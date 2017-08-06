@@ -1,0 +1,23 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Signup</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list inset>
+    <ion-item>
+      <ion-label>Email</ion-label>
+      <ion-input type="email" [(ngModel)]="user.email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Password</ion-label>
+      <ion-input type="password" [(ngModel)]="user.password"></ion-input>
+    </ion-item>
+  </ion-list>
+  <button ion-button (click)="onSubmit(user)">Submit</button>
+  <button ion-button (click)="onCancel()">Cancel</button>
+</ion-content>
