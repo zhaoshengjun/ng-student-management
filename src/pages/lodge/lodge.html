@@ -20,53 +20,49 @@
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
+  <!-- <div>
+    <span>
+        wholeList: {{wholeList | async |json}}
+      </span>
+  </div> -->
 </ion-header>
 
 <ion-content padding>
-  <!-- <div>
-    <span> Site: {{(site | async)?.$value  }} </span>
-  </div>
-  <div>
-    <span>WholeList:  {{wholeList | async | json}} </span>
-  </div>
-  <div>
-    <span> Obs: {{obs | async | json}} </span>
-  </div> -->
-  <ion-list>
-    <ion-list>
-      <ion-item-sliding *ngFor="let item of wholeList | async" [class.hide]="item.lodgeStatus !== selectedSegment ">
-        <ion-item>
-          <ion-avatar item-start>
-            <img src="/assets/images/unknown.png">
-          </ion-avatar>
-          <h2>{{item.name}}</h2>
-          <p> {{item.roomNo}} </p>
-          <p> {{item.email}} </p>
-          <p> {{item.lodgeStatus}} </p>
-          <p> {{item.id}} </p>
-          <p> {{item.email}} </p>
-        </ion-item>
-        <ion-item-options side="left">
-          <button ion-button color="primary">
+
+  <ion-list *ngIf="wholeList">
+    <ion-item-sliding *ngFor="let item of wholeList | async" [class.hide]="item.lodgeStatus !== selectedSegment ">
+      <ion-item>
+        <ion-avatar item-start>
+          <img src="/assets/images/unknown.png">
+        </ion-avatar>
+        <h2>{{item.name}}</h2>
+        <p> {{item.roomNo}} </p>
+        <p> {{item.email}} </p>
+        <p> {{item.lodgeStatus}} </p>
+        <p> {{item.id}} </p>
+        <p> {{item.email}} </p>
+      </ion-item>
+      <ion-item-options side="left">
+        <button ion-button color="primary" (click)="onText(item)">
                 <ion-icon name="text"></ion-icon>
                 Text
               </button>
-          <button ion-button color="secondary">
+        <button ion-button color="secondary" (click)="onCall(item)">
                 <ion-icon name="call"></ion-icon>
                 Call
               </button>
-          <button ion-button color="primary">
+        <button ion-button color="primary" (click)="onEmail(item)">
                   <ion-icon name="mail"></ion-icon>
                   Email 
                 </button>
-        </ion-item-options>
-        <ion-item-options side="right">
-          <button ion-button color="primary">
+      </ion-item-options>
+      <ion-item-options side="right">
+        <button ion-button color="primary" (click)="onSignIn(item)">
                 <ion-icon name="mail"></ion-icon>
                 SignIn
               </button>
-        </ion-item-options>
-      </ion-item-sliding>
-    </ion-list>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
+
 </ion-content>

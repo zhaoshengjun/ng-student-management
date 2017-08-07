@@ -18,6 +18,7 @@ import * as firebase from "firebase";
 import * as Rx from "rxjs";
 import { DataService } from "../../share/data-service";
 import { getDateString, convertFirebaseObject } from "../../share/common";
+import { isWithinRange, format } from 'date-fns';
 
 // when user logged in, the app should check if there's a today's list already exists
 //  if yes, use the list. otherwise, generate the list, save it and use it
@@ -29,11 +30,14 @@ import { getDateString, convertFirebaseObject } from "../../share/common";
   templateUrl: "lodge.html"
 })
 export class LodgePage {
+
   selectedSegment = "unlodged";
   wholeList: Rx.Observable<any>;
   userId: string;
-  today: string;
+  selectedDate: Date;
+  dateString: string;
   site: FirebaseObjectObservable<any>;
+  db: firebase.database.Database;
   private loader: LoadingPage;
 
   constructor(
@@ -44,48 +48,106 @@ export class LodgePage {
     private dbService: DataService,
     private _app: App
   ) {
-    // console.log(this.dbService);
+    this.db = this.afDB.database;
   }
 
   ionViewDidLoad() {
     this.loader = new LoadingPage(this.loadingCtrl);
-    this.today = "20170802";
+    this.selectedDate = new Date();
+    this.dateString = format(this.selectedDate, "YYYYMMDD");
     this.userId = this.dbService.uid;
-    const todayRef = `/${this.userId}/lodgelists/${this.today}`;
+    const todayRef = `/${this.userId}/lodgelists/${this.dateString}`;
     let listRef = this.afDB.list(todayRef);
-    let listSubject = new ReplaySubject();
-    let db = this.afDB.database.ref();
     let fetchStudentInfo = (stu, cb) => {
-      let stuRef = db.child(`/${this.userId}/students/${stu.studentId}`);
+      let stuRef = this.db.ref().child(`/${this.userId}/students/${stu.studentId}`);
       stuRef.once("value", cb);
     };
     this.wholeList = listRef.map(snap => {
-      let l = [];
-      snap.forEach(stu => {
-        fetchStudentInfo(stu, data => {
-          console.log("fetch:", data.val());
-          let student = Object.assign(
-            data.val(),
-            { id: data.key },
-            { lodgeStatus: stu.status }
-          );
-          l.push(student);
+      if (snap.length == 0) {
+        // this is the 1st time to use for today.
+        // should generate a list
+        this.generateList();
+      } else {
+        // list already exists.
+        let list = [];
+        snap.forEach(stu => {
+          // console.log('stu:', stu);
+          fetchStudentInfo(stu, data => {
+            // console.log("fetch:", data.val());
+            let stud = data.val();
+            let student = Object.assign(
+              stud, {
+                lodgeStatus: stu.lodgeStatus,
+                reason: stu.reason
+              }
+            );
+            // console.log('generate info: ', student);
+            list.push(student);
+          });
         });
-      });
-      return l;
+        return list;
+      };
     });
-
     this.site = this.afDB.object(`/${this.userId}/site`);
+    this.wholeList.subscribe(d => {
+      console.log("whole list", d);
+      // if (d && d.length > 0) {
+      // d.forEach(s => {
+      //   console.log("object inside list:", s);
+      // })
+      // }
+    })
   }
 
-  filterList(filter: string): Rx.Observable<any> {
-    return this.wholeList.map(d => {
-      // console.log("data:", d);
-      return d.filter(a => {
-        // console.log("item: ", a);
-        return a.status === filter;
-      });
+  generateList() {
+    // get full students list
+
+    let studentRefString = `/${this.userId}/students`;
+    let studentRef = this.db.ref(studentRefString);
+    // let studentsRef = this.afDB.list(studentRefString);
+    // check each of them should be lodged
+    let lodgeListRefString = `/${this.userId}/lodgelists/${this.dateString}`
+    let lodgeListRef = this.db.ref(lodgeListRefString);
+    // let lodgeListRef = this.afDB.list(lodgeListRefString);
+    let listRef = this.afDB.database.ref(lodgeListRefString);
+    studentRef.once('value', snap => {
+      console.log(snap.val());
+      let students = snap.val();
+      let lodgeList = [];
+      students
+        .filter(s => s.status === 'active')
+        .forEach(s => {
+          console.log("student:", s, "key:", s.id);
+          let { reason, status } = this.checkIfNeedToLodge(s);
+          let lodgeInfo = {
+            studentId: s.id,
+            lodgeStatus: status,
+            reason: reason
+          };
+          console.log('lodgeInfo:', lodgeInfo);
+          lodgeList.push(lodgeInfo);
+        });
+      listRef.update(lodgeList);
     });
+  }
+
+  checkIfNeedToLodge(student) {
+    let reason = "";
+    let status = "unlodged";
+
+    let holidays = student.holidayPeriods;
+    if (holidays && holidays.length > 0) {
+      for (let i = 0; i < holidays.length; i++) {
+        let holiday = holidays[i];
+        if (isWithinRange(this.selectedDate, holiday.startDate, holiday.endDate)) {
+          reason = "InHoliday";
+          status = "lodged"
+          break;
+        }
+      }
+    }
+
+    return { reason, status };
   }
 
   onLogout() {
@@ -96,5 +158,23 @@ export class LodgePage {
   onSegmentChanged(newVal: string) {
     this.selectedSegment = newVal;
     console.log(this.selectedSegment);
+  }
+
+  onSignIn(student) {
+    console.log("Sign in with :", student);
+    // should show sign in form to collect signature
+    //  and save it to the database
+  }
+  onText(student) {
+    console.log("Text with :", student);
+    //  Text student 
+  }
+  onCall(student) {
+    console.log("Call with :", student);
+    //  Call student 
+  }
+  onEmail(student) {
+    console.log("Email with :", student);
+    //  Email student 
   }
 }

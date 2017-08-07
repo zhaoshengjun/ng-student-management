@@ -25199,6 +25199,10 @@ ion-navbar.toolbar {
   }
 }
 
+.toolbar-title {
+  text-align: center;
+}
+
 loading-modal .container {
   z-index: -1;
   -webkit-transition: z-index 0.2s step-end;
