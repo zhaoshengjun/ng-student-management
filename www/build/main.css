@@ -25253,6 +25253,10 @@ page-home ion-item-options .button {
   text-transform: none !important;
 }
 
+page-setting .archived {
+  background-color: lightgray !important;
+}
+
 page-student-modal .dark {
   background-color: darkgray;
 }

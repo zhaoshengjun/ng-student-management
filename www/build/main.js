@@ -175,6 +175,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var StudentModalPage = (function () {
     function StudentModalPage(viewCtrl, dbService, navParams) {
+        // if student has been archived, the UI should reflect this
+        // e.g. a darker color or a ribbon on the title.
         this.viewCtrl = viewCtrl;
         this.dbService = dbService;
         this.navParams = navParams;
@@ -182,19 +184,20 @@ var StudentModalPage = (function () {
         this.isArchived = false;
         this.student = new __WEBPACK_IMPORTED_MODULE_1__share_data_model__["a" /* Student */];
         this.mode = "add";
+    }
+    StudentModalPage.prototype.ionViewDidLoad = function () {
         var title = this.navParams.get("confirmTitle");
         if (title)
             this.confirmTitle = title;
-        var studentID = this.navParams.get("studentId");
-        if (studentID) {
-            this.studentId = studentID;
-            this.student = this.dbService.getStudentById(this.studentId);
+        var student = this.navParams.get("student");
+        if (student) {
             this.mode = "edit";
+            this.student = student;
         }
-        // if student has been archived, the UI should reflect this
-        // e.g. a darker color or a ribbon on the title.
         this.isArchived = this.student.status == 'achived';
-    }
+        console.log('student', this.student);
+        console.log('confirm title:', this.confirmTitle);
+    };
     StudentModalPage.prototype.clickedAvatar = function () {
         console.log('needs to change avatar');
         // access the photo lib to change the avatar. 
@@ -219,13 +222,12 @@ var StudentModalPage = (function () {
 }());
 StudentModalPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({
-        selector: "page-student-modal",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/'<ion-header>\n  <ion-toolbar>\n    <ion-title>\n      Student Info\n    </ion-title>\n\n    <ion-buttons start>\n      <button ion-button (click)="onCancel()">\n        <ion-icon name="md-close"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding [class.dark]="isArchived">\n  <ion-item>\n    <ion-avatar (click)="clickedAvatar()">\n      <img src="/assets/images/unknown.png">\n      <button ion-button class="inside-middle">Change</button>\n    </ion-avatar>\n\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Full Name\n    </ion-label>\n    <ion-input type="text" [(ngModel)]="student.name" placeholder="Full Name"></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      University\n    </ion-label>\n    <ion-select name="">\n      <ion-option>\n        QUT\n      </ion-option>\n      <ion-option>\n        UQ\n      </ion-option>\n    </ion-select>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Email\n    </ion-label>\n    <ion-input type="email" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Phone\n    </ion-label>\n    <ion-input type="tel" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Start Date\n    </ion-label>\n    <ion-input type="date" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Room No.\n    </ion-label>\n    <ion-input type="number" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Comments\n    </ion-label>\n    <ion-textarea placeholder="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet quos vero sequi consequatur voluptate id, impedit sed quis doloribus. Dolore."></ion-textarea>\n  </ion-item>\n  <ion-item>\n    <button ion-button color="positive" icon-left (click)="onAddHoliday()">\n        <ion-icon name="plane"></ion-icon>\n        Add Holiday Period\n      </button>\n    <button ion-button color="positive" icon-left (click)="onAddGuardian()">\n          <ion-icon name="plane"></ion-icon>\n          Add Guidian Info\n        </button>\n  </ion-item>\n\n  <div class="equal-box">\n    <button ion-button color="positive" icon-left class="equal-item" (click)="onSave()">\n      <ion-icon name="checkmark-circle"></ion-icon>\n      Save\n    </button>\n    <button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">\n      <ion-icon name="close"></ion-icon>\n      Cancel\n    </button>\n  </div>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/
+        selector: "page-student-modal",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/'<ion-header>\n  <ion-toolbar>\n    <ion-title>\n      Student Info\n    </ion-title>\n\n    <ion-buttons start>\n      <button ion-button (click)="onCancel()">\n        <ion-icon name="md-close"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding [class.dark]="isArchived">\n  <ion-item>\n    <ion-avatar (click)="clickedAvatar()">\n      <img src="/assets/images/unknown.png">\n      <button ion-button class="inside-middle">Change</button>\n    </ion-avatar>\n\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Full Name\n    </ion-label>\n    <ion-input type="text" [(ngModel)]="student.name" placeholder="Full Name"></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      University\n    </ion-label>\n    <ion-select name="">\n      <ion-option>\n        QUT\n      </ion-option>\n      <ion-option>\n        UQ\n      </ion-option>\n    </ion-select>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Email\n    </ion-label>\n    <ion-input type="email" [(ngModel)]="student.email" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Phone\n    </ion-label>\n    <ion-input type="tel" [(ngModel)]="student.phone" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Start Date\n    </ion-label>\n    <ion-input type="date" [(ngModel)]="student.startDate" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      End Date\n    </ion-label>\n    <ion-input type="date" [(ngModel)]="student.endDate" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Room No.\n    </ion-label>\n    <ion-input type="number" [(ngModel)]="student.roomNo" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Name\n    </ion-label>\n    <ion-input type="text" [(ngModel)]="student.guardianName" placeholder="Full Name"></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Email\n    </ion-label>\n    <ion-input type="email" [(ngModel)]="student.guardianEmail" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Phone\n    </ion-label>\n    <ion-input type="tel" [(ngModel)]="student.guardianPhone" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Comments\n    </ion-label>\n    <ion-textarea [(ngModel)]="student.comments" placeholder="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet quos vero sequi consequatur voluptate id, impedit sed quis doloribus. Dolore."></ion-textarea>\n  </ion-item>\n  <ion-item>\n    <button ion-button color="positive" icon-left (click)="onAddHoliday()">\n        <ion-icon name="plane"></ion-icon>\n        Add Holiday Period\n      </button>\n  </ion-item>\n\n  <div class="equal-box">\n    <button ion-button color="positive" icon-left class="equal-item" (click)="onSave()">\n      <ion-icon name="checkmark-circle"></ion-icon>\n      {{ confirmTitle }}\n    </button>\n    <button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">\n      <ion-icon name="close"></ion-icon>\n      Cancel\n    </button>\n  </div>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3_ionic_angular__["k" /* ViewController */],
-        __WEBPACK_IMPORTED_MODULE_0__share_data_service__["a" /* DataService */],
-        __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["i" /* NavParams */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["l" /* ViewController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["l" /* ViewController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__share_data_service__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__share_data_service__["a" /* DataService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["j" /* NavParams */]) === "function" && _c || Object])
 ], StudentModalPage);
 
+var _a, _b, _c;
 //# sourceMappingURL=student-modal.js.map
 
 /***/ }),
@@ -248,9 +250,13 @@ webpackEmptyAsyncContext.id = 265;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__student_modal_student_modal__ = __webpack_require__(186);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__ = __webpack_require__(107);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__student_modal_student_modal__ = __webpack_require__(186);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -263,26 +269,46 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
+
 var SettingPage = (function () {
-    function SettingPage(navCtrl, modalCtrl) {
+    function SettingPage(navCtrl, afDB, afAuth, modalCtrl) {
         this.navCtrl = navCtrl;
+        this.afDB = afDB;
+        this.afAuth = afAuth;
         this.modalCtrl = modalCtrl;
+        this.activeOnly = new __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__["Subject"]();
+        this.userId = this.afAuth.auth.currentUser.uid;
+        var studentsRefString = "/" + this.userId + "/students";
+        this.students = this.afDB.list(studentsRefString);
     }
+    SettingPage.prototype.ionViewDidLoad = function () {
+        // load all students info
+    };
+    SettingPage.prototype.updateFilter = function () {
+        this.activeOnly.next();
+    };
+    SettingPage.prototype.onEdit = function (student) {
+        console.log('Edit student info: ', student);
+        var modal = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_2__student_modal_student_modal__["a" /* StudentModalPage */], { confirmTitle: "Update", student: student });
+        modal.present();
+    };
     SettingPage.prototype.onAdd = function () {
         // show add modal
-        var modal = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_0__student_modal_student_modal__["a" /* StudentModalPage */], {});
+        var modal = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_2__student_modal_student_modal__["a" /* StudentModalPage */], {});
         modal.present();
     };
     return SettingPage;
 }());
 SettingPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
-        selector: "page-setting",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Setting\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n    <button ion-button (click)="onAdd()">Add</button>\n    <p>List all the students with a special class for the archived ones</p>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/
+    Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["n" /* Component */])({
+        selector: "page-setting",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Setting\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <div>\n    <button ion-button (click)="onAdd()" full>Add</button>\n    <!-- <p>List all the students with a special class for the archived ones</p>\n    <span>\n        {{ students | async | json}}\n      </span> -->\n  </div>\n  <ion-item>\n    <ion-label>Active students only</ion-label>\n    <ion-checkbox color="dark" checked="true" (ionChange)="updateFilter()"></ion-checkbox>\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor="let item of students | async" (click)="onEdit(item)" [class.archived]="item.status == \'archived\'">\n      <ion-avatar item-start>\n        <img src="/assets/images/unknown.png">\n      </ion-avatar>\n      <h2>{{item.name}}</h2>\n      <p> {{item.roomNo}} </p>\n      <p> {{item.email}} </p>\n      <p> {{item.lodgeStatus}} </p>\n      <p> {{item.id}} </p>\n      <p> {{item.email}} </p>\n    </ion-item>\n  </ion-list>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* ModalController */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */]) === "function" && _d || Object])
 ], SettingPage);
 
+var _a, _b, _c, _d;
 //# sourceMappingURL=setting.js.map
 
 /***/ }),
@@ -315,7 +341,7 @@ ReportPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: "page-report",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Report\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]])
 ], ReportPage);
 
 //# sourceMappingURL=report.js.map
@@ -359,7 +385,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var LodgePage = (function () {
-    function LodgePage(navCtrl, loadingCtrl, modalCtrl, alertCtrl, afDB, afAuth, dbService, _app) {
+    function LodgePage(navCtrl, loadingCtrl, modalCtrl, alertCtrl, afDB, afAuth, dbService, events, _app) {
         this.navCtrl = navCtrl;
         this.loadingCtrl = loadingCtrl;
         this.modalCtrl = modalCtrl;
@@ -367,6 +393,7 @@ var LodgePage = (function () {
         this.afDB = afDB;
         this.afAuth = afAuth;
         this.dbService = dbService;
+        this.events = events;
         this._app = _app;
         this.selectedSegment = "unlodged";
         this.db = this.afDB.database;
@@ -413,11 +440,10 @@ var LodgePage = (function () {
         this.site = this.afDB.object("/" + this.userId + "/site");
         this.wholeList.subscribe(function (d) {
             console.log("whole list", d);
-            // if (d && d.length > 0) {
-            // d.forEach(s => {
-            //   console.log("object inside list:", s);
-            // })
-            // }
+            if (d.length > 0) {
+                var unlodgeList = d.filter(function (a) { return a.lodgeStatus === 'unlodged'; });
+                _this.events.publish("unlodge:count", unlodgeList.length);
+            }
         });
     };
     LodgePage.prototype.generateList = function () {
@@ -491,22 +517,22 @@ var LodgePage = (function () {
         if (student.phone && student.guardianPhone) {
             // if have more than 1 phone numbers in student record,
             //  show a popup window to choose.
-            var alert_1 = this.alertCtrl.create();
-            alert_1.setTitle("Select phone number");
-            alert_1.addInput({
+            var alert = this.alertCtrl.create();
+            alert.setTitle("Select phone number");
+            alert.addInput({
                 type: "radio",
                 label: student.phone,
                 value: student.phone,
                 checked: true
             });
-            alert_1.addInput({
+            alert.addInput({
                 type: "radio",
                 label: student.guardianPhone,
                 value: student.guardianPhone,
                 checked: false
             });
-            alert_1.addButton("Cancel");
-            alert_1.addButton({
+            alert.addButton("Cancel");
+            alert.addButton({
                 text: "Ok",
                 handler: function (data) {
                     console.log("Radio data:", data);
@@ -514,7 +540,7 @@ var LodgePage = (function () {
                     // make a call
                 }
             });
-            alert_1.present();
+            alert.present();
         }
         else {
             var phone = student.phone || student.guardianPhone;
@@ -537,16 +563,10 @@ LodgePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
         selector: "page-lodge",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Lodge</ion-title>\n    <ion-buttons end>\n      <button ion-button (click)="onLogout()">\n        Logout\n        <ion-icon name="log-out"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n\n  <h1 center>{{today}}</h1>\n  <ion-toolbar>\n    <ion-segment [(ngModel)]="selectedSegment">\n      <ion-segment-button value="unlodged">\n        Sign In\n      </ion-segment-button>\n      <ion-segment-button value="lodged">\n        Already Signed In\n      </ion-segment-button>\n    </ion-segment>\n  </ion-toolbar>\n  <!-- <div>\n    <span>\n        wholeList: {{wholeList | async |json}}\n      </span>\n  </div> -->\n</ion-header>\n\n<ion-content padding>\n\n  <ion-list *ngIf="wholeList">\n    <ion-item-sliding *ngFor="let item of wholeList | async; let i = index " [class.hide]="item.lodgeStatus !== selectedSegment ">\n      <ion-item>\n        <ion-avatar item-start>\n          <img src="/assets/images/unknown.png">\n        </ion-avatar>\n        <h2>{{item.name}}</h2>\n        <p> {{item.roomNo}} </p>\n        <p> {{item.email}} </p>\n        <p> {{item.lodgeStatus}} </p>\n        <p> {{item.id}} </p>\n        <p> {{item.email}} </p>\n      </ion-item>\n      <ion-item-options side="left">\n        <button ion-button color="primary" (click)="onText(item)">\n                <ion-icon name="text"></ion-icon>\n                Text\n              </button>\n        <button ion-button color="secondary" (click)="onCall(item)">\n                <ion-icon name="call"></ion-icon>\n                Call\n              </button>\n        <button ion-button color="primary" (click)="onEmail(item)">\n                  <ion-icon name="mail"></ion-icon>\n                  Email \n                </button>\n      </ion-item-options>\n      <ion-item-options side="right">\n        <button ion-button color="primary" (click)="onSignIn(item, i)">\n                <ion-icon name="mail"></ion-icon>\n                SignIn\n              </button>\n      </ion-item-options>\n    </ion-item-sliding>\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["f" /* LoadingController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* ModalController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["a" /* AlertController */],
-        __WEBPACK_IMPORTED_MODULE_4_angularfire2_database__["a" /* AngularFireDatabase */],
-        __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */],
-        __WEBPACK_IMPORTED_MODULE_6__share_data_service__["a" /* DataService */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["b" /* App */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* ModalController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* ModalController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["a" /* AlertController */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4_angularfire2_database__["a" /* AngularFireDatabase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_angularfire2_database__["a" /* AngularFireDatabase */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_6__share_data_service__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__share_data_service__["a" /* DataService */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["c" /* Events */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["c" /* Events */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["b" /* App */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["b" /* App */]) === "function" && _j || Object])
 ], LodgePage);
 
+var _a, _b, _c, _d, _e, _f, _g, _h, _j;
 //# sourceMappingURL=lodge.js.map
 
 /***/ }),
@@ -638,10 +658,10 @@ LodgeFormPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
         selector: "page-lodge-form",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/'<ion-header>\n\n  <ion-navbar>\n    <ion-title>Sign In</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <div>\n    <h1>This is a signature form</h1>\n    <span>\n      {{student |json}}\n    </span>\n  </div>\n\n  <button ion-button (click)="onSubmit()">\n    Submit\n  </button>\n  <button ion-button (click)="onCancel()">\n      Cancel\n    </button>\n\n  <div *ngIf="error">\n    <h2>{{errorMessage}}</h2>\n  </div>\n\n\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["k" /* ViewController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["f" /* LoadingController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavParams */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */],
+        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */],
+        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */]])
 ], LodgeFormPage);
 
 //# sourceMappingURL=lodge-form.js.map
@@ -703,8 +723,8 @@ SignupPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: "page-signup",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\signup\signup.html"*/'<ion-header>\n\n  <ion-navbar>\n    <ion-title>Signup</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <ion-list inset>\n    <ion-item>\n      <ion-label>Email</ion-label>\n      <ion-input type="email" [(ngModel)]="user.email"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label>Password</ion-label>\n      <ion-input type="password" [(ngModel)]="user.password"></ion-input>\n    </ion-item>\n  </ion-list>\n  <button ion-button (click)="onSubmit(user)">Submit</button>\n  <button ion-button (click)="onCancel()">Cancel</button>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\signup\signup.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavParams */],
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
         __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__["a" /* AngularFireAuth */]])
 ], SignupPage);
 
@@ -776,7 +796,7 @@ LoginPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({
         selector: "page-login",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\login\login.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Login</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list inset>\n    <ion-item>\n      <ion-label>Email</ion-label>\n      <ion-input type="email" [(ngModel)]="user.email"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label>Password</ion-label>\n      <ion-input type="password" [(ngModel)]="user.password"></ion-input>\n    </ion-item>\n  </ion-list>\n  <button ion-button outline color="secondary" (click)="onLogin()">Login</button>\n  <button ion-button outline color="danger" (click)="onSignup()">Signup</button>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\login\login.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3_ionic_angular__["h" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["f" /* LoadingController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["i" /* NavParams */], __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__["a" /* AngularFireAuth */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3_ionic_angular__["i" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["g" /* LoadingController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["j" /* NavParams */], __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__["a" /* AngularFireAuth */]])
 ], LoginPage);
 
 //# sourceMappingURL=login.js.map
@@ -792,6 +812,7 @@ LoginPage = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__setting_setting__ = __webpack_require__(305);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lodge_lodge__ = __webpack_require__(307);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(25);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -805,20 +826,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var TabsPage = (function () {
-    function TabsPage() {
+    function TabsPage(events) {
+        var _this = this;
+        this.events = events;
         this.tab1Root = __WEBPACK_IMPORTED_MODULE_3__lodge_lodge__["a" /* LodgePage */];
         this.tab2Root = __WEBPACK_IMPORTED_MODULE_0__report_report__["a" /* ReportPage */];
         this.tab3Root = __WEBPACK_IMPORTED_MODULE_1__setting_setting__["a" /* SettingPage */];
+        this.unlodgeCount = 0;
+        events.subscribe("unlodge:count", function (data) {
+            _this.unlodgeCount = data;
+        });
     }
     return TabsPage;
 }());
 TabsPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\tabs\tabs.html"*/'<ion-tabs>\n  <ion-tab [root]="tab1Root" tabTitle="Lodge" tabIcon="home"></ion-tab>\n  <ion-tab [root]="tab2Root" tabTitle="Report" tabIcon="document"></ion-tab>\n  <ion-tab [root]="tab3Root" tabTitle="Setting" tabIcon="settings"></ion-tab>\n</ion-tabs>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\tabs\tabs.html"*/
+    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\tabs\tabs.html"*/'<ion-tabs selectedIndex="2">\n  <ion-tab [root]="tab1Root" tabTitle="Lodge" tabIcon="home" [tabBadge]="unlodgeCount" tabBadgeStyle="danger"></ion-tab>\n  <ion-tab [root]="tab2Root" tabTitle="Report" tabIcon="document"></ion-tab>\n  <ion-tab [root]="tab3Root" tabTitle="Setting" tabIcon="settings"></ion-tab>\n</ion-tabs>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\tabs\tabs.html"*/
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* Events */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* Events */]) === "function" && _a || Object])
 ], TabsPage);
 
+var _a;
 //# sourceMappingURL=tabs.js.map
 
 /***/ }),
@@ -919,7 +948,7 @@ AppModule = __decorate([
         imports: [
             __WEBPACK_IMPORTED_MODULE_7__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_12__angular_http__["a" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_8_ionic_angular__["e" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_9__app_component__["a" /* MyApp */], {
+            __WEBPACK_IMPORTED_MODULE_8_ionic_angular__["f" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_9__app_component__["a" /* MyApp */], {
                 iconMode: "md",
                 pageTransition: "md-transition"
             }),
@@ -927,7 +956,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_16_angularfire2_database__["b" /* AngularFireDatabaseModule */],
             __WEBPACK_IMPORTED_MODULE_17_angularfire2_auth__["b" /* AngularFireAuthModule */]
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_8_ionic_angular__["c" /* IonicApp */]],
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_8_ionic_angular__["d" /* IonicApp */]],
         entryComponents: [
             __WEBPACK_IMPORTED_MODULE_9__app_component__["a" /* MyApp */],
             __WEBPACK_IMPORTED_MODULE_5__pages_login_login__["a" /* LoginPage */],
@@ -943,7 +972,7 @@ AppModule = __decorate([
         providers: [
             __WEBPACK_IMPORTED_MODULE_13__ionic_native_status_bar__["a" /* StatusBar */],
             __WEBPACK_IMPORTED_MODULE_14__ionic_native_splash_screen__["a" /* SplashScreen */],
-            { provide: __WEBPACK_IMPORTED_MODULE_6__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_8_ionic_angular__["d" /* IonicErrorHandler */] },
+            { provide: __WEBPACK_IMPORTED_MODULE_6__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_8_ionic_angular__["e" /* IonicErrorHandler */] },
             __WEBPACK_IMPORTED_MODULE_18__share_data_service__["a" /* DataService */]
         ]
     })
@@ -1042,7 +1071,7 @@ var MyApp = (function () {
 MyApp = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\app\app.html"*/'<ion-nav [root]="rootPage"></ion-nav>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\app\app.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* Platform */],
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["k" /* Platform */],
         __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */],
         __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
 ], MyApp);
@@ -1091,7 +1120,7 @@ LoadingPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'page-loading',template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\loading\loading.html"*/'<div class="container" [ngClass]="{\'busy\': isBusy}">\n  <div class="backdrop"></div>\n  <ion-spinner></ion-spinner>\n</div>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\loading\loading.html"*/,
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* LoadingController */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */]])
 ], LoadingPage);
 
 //# sourceMappingURL=loading.js.map

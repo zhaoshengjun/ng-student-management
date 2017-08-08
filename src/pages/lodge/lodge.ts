@@ -8,7 +8,8 @@ import {
   App,
   LoadingController,
   ModalController,
-  AlertController
+  AlertController,
+  Events
 } from "ionic-angular";
 import { LoadingPage } from "../loading/loading";
 import {
@@ -49,6 +50,7 @@ export class LodgePage {
     private afDB: AngularFireDatabase,
     private afAuth: AngularFireAuth,
     private dbService: DataService,
+    private events: Events,
     private _app: App
   ) {
     this.db = this.afDB.database;
@@ -94,11 +96,10 @@ export class LodgePage {
     this.site = this.afDB.object(`/${this.userId}/site`);
     this.wholeList.subscribe(d => {
       console.log("whole list", d);
-      // if (d && d.length > 0) {
-      // d.forEach(s => {
-      //   console.log("object inside list:", s);
-      // })
-      // }
+      if (d.length > 0) {
+        let unlodgeList = d.filter(a => a.lodgeStatus === 'unlodged');
+        this.events.publish("unlodge:count", unlodgeList.length);
+      }
     });
   }
 

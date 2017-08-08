@@ -10,7 +10,6 @@ import { NavParams, ViewController } from "ionic-angular";
 export class StudentModalPage {
   confirmTitle: string = "confirm";
   isArchived: boolean = false;
-  studentId: string;
   student: Student = new Student;
   mode: string = "add";
 
@@ -18,20 +17,27 @@ export class StudentModalPage {
     private dbService: DataService,
     private navParams: NavParams) {
 
-    let title = this.navParams.get("confirmTitle");
-    if (title) this.confirmTitle = title;
 
-    let studentID = this.navParams.get("studentId");
-    if (studentID) {
-      this.studentId = studentID;
-      this.student = this.dbService.getStudentById(this.studentId);
-      this.mode = "edit";
-    }
 
 
     // if student has been archived, the UI should reflect this
     // e.g. a darker color or a ribbon on the title.
+
+  }
+
+  ionViewDidLoad() {
+    let title = this.navParams.get("confirmTitle");
+    if (title) this.confirmTitle = title;
+
+    let student = this.navParams.get("student");
+    if (student) {
+      this.mode = "edit";
+      this.student = student;
+    }
+
     this.isArchived = this.student.status == 'achived';
+    console.log('student', this.student);
+    console.log('confirm title:', this.confirmTitle);
   }
 
   clickedAvatar() {

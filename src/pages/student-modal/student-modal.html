@@ -43,47 +43,67 @@
     <ion-label>
       Email
     </ion-label>
-    <ion-input type="email" placeholder=""></ion-input>
+    <ion-input type="email" [(ngModel)]="student.email" placeholder=""></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>
       Phone
     </ion-label>
-    <ion-input type="tel" placeholder=""></ion-input>
+    <ion-input type="tel" [(ngModel)]="student.phone" placeholder=""></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>
       Start Date
     </ion-label>
-    <ion-input type="date" placeholder=""></ion-input>
+    <ion-input type="date" [(ngModel)]="student.startDate" placeholder=""></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      End Date
+    </ion-label>
+    <ion-input type="date" [(ngModel)]="student.endDate" placeholder=""></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>
       Room No.
     </ion-label>
-    <ion-input type="number" placeholder=""></ion-input>
+    <ion-input type="number" [(ngModel)]="student.roomNo" placeholder=""></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      Guardian Name
+    </ion-label>
+    <ion-input type="text" [(ngModel)]="student.guardianName" placeholder="Full Name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      Guardian Email
+    </ion-label>
+    <ion-input type="email" [(ngModel)]="student.guardianEmail" placeholder=""></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      Guardian Phone
+    </ion-label>
+    <ion-input type="tel" [(ngModel)]="student.guardianPhone" placeholder=""></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>
       Comments
     </ion-label>
-    <ion-textarea placeholder="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet quos vero sequi consequatur voluptate id, impedit sed quis doloribus. Dolore."></ion-textarea>
+    <ion-textarea [(ngModel)]="student.comments" placeholder="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet quos vero sequi consequatur voluptate id, impedit sed quis doloribus. Dolore."></ion-textarea>
   </ion-item>
   <ion-item>
     <button ion-button color="positive" icon-left (click)="onAddHoliday()">
         <ion-icon name="plane"></ion-icon>
         Add Holiday Period
       </button>
-    <button ion-button color="positive" icon-left (click)="onAddGuardian()">
-          <ion-icon name="plane"></ion-icon>
-          Add Guidian Info
-        </button>
   </ion-item>
 
   <div class="equal-box">
     <button ion-button color="positive" icon-left class="equal-item" (click)="onSave()">
       <ion-icon name="checkmark-circle"></ion-icon>
-      Save
+      {{ confirmTitle }}
     </button>
     <button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">
       <ion-icon name="close"></ion-icon>
