@@ -25249,6 +25249,10 @@ page-home .hide {
   display: none;
 }
 
+page-home ion-item-options .button {
+  text-transform: none !important;
+}
+
 page-student-modal .dark {
   background-color: darkgray;
 }

@@ -2,4 +2,7 @@ page-home {
   .hide {
     display: none;
   }
+  ion-item-options .button {
+    text-transform: none !important;
+  }
 }

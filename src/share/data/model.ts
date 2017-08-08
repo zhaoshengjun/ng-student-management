@@ -16,6 +16,7 @@ export interface Guardian {
 }
 
 export class Student {
+  id: string = "";
   name: string = "Full name";
   roomNo: string = "";
   photo: string = "101";

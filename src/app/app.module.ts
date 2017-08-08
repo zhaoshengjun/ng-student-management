@@ -19,6 +19,7 @@ import { AngularFireModule } from "angularfire2";
 import { AngularFireDatabaseModule } from "angularfire2/database";
 import { AngularFireAuthModule } from "angularfire2/auth";
 import { DataService } from "../share/data-service";
+import { LodgeFormPage } from "../pages/lodge-form/lodge-form";
 
 
 export const firebaseConfig = {
@@ -40,6 +41,7 @@ export const firebaseConfig = {
     SettingPage,
     StudentModalPage,
     LoadingPage,
+    LodgeFormPage,
     TabsPage
   ],
   imports: [
@@ -63,6 +65,7 @@ export const firebaseConfig = {
     SettingPage,
     StudentModalPage,
     LoadingPage,
+    LodgeFormPage,
     TabsPage
   ],
   providers: [

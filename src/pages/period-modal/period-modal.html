@@ -15,4 +15,14 @@
 
 <ion-content padding>
 
+  <ion-list>
+    <ion-item>
+      <ion-label>Start Date</ion-label>
+      <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="holiday.startDate"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>End Date</ion-label>
+      <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="holiday.endDate"></ion-datetime>
+    </ion-item>
+  </ion-list>
 </ion-content>

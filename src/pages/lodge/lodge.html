@@ -30,7 +30,7 @@
 <ion-content padding>
 
   <ion-list *ngIf="wholeList">
-    <ion-item-sliding *ngFor="let item of wholeList | async" [class.hide]="item.lodgeStatus !== selectedSegment ">
+    <ion-item-sliding *ngFor="let item of wholeList | async; let i = index " [class.hide]="item.lodgeStatus !== selectedSegment ">
       <ion-item>
         <ion-avatar item-start>
           <img src="/assets/images/unknown.png">
@@ -57,7 +57,7 @@
                 </button>
       </ion-item-options>
       <ion-item-options side="right">
-        <button ion-button color="primary" (click)="onSignIn(item)">
+        <button ion-button color="primary" (click)="onSignIn(item, i)">
                 <ion-icon name="mail"></ion-icon>
                 SignIn
               </button>

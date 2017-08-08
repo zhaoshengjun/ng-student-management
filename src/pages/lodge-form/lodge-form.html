@@ -1,0 +1,30 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Sign In</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div>
+    <h1>This is a signature form</h1>
+    <span>
+      {{student |json}}
+    </span>
+  </div>
+
+  <button ion-button (click)="onSubmit()">
+    Submit
+  </button>
+  <button ion-button (click)="onCancel()">
+      Cancel
+    </button>
+
+  <div *ngIf="error">
+    <h2>{{errorMessage}}</h2>
+  </div>
+
+
+</ion-content>
