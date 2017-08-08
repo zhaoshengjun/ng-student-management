@@ -3,7 +3,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { StudentModalPage } from "./../student-modal/student-modal";
 import { Component } from "@angular/core";
 import { NavController, ModalController } from "ionic-angular";
-import { Subject } from "rxjs/Subject";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 @Component({
   selector: "page-setting",
@@ -12,7 +12,9 @@ import { Subject } from "rxjs/Subject";
 export class SettingPage {
   userId: string;
   students;
-  activeOnly: Subject<any>;
+  activeOnly: boolean = false
+  querySubject: BehaviorSubject<any>;
+  queryOpts = {};
 
 
   constructor(
@@ -21,19 +23,32 @@ export class SettingPage {
     private afAuth: AngularFireAuth,
     public modalCtrl: ModalController
   ) {
-    this.activeOnly = new Subject();
+    this.querySubject = new BehaviorSubject({});
     this.userId = this.afAuth.auth.currentUser.uid;
-    const studentsRefString = `/${this.userId}/students`
-    this.students = this.afDB.list(studentsRefString);
+    const studentsRefString = `/${this.userId}/students`;
+    this.querySubject.subscribe(opts => {
+      console.log('options:', opts);
+      this.queryOpts = opts;
+      this.students = this.afDB.list(studentsRefString, this.queryOpts);
+    })
   }
 
   ionViewDidLoad() {
     // load all students info
-
   }
 
   updateFilter() {
-    this.activeOnly.next()
+    console.log('activeOnly: ', this.activeOnly);
+    if (this.activeOnly) {
+      this.querySubject.next({
+        query: {
+          orderByChild: "status",
+          equalTo: "active"
+        }
+      })
+    } else {
+      this.querySubject.next({});
+    }
   }
 
   onEdit(student) {

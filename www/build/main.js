@@ -175,8 +175,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var StudentModalPage = (function () {
     function StudentModalPage(viewCtrl, dbService, navParams) {
-        // if student has been archived, the UI should reflect this
-        // e.g. a darker color or a ribbon on the title.
         this.viewCtrl = viewCtrl;
         this.dbService = dbService;
         this.navParams = navParams;
@@ -255,8 +253,8 @@ webpackEmptyAsyncContext.id = 265;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__student_modal_student_modal__ = __webpack_require__(186);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__ = __webpack_require__(60);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(616);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -274,20 +272,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var SettingPage = (function () {
     function SettingPage(navCtrl, afDB, afAuth, modalCtrl) {
+        var _this = this;
         this.navCtrl = navCtrl;
         this.afDB = afDB;
         this.afAuth = afAuth;
         this.modalCtrl = modalCtrl;
-        this.activeOnly = new __WEBPACK_IMPORTED_MODULE_5_rxjs_Subject__["Subject"]();
+        this.activeOnly = false;
+        this.queryOpts = {};
+        this.querySubject = new __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__["BehaviorSubject"]({});
         this.userId = this.afAuth.auth.currentUser.uid;
         var studentsRefString = "/" + this.userId + "/students";
-        this.students = this.afDB.list(studentsRefString);
+        this.querySubject.subscribe(function (opts) {
+            console.log('options:', opts);
+            _this.queryOpts = opts;
+            _this.students = _this.afDB.list(studentsRefString, _this.queryOpts);
+        });
     }
     SettingPage.prototype.ionViewDidLoad = function () {
         // load all students info
     };
     SettingPage.prototype.updateFilter = function () {
-        this.activeOnly.next();
+        console.log('activeOnly: ', this.activeOnly);
+        if (this.activeOnly) {
+            this.querySubject.next({
+                query: {
+                    orderByChild: "status",
+                    equalTo: "active"
+                }
+            });
+        }
+        else {
+            this.querySubject.next({});
+        }
     };
     SettingPage.prototype.onEdit = function (student) {
         console.log('Edit student info: ', student);
@@ -303,7 +319,7 @@ var SettingPage = (function () {
 }());
 SettingPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["n" /* Component */])({
-        selector: "page-setting",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Setting\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <div>\n    <button ion-button (click)="onAdd()" full>Add</button>\n    <!-- <p>List all the students with a special class for the archived ones</p>\n    <span>\n        {{ students | async | json}}\n      </span> -->\n  </div>\n  <ion-item>\n    <ion-label>Active students only</ion-label>\n    <ion-checkbox color="dark" checked="true" (ionChange)="updateFilter()"></ion-checkbox>\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor="let item of students | async" (click)="onEdit(item)" [class.archived]="item.status == \'archived\'">\n      <ion-avatar item-start>\n        <img src="/assets/images/unknown.png">\n      </ion-avatar>\n      <h2>{{item.name}}</h2>\n      <p> {{item.roomNo}} </p>\n      <p> {{item.email}} </p>\n      <p> {{item.lodgeStatus}} </p>\n      <p> {{item.id}} </p>\n      <p> {{item.email}} </p>\n    </ion-item>\n  </ion-list>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/
+        selector: "page-setting",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Setting\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <div>\n    <ion-fab right bottom>\n      <button ion-fab (click)="onAdd()">\n        <ion-icon name="add"></ion-icon>\n      </button>\n    </ion-fab>\n    <!-- <span>\n      {{ students | async | json}}\n    </span> -->\n  </div>\n  <ion-item>\n    <ion-label>Active students only</ion-label>\n    <ion-checkbox color="dark" [(ngModel)]="activeOnly" (ionChange)="updateFilter()"></ion-checkbox>\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor="let item of students | async" (click)="onEdit(item)" [class.archived]="item.status === \'archived\'">\n      <ion-avatar item-start>\n        <img src="/assets/images/unknown.png">\n      </ion-avatar>\n      <h2>{{item.name}}</h2>\n      <p> {{item.roomNo}} </p>\n      <p> {{item.email}} </p>\n      <p> {{item.lodgeStatus}} </p>\n      <p> {{item.id}} </p>\n      <p> {{item.email}} </p>\n    </ion-item>\n  </ion-list>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */]) === "function" && _d || Object])
 ], SettingPage);

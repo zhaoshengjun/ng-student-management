@@ -16,13 +16,6 @@ export class StudentModalPage {
   constructor(private viewCtrl: ViewController,
     private dbService: DataService,
     private navParams: NavParams) {
-
-
-
-
-    // if student has been archived, the UI should reflect this
-    // e.g. a darker color or a ribbon on the title.
-
   }
 
   ionViewDidLoad() {
@@ -34,7 +27,6 @@ export class StudentModalPage {
       this.mode = "edit";
       this.student = student;
     }
-
     this.isArchived = this.student.status == 'achived';
     console.log('student', this.student);
     console.log('confirm title:', this.confirmTitle);

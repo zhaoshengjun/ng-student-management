@@ -8,18 +8,21 @@
 
 <ion-content>
   <div>
-    <button ion-button (click)="onAdd()" full>Add</button>
-    <!-- <p>List all the students with a special class for the archived ones</p>
-    <span>
-        {{ students | async | json}}
-      </span> -->
+    <ion-fab right bottom>
+      <button ion-fab (click)="onAdd()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-fab>
+    <!-- <span>
+      {{ students | async | json}}
+    </span> -->
   </div>
   <ion-item>
     <ion-label>Active students only</ion-label>
-    <ion-checkbox color="dark" checked="true" (ionChange)="updateFilter()"></ion-checkbox>
+    <ion-checkbox color="dark" [(ngModel)]="activeOnly" (ionChange)="updateFilter()"></ion-checkbox>
   </ion-item>
   <ion-list>
-    <ion-item *ngFor="let item of students | async" (click)="onEdit(item)" [class.archived]="item.status == 'archived'">
+    <ion-item *ngFor="let item of students | async" (click)="onEdit(item)" [class.archived]="item.status === 'archived'">
       <ion-avatar item-start>
         <img src="/assets/images/unknown.png">
       </ion-avatar>
