@@ -1,14 +1,63 @@
 webpackJsonp([0],{
 
-/***/ 106:
+/***/ 120:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["c"] = getDateString;
+/* harmony export (immutable) */ __webpack_exports__["b"] = convertFirebaseObjectToArray;
+/* unused harmony export convertFirebaseObject */
+/* harmony export (immutable) */ __webpack_exports__["a"] = b64ToBlob;
+function getDateString(d) {
+    if (d === void 0) { d = new Date(); }
+    var day = d.getDate() - 1;
+    var month = d.getMonth() + 1;
+    var dayStr = day < 10 ? "0" + day.toString() : day.toString();
+    var monthStr = month < 10 ? "0" + month.toString() : month.toString();
+    return "" + d.getFullYear() + monthStr + dayStr;
+}
+function convertFirebaseObjectToArray(obj) {
+    var arr = [];
+    for (var k in obj) {
+        if (obj.hasOwnProperty(k)) {
+            arr.push(convertFirebaseObject(obj[k], k));
+        }
+    }
+    return arr;
+}
+function convertFirebaseObject(obj, key) {
+    return Object.assign({ key: key }, obj);
+}
+function b64ToBlob(b64data, contentType, sliceSize) {
+    if (contentType === void 0) { contentType = ""; }
+    if (sliceSize === void 0) { sliceSize = 512; }
+    var byteCharacters = atob(b64data);
+    var byteArrays = [];
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+    var blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+}
+//# sourceMappingURL=common.js.map
+
+/***/ }),
+
+/***/ 185:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_database__ = __webpack_require__(107);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_auth__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common__ = __webpack_require__(438);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_database__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_auth__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common__ = __webpack_require__(120);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -53,7 +102,7 @@ var DataService = (function () {
     DataService.prototype.retriveData = function () {
         var _this = this;
         if (this.checkLoginStatus()) {
-            var today = Object(__WEBPACK_IMPORTED_MODULE_3__common__["a" /* getDateString */])();
+            var today = Object(__WEBPACK_IMPORTED_MODULE_3__common__["c" /* getDateString */])();
             this.afDB
                 .list("/" + this.uid + "/students", { preserveSnapshot: true })
                 .subscribe(function (snapshot) {
@@ -138,28 +187,107 @@ DataService = __decorate([
 
 /***/ }),
 
-/***/ 185:
+/***/ 218:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
-	return new Promise(function(resolve, reject) { reject(new Error("Cannot find module '" + req + "'.")); });
+	// Here Promise.resolve().then() is used instead of new Promise() to prevent
+	// uncatched exception popping up in devtools
+	return Promise.resolve().then(function() {
+		throw new Error("Cannot find module '" + req + "'.");
+	});
 }
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 185;
+webpackEmptyAsyncContext.id = 218;
 
 /***/ }),
 
-/***/ 186:
+/***/ 219:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LodgeDetailPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_date_fns__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_date_fns__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(28);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var LodgeDetailPage = (function () {
+    function LodgeDetailPage(navParams, viewCtrl) {
+        this.navParams = navParams;
+        this.viewCtrl = viewCtrl;
+        this.hasSignature = true;
+        this.student = navParams.get("student");
+    }
+    LodgeDetailPage.prototype.ionViewDidLoad = function () {
+        if (this.student.reason == "InHoliday") {
+            this.hasSignature = false;
+        }
+        else if (this.student.reason == "signature") {
+            this.hasSignature = true;
+            this.student.timestampStr = Object(__WEBPACK_IMPORTED_MODULE_0_date_fns__["format"])(this.student.timestamp, "YYYY/MM/DD HH:mm:ss");
+        }
+    };
+    LodgeDetailPage.prototype.dismiss = function () {
+        this.viewCtrl.dismiss();
+    };
+    return LodgeDetailPage;
+}());
+LodgeDetailPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
+        selector: "page-lodge-detail",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-detail\lodge-detail.html"*/'<ion-header>\n	<ion-toolbar>\n		<ion-title>\n			Lodge Detail\n		</ion-title>\n		<ion-buttons end>\n			<button ion-button (click)="dismiss()">\n						<ion-icon name="md-close"></ion-icon>\n					</button>\n		</ion-buttons>\n	</ion-toolbar>\n</ion-header>\n\n\n<ion-content padding>\n	<ion-list>\n		<ion-item>\n			<h2 class="title">{{student.name}}</h2>\n		</ion-item>\n		<ion-item>\n			Room No.:\n			<ion-note item-end>\n				{{student.roomNo}}\n			</ion-note>\n		</ion-item>\n		<ion-item *ngIf="!hasSignature">\n			Status:\n			<ion-note item-end>\n				In Holiday\n			</ion-note>\n		</ion-item>\n		<ion-item *ngIf="!hasSignature">\n			Holiday Period:\n			<ion-note item-end>\n				{{student.timestamp}}\n			</ion-note>\n		</ion-item>\n\n		<ion-item *ngIf="hasSignature">\n			Time:\n			<ion-note item-end>\n				{{student.timestampStr}}\n			</ion-note>\n		</ion-item>\n		<div *ngIf="hasSignature" class="pic-box">\n			<ion-label>Signature:</ion-label>\n			<div class="box">\n				<img [src]="student.signature" alt="" class="signature">\n			</div>\n		</div>\n		<div class="box">\n			<button ion-button (click)="dismiss()">Cancel</button>\n		</div>\n	</ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-detail\lodge-detail.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */]])
+], LodgeDetailPage);
+
+//# sourceMappingURL=lodge-detail.js.map
+
+/***/ }),
+
+/***/ 297:
+/***/ (function(module, exports) {
+
+function webpackEmptyAsyncContext(req) {
+	// Here Promise.resolve().then() is used instead of new Promise() to prevent
+	// uncatched exception popping up in devtools
+	return Promise.resolve().then(function() {
+		throw new Error("Cannot find module '" + req + "'.");
+	});
+}
+webpackEmptyAsyncContext.keys = function() { return []; };
+webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
+module.exports = webpackEmptyAsyncContext;
+webpackEmptyAsyncContext.id = 297;
+
+/***/ }),
+
+/***/ 337:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StudentModalPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__share_data_service__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__share_data_model__ = __webpack_require__(439);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__loading_loading__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_date_fns__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_date_fns__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__share_data_service__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__share_data_model__ = __webpack_require__(615);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_ionic_angular__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_firebase__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_firebase__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -173,87 +301,128 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
+
 var StudentModalPage = (function () {
-    function StudentModalPage(viewCtrl, dbService, navParams) {
+    function StudentModalPage(viewCtrl, dbService, loadCtrl, navParams) {
         this.viewCtrl = viewCtrl;
         this.dbService = dbService;
+        this.loadCtrl = loadCtrl;
         this.navParams = navParams;
-        this.confirmTitle = "confirm";
+        this.confirmTitle = "Save";
         this.isArchived = false;
-        this.student = new __WEBPACK_IMPORTED_MODULE_1__share_data_model__["a" /* Student */];
+        this.student = new __WEBPACK_IMPORTED_MODULE_3__share_data_model__["a" /* Student */]();
         this.mode = "add";
+        this.startDate = "2017-07-01";
+        this.endDate = "2017-07-05";
+        this.error = false;
+        this.errorMessage = "";
     }
     StudentModalPage.prototype.ionViewDidLoad = function () {
         var title = this.navParams.get("confirmTitle");
         if (title)
             this.confirmTitle = title;
+        this.db = __WEBPACK_IMPORTED_MODULE_6_firebase__["database"]();
+        var uid = __WEBPACK_IMPORTED_MODULE_6_firebase__["auth"]().currentUser.uid;
+        this.studentRef = "/" + uid + "/students";
         var student = this.navParams.get("student");
         if (student) {
             this.mode = "edit";
             this.student = student;
+            this.startDate = Object(__WEBPACK_IMPORTED_MODULE_1_date_fns__["format"])(this.student.startDate, "YYYY-MM-DD");
+            this.endDate = Object(__WEBPACK_IMPORTED_MODULE_1_date_fns__["format"])(this.student.endDate, "YYYY-MM-DD");
+            console.log("startDate:", this.startDate);
+            console.log("endDate:", this.endDate);
+            this.index = this.navParams.get("index");
         }
-        this.isArchived = this.student.status == 'achived';
-        console.log('student', this.student);
-        console.log('confirm title:', this.confirmTitle);
+        this.isArchived = this.student.status == "achived";
+        this.loader = new __WEBPACK_IMPORTED_MODULE_0__loading_loading__["a" /* LoadingPage */](this.loadCtrl);
     };
     StudentModalPage.prototype.clickedAvatar = function () {
-        console.log('needs to change avatar');
-        // access the photo lib to change the avatar. 
+        console.log("needs to change avatar");
+        // access the photo lib to change the avatar.
         // this can be saved to the database.
     };
     StudentModalPage.prototype.onConfirm = function () {
+        var _this = this;
         // should update/add the student data
         // delete/archive will be performed in the list view instead of this detail view
         // for unarchived student, there's archive option
         // for archived student, there's unarchive option
-        if (this.mode = "add") {
-            this.dbService.addStudent(this.student);
+        this.loader.show();
+        this.student.startDate = new Date(this.startDate);
+        this.student.endDate = new Date(this.endDate);
+        this.student.dateOfBirth = new Date(this.dateOfBirth);
+        var listRef = this.db.ref(this.studentRef);
+        if (this.mode == "add") {
+            var newKey = listRef.push().key;
+            this.student.id = newKey;
+            var updateData = {};
+            updateData[newKey] = this.student;
+            // also need to check if needs to be inserted into today's lodge list.
+            listRef.update(updateData).then(function (_) {
+                _this.loader.hide();
+                _this.viewCtrl.dismiss();
+            }, function (err) {
+                _this.loader.hide();
+                _this.error = true;
+                _this.errorMessage = err.message;
+                console.log("error when saving student data", err);
+            });
         }
         else {
             // this.dbService.updateStudentInfo(this.student.$key, newVal)
+            listRef.child(this.student.id).update(this.student).then(function (_) {
+                _this.loader.hide();
+                _this.viewCtrl.dismiss();
+            }, function (err) {
+                _this.loader.hide();
+                _this.error = true;
+                _this.errorMessage = err.message;
+                console.log("error when saving student data", err);
+            });
         }
     };
     StudentModalPage.prototype.onCancel = function () {
         this.viewCtrl.dismiss();
     };
+    StudentModalPage.prototype.onAddHoliday = function () {
+        console.log("Add holiday");
+    };
+    StudentModalPage.prototype.onEditHoliday = function () {
+        console.log("Edit holiday");
+    };
+    StudentModalPage.prototype.onDeleteHoliday = function () {
+        console.log("Delete holiday");
+    };
     return StudentModalPage;
 }());
 StudentModalPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({
-        selector: "page-student-modal",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/'<ion-header>\n  <ion-toolbar>\n    <ion-title>\n      Student Info\n    </ion-title>\n\n    <ion-buttons start>\n      <button ion-button (click)="onCancel()">\n        <ion-icon name="md-close"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding [class.dark]="isArchived">\n  <ion-item>\n    <ion-avatar (click)="clickedAvatar()">\n      <img src="/assets/images/unknown.png">\n      <button ion-button class="inside-middle">Change</button>\n    </ion-avatar>\n\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Full Name\n    </ion-label>\n    <ion-input type="text" [(ngModel)]="student.name" placeholder="Full Name"></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      University\n    </ion-label>\n    <ion-select name="">\n      <ion-option>\n        QUT\n      </ion-option>\n      <ion-option>\n        UQ\n      </ion-option>\n    </ion-select>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Email\n    </ion-label>\n    <ion-input type="email" [(ngModel)]="student.email" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Phone\n    </ion-label>\n    <ion-input type="tel" [(ngModel)]="student.phone" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Start Date\n    </ion-label>\n    <ion-input type="date" [(ngModel)]="student.startDate" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      End Date\n    </ion-label>\n    <ion-input type="date" [(ngModel)]="student.endDate" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Room No.\n    </ion-label>\n    <ion-input type="number" [(ngModel)]="student.roomNo" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Name\n    </ion-label>\n    <ion-input type="text" [(ngModel)]="student.guardianName" placeholder="Full Name"></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Email\n    </ion-label>\n    <ion-input type="email" [(ngModel)]="student.guardianEmail" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Phone\n    </ion-label>\n    <ion-input type="tel" [(ngModel)]="student.guardianPhone" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Comments\n    </ion-label>\n    <ion-textarea [(ngModel)]="student.comments" placeholder="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet quos vero sequi consequatur voluptate id, impedit sed quis doloribus. Dolore."></ion-textarea>\n  </ion-item>\n  <ion-item>\n    <button ion-button color="positive" icon-left (click)="onAddHoliday()">\n        <ion-icon name="plane"></ion-icon>\n        Add Holiday Period\n      </button>\n  </ion-item>\n\n  <div class="equal-box">\n    <button ion-button color="positive" icon-left class="equal-item" (click)="onSave()">\n      <ion-icon name="checkmark-circle"></ion-icon>\n      {{ confirmTitle }}\n    </button>\n    <button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">\n      <ion-icon name="close"></ion-icon>\n      Cancel\n    </button>\n  </div>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/
+    Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["n" /* Component */])({
+        selector: "page-student-modal",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/'<ion-header>\n  <ion-toolbar>\n    <ion-title>\n      Student Info\n    </ion-title>\n\n    <ion-buttons start>\n      <button ion-button (click)="onCancel()">\n        <ion-icon name="md-close"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding [class.dark]="isArchived">\n  <ion-item>\n    <ion-avatar (click)="clickedAvatar()">\n      <img src="/assets/images/unknown.png">\n      <button ion-button class="inside-middle">Change</button>\n    </ion-avatar>\n\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Full Name\n    </ion-label>\n    <ion-input type="text" [(ngModel)]="student.name" placeholder="Full Name"></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      University\n    </ion-label>\n    <ion-select name="">\n      <ion-option>\n        QUT\n      </ion-option>\n      <ion-option>\n        UQ\n      </ion-option>\n    </ion-select>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Email\n    </ion-label>\n    <ion-input type="email" [(ngModel)]="student.email" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Phone\n    </ion-label>\n    <ion-input type="tel" [(ngModel)]="student.phone" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Start Date\n    </ion-label>\n    <ion-input type="date" [(ngModel)]="startDate" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      End Date\n    </ion-label>\n    <ion-input type="date" [(ngModel)]="endDate" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Room No.\n    </ion-label>\n    <ion-input type="number" [(ngModel)]="student.roomNo" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Name\n    </ion-label>\n    <ion-input type="text" [(ngModel)]="student.guardianName" placeholder="Full Name"></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Email\n    </ion-label>\n    <ion-input type="email" [(ngModel)]="student.guardianEmail" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Phone\n    </ion-label>\n    <ion-input type="tel" [(ngModel)]="student.guardianPhone" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Comments\n    </ion-label>\n    <ion-textarea [(ngModel)]="student.comments" placeholder="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet quos vero sequi consequatur voluptate id, impedit sed quis doloribus. Dolore."></ion-textarea>\n  </ion-item>\n  <ion-item>\n\n  </ion-item>\n\n  <ion-item>\n\n    <ion-grid>\n      <ion-row class="title">\n        <ion-col>\n          <h2>Holidays</h2>\n        </ion-col>\n        <ion-col>\n          <button ion-button color="positive" icon-left (click)="onAddHoliday()" float-right>\n                <ion-icon name="plane"></ion-icon>\n                Add\n              </button>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n\n    <div class="holiday-table">\n      <ion-grid>\n        <ion-row>\n          <ion-col>Start Date</ion-col>\n          <ion-col>End Date</ion-col>\n          <ion-col>Actions</ion-col>\n        </ion-row>\n\n        <ion-row>\n          <ion-col>2018/07/01</ion-col>\n          <ion-col>2018/08/01</ion-col>\n          <ion-col class="equal-box">\n            <button class="equal-item" (click)="onEditHoliday()">\n              <ion-icon name=\'create\' class="icon-btn"></ion-icon>\n            </button>\n            <button class="equal-item" (click)="onDeleteHoliday()">\n                <ion-icon name=\'trash\' class="icon-btn"></ion-icon>\n            </button>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n    </div>\n  </ion-item>\n\n  <div class="equal-box">\n    <button ion-button color="positive" icon-left class="equal-item" (click)="onConfirm()">\n      <ion-icon name="checkmark-circle"></ion-icon>\n      {{ confirmTitle }}\n    </button>\n    <button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">\n      <ion-icon name="close"></ion-icon>\n      Cancel\n    </button>\n  </div>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["l" /* ViewController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["l" /* ViewController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__share_data_service__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__share_data_service__["a" /* DataService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["j" /* NavParams */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_5_ionic_angular__["l" /* ViewController */],
+        __WEBPACK_IMPORTED_MODULE_2__share_data_service__["a" /* DataService */],
+        __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["g" /* LoadingController */],
+        __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["j" /* NavParams */]])
 ], StudentModalPage);
 
-var _a, _b, _c;
 //# sourceMappingURL=student-modal.js.map
 
 /***/ }),
 
-/***/ 265:
-/***/ (function(module, exports) {
-
-function webpackEmptyAsyncContext(req) {
-	return new Promise(function(resolve, reject) { reject(new Error("Cannot find module '" + req + "'.")); });
-}
-webpackEmptyAsyncContext.keys = function() { return []; };
-webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 265;
-
-/***/ }),
-
-/***/ 305:
+/***/ 387:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__ = __webpack_require__(107);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__student_modal_student_modal__ = __webpack_require__(186);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(616);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__student_modal_student_modal__ = __webpack_require__(337);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(204);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -283,7 +452,7 @@ var SettingPage = (function () {
         this.userId = this.afAuth.auth.currentUser.uid;
         var studentsRefString = "/" + this.userId + "/students";
         this.querySubject.subscribe(function (opts) {
-            console.log('options:', opts);
+            console.log("options:", opts);
             _this.queryOpts = opts;
             _this.students = _this.afDB.list(studentsRefString, _this.queryOpts);
         });
@@ -292,7 +461,7 @@ var SettingPage = (function () {
         // load all students info
     };
     SettingPage.prototype.updateFilter = function () {
-        console.log('activeOnly: ', this.activeOnly);
+        console.log("activeOnly: ", this.activeOnly);
         if (this.activeOnly) {
             this.querySubject.next({
                 query: {
@@ -305,9 +474,13 @@ var SettingPage = (function () {
             this.querySubject.next({});
         }
     };
-    SettingPage.prototype.onEdit = function (student) {
-        console.log('Edit student info: ', student);
-        var modal = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_2__student_modal_student_modal__["a" /* StudentModalPage */], { confirmTitle: "Update", student: student });
+    SettingPage.prototype.onEdit = function (student, index) {
+        console.log("Edit student info: ", student, index);
+        var modal = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_2__student_modal_student_modal__["a" /* StudentModalPage */], {
+            confirmTitle: "Update",
+            student: student,
+            index: index
+        });
         modal.present();
     };
     SettingPage.prototype.onAdd = function () {
@@ -319,23 +492,32 @@ var SettingPage = (function () {
 }());
 SettingPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["n" /* Component */])({
-        selector: "page-setting",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Setting\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <div>\n    <ion-fab right bottom>\n      <button ion-fab (click)="onAdd()">\n        <ion-icon name="add"></ion-icon>\n      </button>\n    </ion-fab>\n    <!-- <span>\n      {{ students | async | json}}\n    </span> -->\n  </div>\n  <ion-item>\n    <ion-label>Active students only</ion-label>\n    <ion-checkbox color="dark" [(ngModel)]="activeOnly" (ionChange)="updateFilter()"></ion-checkbox>\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor="let item of students | async" (click)="onEdit(item)" [class.archived]="item.status === \'archived\'">\n      <ion-avatar item-start>\n        <img src="/assets/images/unknown.png">\n      </ion-avatar>\n      <h2>{{item.name}}</h2>\n      <p> {{item.roomNo}} </p>\n      <p> {{item.email}} </p>\n      <p> {{item.lodgeStatus}} </p>\n      <p> {{item.id}} </p>\n      <p> {{item.email}} </p>\n    </ion-item>\n  </ion-list>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/
+        selector: "page-setting",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Setting\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <div>\n    <ion-fab right bottom>\n      <button ion-fab (click)="onAdd()">\n        <ion-icon name="add"></ion-icon>\n      </button>\n    </ion-fab>\n    <!-- <span>\n      {{ students | async | json}}\n    </span> -->\n  </div>\n  <ion-item>\n    <ion-label>Active students only</ion-label>\n    <ion-checkbox color="dark" [(ngModel)]="activeOnly" (ionChange)="updateFilter()"></ion-checkbox>\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor="let item of students | async;let i = index" (click)="onEdit(item, i)" [class.archived]="item.status === \'archived\'">\n      <ion-avatar item-start>\n        <img src="/assets/images/unknown.png">\n      </ion-avatar>\n      <h2>{{item.name}}</h2>\n      <p> {{item.roomNo}} </p>\n      <p> {{item.email}} </p>\n      <p> {{item.lodgeStatus}} </p>\n      <p> {{item.id}} </p>\n      <p> {{item.email}} </p>\n    </ion-item>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */],
+        __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */],
+        __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */]])
 ], SettingPage);
 
-var _a, _b, _c, _d;
 //# sourceMappingURL=setting.js.map
 
 /***/ }),
 
-/***/ 306:
+/***/ 388:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReportPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_firebase__ = __webpack_require__(198);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_firebase__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__ = __webpack_require__(638);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__share_common__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_date_fns__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_date_fns__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -345,41 +527,197 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
+
+
 
 
 var ReportPage = (function () {
     function ReportPage(navCtrl) {
         this.navCtrl = navCtrl;
+        this.searchTerm = "byDate";
+        this.loaded = false;
     }
+    ReportPage.prototype.ionViewDidLoad = function () {
+        var _this = this;
+        this.uid = __WEBPACK_IMPORTED_MODULE_2_firebase__["auth"]().currentUser.uid;
+        this.lodgeListsRefString = "/" + this.uid + "/lodgelists";
+        this.studentsRefString = "/" + this.uid + "/students";
+        this.getData().then(function (val) {
+            _this.convertFirebaseData(val);
+        });
+        this.searchUniversity = "UQ";
+        this.searchDate = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(new Date("2017-08-10"), 'YYYY-MM-DD');
+    };
+    ReportPage.prototype.convertFirebaseData = function (snapshot) {
+        this.lodgeLists = snapshot[0].val();
+        this.students = Object(__WEBPACK_IMPORTED_MODULE_4__share_common__["b" /* convertFirebaseObjectToArray */])(snapshot[1].val());
+        this.loaded = true;
+    };
+    ReportPage.prototype.onChange = function (event) {
+        this.resultData = [];
+    };
+    ReportPage.prototype.onSearch = function () {
+        var _this = this;
+        console.log("Search");
+        this.resultData = [];
+        if (!this.loaded) {
+            this.getData().then(function (snap) {
+                _this.convertFirebaseData(snap);
+                _this.doSearch();
+            });
+        }
+        else {
+            this.doSearch();
+            this.formatResultData();
+            console.log("resultData:", this.resultData);
+        }
+    };
+    ReportPage.prototype.formatResultData = function () {
+        var arr = this.resultData;
+        if (arr && arr.length > 0) {
+            this.resultData = arr.map(function (s) {
+                var date = s.date, timestamp = s.timestamp, startDate = s.startDate, endDate = s.endDate, dateOfBirth = s.dateOfBirth;
+                date && (date = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(new Date(date), 'YYYY/MM/DD'));
+                startDate && (startDate = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(new Date(startDate), 'YYYY/MM/DD'));
+                endDate && (endDate = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(new Date(endDate), 'YYYY/MM/DD'));
+                dateOfBirth && (dateOfBirth = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(new Date(dateOfBirth), 'YYYY/MM/DD'));
+                timestamp && (timestamp = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(new Date(timestamp), 'HH:MM:SS'));
+                return Object.assign(s, { date: date, timestamp: timestamp, startDate: startDate, endDate: endDate, dateOfBirth: dateOfBirth });
+            });
+        }
+    };
+    ReportPage.prototype.doSearch = function () {
+        switch (this.searchTerm) {
+            case "byDate":
+                this.searchByDate();
+                break;
+            case "byPerson":
+                this.searchByPerson();
+                break;
+            case "byUniversity":
+                this.searchByUniversity();
+                break;
+        }
+    };
+    ReportPage.prototype.searchByDate = function () {
+        var _this = this;
+        var findStudentInfo = function (sid) {
+            return _this.students.filter(function (s) { return s.id === sid; })[0];
+        };
+        var keyDate = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(new Date(this.searchDate), "YYYYMMDD");
+        var lodgelist = this.lodgeLists[keyDate];
+        this.resultData = lodgelist
+            .map(function (l) {
+            var studentInfo = findStudentInfo(l.studentId);
+            return _this.mergeInfo(studentInfo, l, _this.searchDate);
+        })
+            .filter(function (e) { return e; });
+    };
+    ReportPage.prototype.mergeInfo = function (student, lodgeInfo, date) {
+        var lodgeStatus = lodgeInfo.lodgeStatus, reason = lodgeInfo.reason, signature = lodgeInfo.signature, timestamp = lodgeInfo.timestamp, reminderTime = lodgeInfo.reminderTime;
+        return Object.assign(student, {
+            date: date,
+            lodgeStatus: lodgeStatus,
+            reason: reason,
+            signature: signature,
+            timestamp: timestamp,
+            reminderTime: reminderTime
+        });
+    };
+    ReportPage.prototype.searchByPerson = function () {
+        var _this = this;
+        var flatten = function (arr) {
+            var result = [];
+            for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+                var outer = arr_1[_i];
+                for (var _a = 0, outer_1 = outer; _a < outer_1.length; _a++) {
+                    var inner = outer_1[_a];
+                    if (inner) {
+                        result.push(inner);
+                    }
+                }
+            }
+            return result;
+        };
+        var name = this.searchPerson.trim();
+        var result = this.students.filter(function (s) { return s.name.includes(name); }).map(function (s) {
+            var lodgeInfos = [];
+            for (var keydate in _this.lodgeLists) {
+                var list = _this.lodgeLists[keydate];
+                var date = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(keydate, 'YYYY-MM-DD');
+                var result_1 = list.filter(function (l) { return l.studentId == s.id; })[0];
+                if (result_1) {
+                    lodgeInfos.push(_this.mergeInfo(s, result_1, date));
+                }
+            }
+            return lodgeInfos;
+        });
+        this.resultData = flatten(result);
+    };
+    ReportPage.prototype.searchByUniversity = function () {
+        var _this = this;
+        var findLodgeInfoByStudentId = function (sid, keydate) {
+            var date = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(new Date(keydate), "YYYYMMDD");
+            var lodgelist = _this.lodgeLists[date];
+            return lodgelist.filter(function (s) { return s.studentId === sid; })[0];
+        };
+        var university = this.searchUniversity.trim();
+        this.resultData = this.students
+            .filter(function (s) { return s.university == university; })
+            .map(function (s) {
+            var lodgeInfo = findLodgeInfoByStudentId(s.id, _this.searchDate);
+            if (lodgeInfo) {
+                return _this.mergeInfo(s, lodgeInfo, _this.searchDate);
+            }
+        })
+            .filter(function (e) { return e; });
+    };
+    ReportPage.prototype.getData = function () {
+        var lodgeLists = [];
+        var students = [];
+        var lodgeListsRef = __WEBPACK_IMPORTED_MODULE_2_firebase__["database"]().ref(this.lodgeListsRefString);
+        var studentsRef = __WEBPACK_IMPORTED_MODULE_2_firebase__["database"]().ref(this.studentsRefString);
+        var lodgeStream = __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx___default.a.Observable.from(lodgeListsRef.once("value"));
+        var studentsStream = __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx___default.a.Observable.from(studentsRef.once("value"));
+        return __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx___default.a.Observable.forkJoin(lodgeStream, studentsStream).toPromise();
+    };
+    ReportPage.prototype.onExport = function () {
+        console.log("export report");
+    };
     return ReportPage;
 }());
 ReportPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: "page-report",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Report\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/
+        selector: "page-report",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/'<ion-header>\n	<ion-navbar>\n		<ion-title>\n			Report\n		</ion-title>\n		<ion-buttons end>\n			<button (click)="onExport()">\n				<ion-icon name="md-print" class="big_icon"></ion-icon>\n			</button>\n		</ion-buttons>\n	</ion-navbar>\n\n	<ion-toolbar>\n		<ion-segment [(ngModel)]="searchTerm" (ionChange)="onChange($event)">\n			<ion-segment-button value="byDate">\n				By Date\n			</ion-segment-button>\n			<ion-segment-button value="byPerson">\n				By Person\n			</ion-segment-button>\n			<ion-segment-button value="byUniversity">\n				By University\n			</ion-segment-button>\n		</ion-segment>\n	</ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n	<div [ngSwitch]="searchTerm">\n		<div *ngSwitchCase="\'byDate\'">\n			<ion-list>\n				<ion-item>\n					<ion-label>Date</ion-label>\n					<ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>\n				</ion-item>\n			</ion-list>\n		</div>\n\n		<div *ngSwitchCase="\'byPerson\'">\n			<ion-list>\n				<ion-item>\n					<ion-label>Student</ion-label>\n					<ion-input [(ngModel)]="searchPerson"></ion-input>\n				</ion-item>\n			</ion-list>\n		</div>\n\n		<div *ngSwitchCase="\'byUniversity\'">\n			<ion-list>\n				<ion-item>\n					<ion-label>\n						University\n					</ion-label>\n					<ion-select [(ngModel)]="searchUniversity">\n						<ion-option>\n							QUT\n						</ion-option>\n						<ion-option>\n							UQ\n						</ion-option>\n					</ion-select>\n				</ion-item>\n				<ion-item>\n					<ion-label>Date</ion-label>\n					<ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>\n				</ion-item>\n			</ion-list>\n		</div>\n	</div>\n	<button ion-button block medium (click)="onSearch($event)" item-end>\n						<ion-icon name="search"></ion-icon>\n						<span class="search_text">Search</span>\n					</button>\n	<ion-list *ngIf="resultData">\n		<!-- <ion-row>\n			<ion-col></ion-col>\n			<ion-col>University</ion-col>\n			<ion-col>Student ID</ion-col>\n			<ion-col>Name</ion-col>\n			<ion-col>DOB</ion-col>\n			<ion-col>Room Number</ion-col>\n			<ion-col>Time Signed In</ion-col>\n			<ion-col>Singnature</ion-col>\n			<ion-col>Lease Start</ion-col>\n			<ion-col>Lease End</ion-col>\n		</ion-row> -->\n		<ion-item *ngFor="let item of resultData" [class.highlight]="item.lodgeStatus === \'unlodged\'">\n			<ion-row>\n				<span class="left">Date:</span>\n				<span class="right">{{item.date}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">University:</span>\n				<span class="right">{{item.university}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Student ID:</span>\n				<span class="right">{{item.id}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Name:</span>\n				<span class="right">{{item.name}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">DOB:</span>\n				<span class="right">{{item.dateOfBirth}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Room Number:</span>\n				<span class="right">{{item.roomNo}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Time Signed In:</span>\n				<span class="right">{{item.timestamp}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Singnature:</span>\n				<span class="right"><a [href]="item.signature" *ngIf="item.signature">link</a></span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Lease Start:</span>\n				<span class="right">{{item.startDate}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Lease End:</span>\n				<span class="right">{{item.endDate}}</span>\n			</ion-row>\n		</ion-item>\n\n	</ion-list>\n\n	<!-- <div class="search">\n		<ion-list radio-group [(ngModel)]="searchTerm">\n			<ion-item>\n				<ion-label>By Date</ion-label>\n				<ion-radio (ionSelect)="onSelectChange()" value="bydate"></ion-radio>\n			</ion-item>\n			<ion-item>\n				<ion-label>Date</ion-label>\n				<ion-datetime [disabled]="this.searchTerm != \'bydate\'" displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>\n			</ion-item>\n			<ion-item>\n				<ion-label>By Person</ion-label>\n				<ion-radio (ionSelect)="onSelectChange()" value="byperson"></ion-radio>\n			</ion-item>\n			<ion-item>\n				<ion-label>Name</ion-label>\n				<ion-input [disabled]="this.searchTerm != \'byperson\'" [(ngModel)]="searchPerson"></ion-input>\n			</ion-item>\n			<ion-item>\n				<ion-label>By University</ion-label>\n				<ion-radio (ionSelect)="onSelectChange()" value="byuniversity"></ion-radio>\n			</ion-item>\n			<ion-item>\n				<ion-label>University</ion-label>\n				<ion-input [disabled]="this.searchTerm != \'byuniversity\'" [(ngModel)]="searchUniversity"></ion-input>\n			</ion-item>\n\n		</ion-list>\n		<button ion-button block medium (click)="onSearch($event)" item-end>\n						<ion-icon name="search"></ion-icon>\n						Search\n					</button>\n	</div>\n\n	<div class="content">\n		<ion-card *ngFor="let record of records">\n			<ion-card-content>\n				<ion-row>\n					<ion-col width-40>\n						<p class="left">Student name:</p>\n					</ion-col>\n					<ion-col widht-60>\n						<p class="right"> {{record.name}} </p>\n					</ion-col>\n				</ion-row>\n\n			</ion-card-content>\n		</ion-card>\n	</div> -->\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]) === "function" && _a || Object])
 ], ReportPage);
 
+var _a;
 //# sourceMappingURL=report.js.map
 
 /***/ }),
 
-/***/ 307:
+/***/ 411:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LodgePage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__loading_loading__ = __webpack_require__(93);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2_database__ = __webpack_require__(107);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__ = __webpack_require__(479);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__share_data_service__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_date_fns__ = __webpack_require__(480);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_date_fns__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lodge_form_lodge_form__ = __webpack_require__(343);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lodge_detail_lodge_detail__ = __webpack_require__(219);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_auth__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__loading_loading__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_angularfire2_database__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_map__ = __webpack_require__(401);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__share_data_service__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__share_common__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_date_fns__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_date_fns__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__lodge_form_lodge_form__ = __webpack_require__(412);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -390,8 +728,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-// import { Student } from "./../../share";
-// import { LoginPage } from "./../login/login";
+
+
 
 
 
@@ -416,9 +754,9 @@ var LodgePage = (function () {
     }
     LodgePage.prototype.ionViewDidLoad = function () {
         var _this = this;
-        this.loader = new __WEBPACK_IMPORTED_MODULE_3__loading_loading__["a" /* LoadingPage */](this.loadingCtrl);
+        this.loader = new __WEBPACK_IMPORTED_MODULE_4__loading_loading__["a" /* LoadingPage */](this.loadingCtrl);
         this.selectedDate = new Date();
-        this.dateString = Object(__WEBPACK_IMPORTED_MODULE_7_date_fns__["format"])(this.selectedDate, "YYYYMMDD");
+        this.dateString = Object(__WEBPACK_IMPORTED_MODULE_9_date_fns__["format"])(this.selectedDate, "YYYYMMDD");
         this.userId = this.dbService.uid;
         var todayRef = "/" + this.userId + "/lodgelists/" + this.dateString;
         var listRef = this.afDB.list(todayRef);
@@ -444,7 +782,9 @@ var LodgePage = (function () {
                         var stud = data.val();
                         var student = Object.assign(stud, {
                             lodgeStatus: stu.lodgeStatus,
-                            reason: stu.reason
+                            reason: stu.reason,
+                            signature: stu.signature,
+                            timestamp: stu.timestamp
                         });
                         // console.log('generate info: ', student);
                         list_1.push(student);
@@ -456,9 +796,11 @@ var LodgePage = (function () {
         this.site = this.afDB.object("/" + this.userId + "/site");
         this.wholeList.subscribe(function (d) {
             console.log("whole list", d);
-            if (d.length > 0) {
-                var unlodgeList = d.filter(function (a) { return a.lodgeStatus === 'unlodged'; });
-                _this.events.publish("unlodge:count", unlodgeList.length);
+            if (d) {
+                if (d.length > 0) {
+                    var unlodgeList = d.filter(function (a) { return a.lodgeStatus === "unlodged"; });
+                    _this.events.publish("unlodge:count", unlodgeList.length);
+                }
             }
         });
     };
@@ -475,37 +817,78 @@ var LodgePage = (function () {
         var listRef = this.afDB.database.ref(lodgeListRefString);
         studentRef.once("value", function (snap) {
             console.log(snap.val());
-            var students = snap.val();
+            var stuSnap = snap.val();
+            var students = Object(__WEBPACK_IMPORTED_MODULE_8__share_common__["b" /* convertFirebaseObjectToArray */])(stuSnap);
+            console.log("students:", students);
             var lodgeList = [];
-            students.filter(function (s) { return s.status === "active"; }).forEach(function (s) {
-                console.log("student:", s, "key:", s.id);
-                var _a = _this.checkIfNeedToLodge(s), reason = _a.reason, status = _a.status;
-                var lodgeInfo = {
-                    studentId: s.id,
-                    lodgeStatus: status,
-                    reason: reason
-                };
-                console.log("lodgeInfo:", lodgeInfo);
-                lodgeList.push(lodgeInfo);
-            });
-            listRef.update(lodgeList);
+            if (students) {
+                if (students.length > 0) {
+                    students.filter(function (s) { return s.status === "active"; }).forEach(function (s) {
+                        console.log("student:", s, "key:", s.id);
+                        var _a = _this.checkIfNeedToLodge(s), needLodge = _a.needLodge, reason = _a.reason, status = _a.status, signature = _a.signature, timestamp = _a.timestamp;
+                        if (needLodge) {
+                            var lodgeInfo = {
+                                studentId: s.id,
+                                lodgeStatus: status,
+                                reason: reason,
+                                signature: signature,
+                                timestamp: timestamp
+                            };
+                            console.log("lodgeInfo:", lodgeInfo);
+                            lodgeList.push(lodgeInfo);
+                        }
+                    });
+                    listRef.update(lodgeList);
+                }
+            }
         });
     };
     LodgePage.prototype.checkIfNeedToLodge = function (student) {
+        var needLodge = true;
         var reason = "";
         var status = "unlodged";
+        var signature = "";
+        var timestamp = "";
+        if (Object(__WEBPACK_IMPORTED_MODULE_9_date_fns__["isWithinRange"])(this.selectedDate, student.startDate, student.endDate)) {
+            var _a = this.checkHolidays(student), reason_1 = _a.reason, status_1 = _a.status, signature_1 = _a.signature;
+        }
+        else if (Object(__WEBPACK_IMPORTED_MODULE_9_date_fns__["isBefore"])(student.endDate, this.selectedDate)) {
+            // update student's status to archived.
+            needLodge = false;
+            status = "";
+            var studentKey = student.id;
+            var studentRef = this.db.ref("/" + this.userId + "/students/" + studentKey);
+            studentRef.update({
+                status: "archived"
+            });
+        }
+        else if (Object(__WEBPACK_IMPORTED_MODULE_9_date_fns__["isBefore"])(this.selectedDate, student.startDate)) {
+            needLodge = false;
+            status = "";
+        }
+        return { needLodge: needLodge, reason: reason, status: status, signature: signature, timestamp: timestamp };
+    };
+    LodgePage.prototype.checkHolidays = function (student) {
+        var val = {
+            reason: "",
+            status: "unlodged",
+            signature: "",
+            timestamp: ""
+        };
         var holidays = student.holidayPeriods;
         if (holidays && holidays.length > 0) {
             for (var i = 0; i < holidays.length; i++) {
                 var holiday = holidays[i];
-                if (Object(__WEBPACK_IMPORTED_MODULE_7_date_fns__["isWithinRange"])(this.selectedDate, holiday.startDate, holiday.endDate)) {
-                    reason = "InHoliday";
-                    status = "lodged";
+                if (Object(__WEBPACK_IMPORTED_MODULE_9_date_fns__["isWithinRange"])(this.selectedDate, holiday.startDate, holiday.endDate)) {
+                    val.reason = "InHoliday";
+                    val.status = "lodged";
+                    val.signature = Object(__WEBPACK_IMPORTED_MODULE_9_date_fns__["format"])(holiday.startDate, "YYYY-MM-DD") + " ~ " + Object(__WEBPACK_IMPORTED_MODULE_9_date_fns__["format"])(holiday.endDate, "YYYY-MM-DD");
+                    val.timestamp = new Date().toISOString();
                     break;
                 }
             }
         }
-        return { reason: reason, status: status };
+        return val;
     };
     LodgePage.prototype.onLogout = function () {
         var root = this._app.getRootNavs()[0];
@@ -515,40 +898,42 @@ var LodgePage = (function () {
         this.selectedSegment = newVal;
         console.log(this.selectedSegment);
     };
-    LodgePage.prototype.onSignIn = function (student, index) {
+    LodgePage.prototype.onSignIn = function (student, slidingItem, index) {
+        slidingItem.close();
         console.log("Sign in with :", student);
         // should show sign in form to collect signature
         //  and save it to the database
         var studentRef = "/" + this.userId + "/lodgelists/" + this.dateString;
-        var signInForm = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_8__lodge_form_lodge_form__["a" /* LodgeFormPage */], {
+        var signInForm = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_10__lodge_form_lodge_form__["a" /* LodgeFormPage */], {
             student: student,
             studentRef: studentRef,
             index: index
         });
         signInForm.present();
     };
-    LodgePage.prototype.onText = function (student) {
+    LodgePage.prototype.onText = function (student, slidingItem) {
+        slidingItem.close();
         console.log("Text with :", student);
         //  Text student
         if (student.phone && student.guardianPhone) {
             // if have more than 1 phone numbers in student record,
             //  show a popup window to choose.
-            var alert = this.alertCtrl.create();
-            alert.setTitle("Select phone number");
-            alert.addInput({
+            var alert_1 = this.alertCtrl.create();
+            alert_1.setTitle("Select phone number");
+            alert_1.addInput({
                 type: "radio",
                 label: student.phone,
                 value: student.phone,
                 checked: true
             });
-            alert.addInput({
+            alert_1.addInput({
                 type: "radio",
                 label: student.guardianPhone,
                 value: student.guardianPhone,
                 checked: false
             });
-            alert.addButton("Cancel");
-            alert.addButton({
+            alert_1.addButton("Cancel");
+            alert_1.addButton({
                 text: "Ok",
                 handler: function (data) {
                     console.log("Radio data:", data);
@@ -556,47 +941,65 @@ var LodgePage = (function () {
                     // make a call
                 }
             });
-            alert.present();
+            alert_1.present();
         }
         else {
             var phone = student.phone || student.guardianPhone;
             // make a call
         }
     };
-    LodgePage.prototype.onCall = function (student) {
+    LodgePage.prototype.onCall = function (student, slidingItem) {
+        slidingItem.close();
         console.log("Call with :", student);
         //  Call student
         // if have more than 1 phone numbers in student record,
         //  show a popup window to choose.
     };
-    LodgePage.prototype.onEmail = function (student) {
+    LodgePage.prototype.onEmail = function (student, slidingItem) {
+        slidingItem.close();
         console.log("Email with :", student);
         //  Email student
+    };
+    LodgePage.prototype.onShowDetail = function (student) {
+        if (student.lodgeStatus == "lodged") {
+            // show lodged detail information
+            var lodgeDetail = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_0__lodge_detail_lodge_detail__["a" /* LodgeDetailPage */], { student: student });
+            lodgeDetail.present();
+        }
     };
     return LodgePage;
 }());
 LodgePage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
-        selector: "page-lodge",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Lodge</ion-title>\n    <ion-buttons end>\n      <button ion-button (click)="onLogout()">\n        Logout\n        <ion-icon name="log-out"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-navbar>\n\n  <h1 center>{{today}}</h1>\n  <ion-toolbar>\n    <ion-segment [(ngModel)]="selectedSegment">\n      <ion-segment-button value="unlodged">\n        Sign In\n      </ion-segment-button>\n      <ion-segment-button value="lodged">\n        Already Signed In\n      </ion-segment-button>\n    </ion-segment>\n  </ion-toolbar>\n  <!-- <div>\n    <span>\n        wholeList: {{wholeList | async |json}}\n      </span>\n  </div> -->\n</ion-header>\n\n<ion-content padding>\n\n  <ion-list *ngIf="wholeList">\n    <ion-item-sliding *ngFor="let item of wholeList | async; let i = index " [class.hide]="item.lodgeStatus !== selectedSegment ">\n      <ion-item>\n        <ion-avatar item-start>\n          <img src="/assets/images/unknown.png">\n        </ion-avatar>\n        <h2>{{item.name}}</h2>\n        <p> {{item.roomNo}} </p>\n        <p> {{item.email}} </p>\n        <p> {{item.lodgeStatus}} </p>\n        <p> {{item.id}} </p>\n        <p> {{item.email}} </p>\n      </ion-item>\n      <ion-item-options side="left">\n        <button ion-button color="primary" (click)="onText(item)">\n                <ion-icon name="text"></ion-icon>\n                Text\n              </button>\n        <button ion-button color="secondary" (click)="onCall(item)">\n                <ion-icon name="call"></ion-icon>\n                Call\n              </button>\n        <button ion-button color="primary" (click)="onEmail(item)">\n                  <ion-icon name="mail"></ion-icon>\n                  Email \n                </button>\n      </ion-item-options>\n      <ion-item-options side="right">\n        <button ion-button color="primary" (click)="onSignIn(item, i)">\n                <ion-icon name="mail"></ion-icon>\n                SignIn\n              </button>\n      </ion-item-options>\n    </ion-item-sliding>\n  </ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/
+    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({
+        selector: "page-lodge",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/'<ion-header>\n	<ion-navbar>\n		<ion-title>Lodge</ion-title>\n		<ion-buttons end>\n			<button (click)="onLogout()">\n        <ion-icon name="log-out" class="big_icon"></ion-icon>\n      </button>\n		</ion-buttons>\n	</ion-navbar>\n\n	<h1 center>{{todayStr}}</h1>\n	<ion-toolbar>\n		<ion-segment [(ngModel)]="selectedSegment">\n			<ion-segment-button value="unlodged">\n				Sign In\n			</ion-segment-button>\n			<ion-segment-button value="lodged">\n				Already Signed In\n			</ion-segment-button>\n		</ion-segment>\n	</ion-toolbar>\n	<!-- <div>\n    <span>\n        wholeList: {{wholeList | async |json}}\n      </span>\n  </div> -->\n</ion-header>\n\n<ion-content padding>\n\n	<ion-list *ngIf="wholeList">\n		<ion-item-sliding *ngFor="let item of wholeList | async; let i = index" [class.hide]="item.lodgeStatus !== selectedSegment "\n		  #slidingItem (click)="onShowDetail(item)">\n\n			<ion-item [class.lodged]="item.lodgeStatus === \'lodged\'" class="box">\n				<ion-avatar item-start>\n					<img src="/assets/images/unknown.png">\n				</ion-avatar>\n				<h2>{{item.name}}</h2>\n				<p> {{item.roomNo}} </p>\n				<!-- <p> {{item.email}} </p>\n				<p> {{item.lodgeStatus}} </p>\n				<p> {{item.id}} </p>\n				<p> {{item.email}} </p> -->\n			</ion-item>\n			<ion-item-options side="left" [class.hide]="item.lodgeStatus === \'lodged\' ">\n				<button ion-button color="primary" (click)="onText(item, slidingItem)">\n									<ion-icon name="text"></ion-icon>\n									Text\n								</button>\n				<button ion-button color="secondary" (click)="onCall(item, slidingItem)">\n									<ion-icon name="call"></ion-icon>\n									Call\n								</button>\n				<button ion-button color="primary" (click)="onEmail(item, slidingItem)">\n										<ion-icon name="mail"></ion-icon>\n										Email\n									</button>\n			</ion-item-options>\n			<ion-item-options side="right" [class.hide]="item.lodgeStatus === \'lodged\' ">\n				<button ion-button color="primary" (click)="onSignIn(item, slidingItem, i)">\n									<ion-icon name="mail"></ion-icon>\n									SignIn\n								</button>\n			</ion-item-options>\n		</ion-item-sliding>\n	</ion-list>\n\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* ModalController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["h" /* ModalController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["a" /* AlertController */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4_angularfire2_database__["a" /* AngularFireDatabase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_angularfire2_database__["a" /* AngularFireDatabase */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__["a" /* AngularFireAuth */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_6__share_data_service__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__share_data_service__["a" /* DataService */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["c" /* Events */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["c" /* Events */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["b" /* App */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["b" /* App */]) === "function" && _j || Object])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3_ionic_angular__["i" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["g" /* LoadingController */],
+        __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["h" /* ModalController */],
+        __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["a" /* AlertController */],
+        __WEBPACK_IMPORTED_MODULE_5_angularfire2_database__["a" /* AngularFireDatabase */],
+        __WEBPACK_IMPORTED_MODULE_1_angularfire2_auth__["a" /* AngularFireAuth */],
+        __WEBPACK_IMPORTED_MODULE_7__share_data_service__["a" /* DataService */],
+        __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["c" /* Events */],
+        __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["b" /* App */]])
 ], LodgePage);
 
-var _a, _b, _c, _d, _e, _f, _g, _h, _j;
 //# sourceMappingURL=lodge.js.map
 
 /***/ }),
 
-/***/ 343:
+/***/ 412:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LodgeFormPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__loading_loading__ = __webpack_require__(93);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase__ = __webpack_require__(582);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__loading_loading__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase__ = __webpack_require__(198);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_firebase__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__toast_zttoast__ = __webpack_require__(897);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__share_common__ = __webpack_require__(120);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -606,6 +1009,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
+
 
 
 
@@ -622,57 +1027,115 @@ var LodgeFormPage = (function () {
         this.studentRef = this.navParams.get("studentRef");
         this.index = this.navParams.get("index");
         this.db = __WEBPACK_IMPORTED_MODULE_3_firebase___default.a.database();
+        this.uid = __WEBPACK_IMPORTED_MODULE_3_firebase___default.a.auth().currentUser.uid;
+        this._toast = new __WEBPACK_IMPORTED_MODULE_4__toast_zttoast__["a" /* ZTToast */]();
     }
+    LodgeFormPage.prototype.resizeCanvas = function () {
+        var ratio = Math.max(window.devicePixelRatio || 1, 1);
+        this.canvas.width = this.canvas.offsetWidth * ratio;
+        this.canvas.height = this.canvas.offsetHeight * ratio;
+        this.canvas.getContext("2d").scale(ratio, ratio);
+    };
     LodgeFormPage.prototype.ionViewDidLoad = function () {
         console.log("ionViewDidLoad LodgeFormPage");
         this.loader = new __WEBPACK_IMPORTED_MODULE_0__loading_loading__["a" /* LoadingPage */](this.loadingCtrl);
+        this.canvas = document.getElementById("canvas");
+        this.pad = new SignaturePad(this.canvas);
+        window.onresize = this.resizeCanvas;
+        this.resizeCanvas();
     };
     LodgeFormPage.prototype.onSubmit = function () {
-        var _this = this;
         // submit the record
-        this.loader.show();
+        // this.loader.show();
         console.log("submit signin information");
         console.log("index", this.index);
+        this.savePic();
         // should show progress bar
         // also show error/success message to let user know.
-        var listRef = this.db.ref(this.studentRef);
-        listRef
-            .child(this.index.toString())
-            .update({ lodgeStatus: "lodged", reason: "signature" })
-            .then(function (_) {
-            _this.loader.hide();
-            _this.viewCtrl.dismiss();
-        }, function (err) {
-            _this.loader.hide();
-            _this.error = true;
-            _this.errorMessage = err.message;
-        });
-        // let stuRef = listRef.orderByChild("studentId").equalTo(this.student.id);
-        // let stuRef = listRef.
-        // console.log(stuRef);
-        // stuRef.ref
+        // let listRef = this.db.ref(this.studentRef);
+        // listRef
+        //   .child(this.index.toString())
         //   .update({ lodgeStatus: "lodged", reason: "signature" })
-        //   .then(_ => {
+        //   .then(
+        //   _ => {
+        //     this.loader.hide();
         //     this.viewCtrl.dismiss();
-        //   });
-        // stuRef.once('value', data => {
-        //   console.log(data);
-        //   console.log(data.val());
-        // });
-        // listRef.once("value", data => {
-        //   let students = data.val();
-        //   students.filter(s => s.studentId = this.student.id)
-        // })
+        //   },
+        //   err => {
+        //     this.loader.hide();
+        //     this.error = true;
+        //     this.errorMessage = err.message;
+        //   }
+        //   );
     };
     LodgeFormPage.prototype.onCancel = function () {
         console.log("Cancel signin");
         this.viewCtrl.dismiss();
     };
+    LodgeFormPage.prototype.savePic = function () {
+        var _this = this;
+        var pic = this.pad.toDataURL();
+        var _a = pic.split(","), contentType = _a[0], b64Data = _a[1];
+        var picData = Object(__WEBPACK_IMPORTED_MODULE_5__share_common__["a" /* b64ToBlob */])(b64Data, contentType);
+        if (this.uid) {
+            this._toast.info("Start uploading signature");
+            var ref = __WEBPACK_IMPORTED_MODULE_3_firebase___default.a.storage().ref("/" + this.uid);
+            var generatedPicName = this.generatePictureName();
+            var meta = {
+                contentType: "image/jpeg",
+                customMetadata: {
+                    activity: "lodge"
+                }
+            };
+            // const showUploadPaused = () => {
+            //   this._toast.warning("Upload is paused");
+            // };
+            var showUploadError_1 = function (err) {
+                _this._toast.error(err.message);
+            };
+            var showUploadSuccess_1 = function () {
+                _this._toast.success("Upload is done!");
+                // this.saveRecord
+            };
+            ref.child(generatedPicName).put(picData, meta).then(function (snapshot) {
+                console.log("snapshot:", snapshot);
+                _this.url = snapshot.downloadURL;
+                showUploadSuccess_1();
+                _this.updateLodgeStatus();
+                // use url to update lodge information.
+            }, function (err) {
+                showUploadError_1(err);
+            });
+        }
+    };
+    LodgeFormPage.prototype.updateLodgeStatus = function () {
+        var _this = this;
+        this._toast.info("Updating sign in record");
+        var listRef = this.db.ref(this.studentRef);
+        listRef
+            .child(this.index.toString())
+            .update({
+            lodgeStatus: "lodged",
+            reason: "signature",
+            timestamp: new Date().toISOString(),
+            signature: this.url
+        })
+            .then(function (_) {
+            _this._toast.success("Saved successfully!");
+            _this.viewCtrl.dismiss();
+        }, function (err) {
+            _this._toast.error(err.message);
+        });
+    };
+    LodgeFormPage.prototype.generatePictureName = function () {
+        var d = new Date().valueOf();
+        return this.uid + d + ".jpg";
+    };
     return LodgeFormPage;
 }());
 LodgeFormPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
-        selector: "page-lodge-form",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/'<ion-header>\n\n  <ion-navbar>\n    <ion-title>Sign In</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <div>\n    <h1>This is a signature form</h1>\n    <span>\n      {{student |json}}\n    </span>\n  </div>\n\n  <button ion-button (click)="onSubmit()">\n    Submit\n  </button>\n  <button ion-button (click)="onCancel()">\n      Cancel\n    </button>\n\n  <div *ngIf="error">\n    <h2>{{errorMessage}}</h2>\n  </div>\n\n\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/
+        selector: "page-lodge-form",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/'<ion-header>\n\n	<ion-navbar>\n		<ion-title>Sign In</ion-title>\n	</ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n	<ion-list>\n		<ion-row>\n			<h2> {{ student?.name}}</h2>\n		</ion-row>\n		<ion-row>\n			<p> Room No.: {{student?.roomNo}} </p>\n		</ion-row>\n		<ion-row class=\'canvas-container\'>\n			<canvas id="canvas"></canvas>\n		</ion-row>\n	</ion-list>\n	<ion-row>\n		<ion-col width-50>\n			<button ion-button (click)="onSubmit()" block large>\n        Submit\n      </button>\n		</ion-col>\n		<ion-col>\n			<button ion-button (click)="onCancel()" block large>\n          Cancel\n        </button>\n		</ion-col>\n	</ion-row>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */],
@@ -684,14 +1147,14 @@ LodgeFormPage = __decorate([
 
 /***/ }),
 
-/***/ 354:
+/***/ 413:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SignupPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__ = __webpack_require__(70);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -737,7 +1200,7 @@ var SignupPage = (function () {
 }());
 SignupPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: "page-signup",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\signup\signup.html"*/'<ion-header>\n\n  <ion-navbar>\n    <ion-title>Signup</ion-title>\n  </ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n  <ion-list inset>\n    <ion-item>\n      <ion-label>Email</ion-label>\n      <ion-input type="email" [(ngModel)]="user.email"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label>Password</ion-label>\n      <ion-input type="password" [(ngModel)]="user.password"></ion-input>\n    </ion-item>\n  </ion-list>\n  <button ion-button (click)="onSubmit(user)">Submit</button>\n  <button ion-button (click)="onCancel()">Cancel</button>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\signup\signup.html"*/
+        selector: "page-signup",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\signup\signup.html"*/'<ion-header>\n\n	<ion-navbar>\n		<ion-title>Signup</ion-title>\n	</ion-navbar>\n\n</ion-header>\n\n\n<!-- <ion-content padding>\n  <ion-list inset>\n    <ion-item>\n      <ion-label>Email</ion-label>\n      <ion-input type="email" [(ngModel)]="user.email"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label>Password</ion-label>\n      <ion-input type="password" [(ngModel)]="user.password"></ion-input>\n    </ion-item>\n  </ion-list>\n  <button ion-button (click)="onSubmit(user)">Submit</button>\n  <button ion-button (click)="onCancel()">Cancel</button>\n</ion-content> -->\n\n<ion-content padding>\n	<ion-list>\n		<ion-item>\n			<ion-label>\n				Email\n			</ion-label>\n			<ion-input type="email" placeholder="your@email.com" [(ngModel)]="user.email"></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Password\n			</ion-label>\n			<ion-input type="password" placeholder="" [(ngModel)]="user.password"></ion-input>\n		</ion-item>\n	</ion-list>\n	<button ion-button color="default" block (click)="onSubmit(user)">\n      Sign up\n    </button>\n	<button ion-button color="secondary" block (click)="onCancel()">\n      Cancel\n    </button>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\signup\signup.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["j" /* NavParams */],
@@ -748,17 +1211,17 @@ SignupPage = __decorate([
 
 /***/ }),
 
-/***/ 355:
+/***/ 414:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tabs_tabs__ = __webpack_require__(356);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__signup_signup__ = __webpack_require__(354);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__loading_loading__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tabs_tabs__ = __webpack_require__(415);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__signup_signup__ = __webpack_require__(413);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__loading_loading__ = __webpack_require__(83);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -810,7 +1273,7 @@ var LoginPage = (function () {
 }());
 LoginPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({
-        selector: "page-login",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\login\login.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>Login</ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list inset>\n    <ion-item>\n      <ion-label>Email</ion-label>\n      <ion-input type="email" [(ngModel)]="user.email"></ion-input>\n    </ion-item>\n    <ion-item>\n      <ion-label>Password</ion-label>\n      <ion-input type="password" [(ngModel)]="user.password"></ion-input>\n    </ion-item>\n  </ion-list>\n  <button ion-button outline color="secondary" (click)="onLogin()">Login</button>\n  <button ion-button outline color="danger" (click)="onSignup()">Signup</button>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\login\login.html"*/
+        selector: "page-login",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\login\login.html"*/'<ion-header>\n	<ion-navbar>\n		<ion-title>Login</ion-title>\n	</ion-navbar>\n</ion-header>\n\n<ion-content padding>\n	<ion-list>\n		<ion-item>\n			<ion-label>\n				Email\n			</ion-label>\n			<ion-input type="email" placeholder="your@email.com" [(ngModel)]="user.email"></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Password\n			</ion-label>\n			<ion-input type="password" placeholder="888888" [(ngModel)]="user.password"></ion-input>\n		</ion-item>\n	</ion-list>\n	<div class="spacer" style="height:40px;"></div>\n	<button ion-button color="stable" block (click)="onLogin()">\n      Log in\n    </button>\n	<button ion-button clear color="positive" block (click)="onSignup()">\n      Or create an account\n    </button>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\login\login.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_3_ionic_angular__["i" /* NavController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["g" /* LoadingController */], __WEBPACK_IMPORTED_MODULE_3_ionic_angular__["j" /* NavParams */], __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__["a" /* AngularFireAuth */]])
 ], LoginPage);
@@ -819,16 +1282,16 @@ LoginPage = __decorate([
 
 /***/ }),
 
-/***/ 356:
+/***/ 415:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabsPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__report_report__ = __webpack_require__(306);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__setting_setting__ = __webpack_require__(305);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lodge_lodge__ = __webpack_require__(307);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__report_report__ = __webpack_require__(388);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__setting_setting__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lodge_lodge__ = __webpack_require__(411);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(28);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -860,21 +1323,20 @@ var TabsPage = (function () {
 TabsPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["n" /* Component */])({template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\tabs\tabs.html"*/'<ion-tabs selectedIndex="2">\n  <ion-tab [root]="tab1Root" tabTitle="Lodge" tabIcon="home" [tabBadge]="unlodgeCount" tabBadgeStyle="danger"></ion-tab>\n  <ion-tab [root]="tab2Root" tabTitle="Report" tabIcon="document"></ion-tab>\n  <ion-tab [root]="tab3Root" tabTitle="Setting" tabIcon="settings"></ion-tab>\n</ion-tabs>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\tabs\tabs.html"*/
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* Events */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* Events */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* Events */]])
 ], TabsPage);
 
-var _a;
 //# sourceMappingURL=tabs.js.map
 
 /***/ }),
 
-/***/ 361:
+/***/ 420:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(362);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(378);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(421);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(425);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -882,38 +1344,40 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 378:
+/***/ 425:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export firebaseConfig */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_student_modal_student_modal__ = __webpack_require__(186);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__pages_setting_setting__ = __webpack_require__(305);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__pages_report_report__ = __webpack_require__(306);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_lodge_lodge__ = __webpack_require__(307);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_signup_signup__ = __webpack_require__(354);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_login_login__ = __webpack_require__(355);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_platform_browser__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_ionic_angular__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__app_component__ = __webpack_require__(605);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__pages_tabs_tabs__ = __webpack_require__(356);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_loading_loading__ = __webpack_require__(93);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__angular_http__ = __webpack_require__(614);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__ionic_native_status_bar__ = __webpack_require__(357);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_splash_screen__ = __webpack_require__(360);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_angularfire2__ = __webpack_require__(615);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_angularfire2_database__ = __webpack_require__(107);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_angularfire2_auth__ = __webpack_require__(63);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__share_data_service__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__pages_lodge_form_lodge_form__ = __webpack_require__(343);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_lodge_detail_lodge_detail__ = __webpack_require__(219);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__pages_student_modal_student_modal__ = __webpack_require__(337);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__pages_setting_setting__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_report_report__ = __webpack_require__(388);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_lodge_lodge__ = __webpack_require__(411);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_signup_signup__ = __webpack_require__(413);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_login_login__ = __webpack_require__(414);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__app_component__ = __webpack_require__(898);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_tabs_tabs__ = __webpack_require__(415);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_loading_loading__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(902);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_status_bar__ = __webpack_require__(416);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_native_splash_screen__ = __webpack_require__(419);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_angularfire2__ = __webpack_require__(903);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_angularfire2_database__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_angularfire2_auth__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__share_data_service__ = __webpack_require__(185);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__pages_lodge_form_lodge_form__ = __webpack_require__(412);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -948,48 +1412,50 @@ var AppModule = (function () {
     return AppModule;
 }());
 AppModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_6__angular_core__["L" /* NgModule */])({
+    Object(__WEBPACK_IMPORTED_MODULE_7__angular_core__["L" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_9__app_component__["a" /* MyApp */],
-            __WEBPACK_IMPORTED_MODULE_5__pages_login_login__["a" /* LoginPage */],
-            __WEBPACK_IMPORTED_MODULE_4__pages_signup_signup__["a" /* SignupPage */],
-            __WEBPACK_IMPORTED_MODULE_3__pages_lodge_lodge__["a" /* LodgePage */],
-            __WEBPACK_IMPORTED_MODULE_2__pages_report_report__["a" /* ReportPage */],
-            __WEBPACK_IMPORTED_MODULE_1__pages_setting_setting__["a" /* SettingPage */],
-            __WEBPACK_IMPORTED_MODULE_0__pages_student_modal_student_modal__["a" /* StudentModalPage */],
-            __WEBPACK_IMPORTED_MODULE_11__pages_loading_loading__["a" /* LoadingPage */],
-            __WEBPACK_IMPORTED_MODULE_19__pages_lodge_form_lodge_form__["a" /* LodgeFormPage */],
-            __WEBPACK_IMPORTED_MODULE_10__pages_tabs_tabs__["a" /* TabsPage */]
+            __WEBPACK_IMPORTED_MODULE_10__app_component__["a" /* MyApp */],
+            __WEBPACK_IMPORTED_MODULE_6__pages_login_login__["a" /* LoginPage */],
+            __WEBPACK_IMPORTED_MODULE_5__pages_signup_signup__["a" /* SignupPage */],
+            __WEBPACK_IMPORTED_MODULE_4__pages_lodge_lodge__["a" /* LodgePage */],
+            __WEBPACK_IMPORTED_MODULE_3__pages_report_report__["a" /* ReportPage */],
+            __WEBPACK_IMPORTED_MODULE_2__pages_setting_setting__["a" /* SettingPage */],
+            __WEBPACK_IMPORTED_MODULE_1__pages_student_modal_student_modal__["a" /* StudentModalPage */],
+            __WEBPACK_IMPORTED_MODULE_12__pages_loading_loading__["a" /* LoadingPage */],
+            __WEBPACK_IMPORTED_MODULE_20__pages_lodge_form_lodge_form__["a" /* LodgeFormPage */],
+            __WEBPACK_IMPORTED_MODULE_0__pages_lodge_detail_lodge_detail__["a" /* LodgeDetailPage */],
+            __WEBPACK_IMPORTED_MODULE_11__pages_tabs_tabs__["a" /* TabsPage */]
         ],
         imports: [
-            __WEBPACK_IMPORTED_MODULE_7__angular_platform_browser__["a" /* BrowserModule */],
-            __WEBPACK_IMPORTED_MODULE_12__angular_http__["a" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_8_ionic_angular__["f" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_9__app_component__["a" /* MyApp */], {
+            __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__["a" /* BrowserModule */],
+            __WEBPACK_IMPORTED_MODULE_13__angular_http__["a" /* HttpModule */],
+            __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["f" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_10__app_component__["a" /* MyApp */], {
                 iconMode: "md",
                 pageTransition: "md-transition"
             }),
-            __WEBPACK_IMPORTED_MODULE_15_angularfire2__["a" /* AngularFireModule */].initializeApp(firebaseConfig),
-            __WEBPACK_IMPORTED_MODULE_16_angularfire2_database__["b" /* AngularFireDatabaseModule */],
-            __WEBPACK_IMPORTED_MODULE_17_angularfire2_auth__["b" /* AngularFireAuthModule */]
+            __WEBPACK_IMPORTED_MODULE_16_angularfire2__["a" /* AngularFireModule */].initializeApp(firebaseConfig),
+            __WEBPACK_IMPORTED_MODULE_17_angularfire2_database__["b" /* AngularFireDatabaseModule */],
+            __WEBPACK_IMPORTED_MODULE_18_angularfire2_auth__["b" /* AngularFireAuthModule */]
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_8_ionic_angular__["d" /* IonicApp */]],
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_9_ionic_angular__["d" /* IonicApp */]],
         entryComponents: [
-            __WEBPACK_IMPORTED_MODULE_9__app_component__["a" /* MyApp */],
-            __WEBPACK_IMPORTED_MODULE_5__pages_login_login__["a" /* LoginPage */],
-            __WEBPACK_IMPORTED_MODULE_4__pages_signup_signup__["a" /* SignupPage */],
-            __WEBPACK_IMPORTED_MODULE_3__pages_lodge_lodge__["a" /* LodgePage */],
-            __WEBPACK_IMPORTED_MODULE_2__pages_report_report__["a" /* ReportPage */],
-            __WEBPACK_IMPORTED_MODULE_1__pages_setting_setting__["a" /* SettingPage */],
-            __WEBPACK_IMPORTED_MODULE_0__pages_student_modal_student_modal__["a" /* StudentModalPage */],
-            __WEBPACK_IMPORTED_MODULE_11__pages_loading_loading__["a" /* LoadingPage */],
-            __WEBPACK_IMPORTED_MODULE_19__pages_lodge_form_lodge_form__["a" /* LodgeFormPage */],
-            __WEBPACK_IMPORTED_MODULE_10__pages_tabs_tabs__["a" /* TabsPage */]
+            __WEBPACK_IMPORTED_MODULE_10__app_component__["a" /* MyApp */],
+            __WEBPACK_IMPORTED_MODULE_6__pages_login_login__["a" /* LoginPage */],
+            __WEBPACK_IMPORTED_MODULE_5__pages_signup_signup__["a" /* SignupPage */],
+            __WEBPACK_IMPORTED_MODULE_4__pages_lodge_lodge__["a" /* LodgePage */],
+            __WEBPACK_IMPORTED_MODULE_3__pages_report_report__["a" /* ReportPage */],
+            __WEBPACK_IMPORTED_MODULE_2__pages_setting_setting__["a" /* SettingPage */],
+            __WEBPACK_IMPORTED_MODULE_1__pages_student_modal_student_modal__["a" /* StudentModalPage */],
+            __WEBPACK_IMPORTED_MODULE_12__pages_loading_loading__["a" /* LoadingPage */],
+            __WEBPACK_IMPORTED_MODULE_20__pages_lodge_form_lodge_form__["a" /* LodgeFormPage */],
+            __WEBPACK_IMPORTED_MODULE_0__pages_lodge_detail_lodge_detail__["a" /* LodgeDetailPage */],
+            __WEBPACK_IMPORTED_MODULE_11__pages_tabs_tabs__["a" /* TabsPage */]
         ],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_13__ionic_native_status_bar__["a" /* StatusBar */],
-            __WEBPACK_IMPORTED_MODULE_14__ionic_native_splash_screen__["a" /* SplashScreen */],
-            { provide: __WEBPACK_IMPORTED_MODULE_6__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_8_ionic_angular__["e" /* IonicErrorHandler */] },
-            __WEBPACK_IMPORTED_MODULE_18__share_data_service__["a" /* DataService */]
+            __WEBPACK_IMPORTED_MODULE_14__ionic_native_status_bar__["a" /* StatusBar */],
+            __WEBPACK_IMPORTED_MODULE_15__ionic_native_splash_screen__["a" /* SplashScreen */],
+            { provide: __WEBPACK_IMPORTED_MODULE_7__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["e" /* IonicErrorHandler */] },
+            __WEBPACK_IMPORTED_MODULE_19__share_data_service__["a" /* DataService */]
         ]
     })
 ], AppModule);
@@ -998,28 +1464,7 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ 438:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = getDateString;
-/* unused harmony export convertFirebaseObject */
-function getDateString(d) {
-    if (d === void 0) { d = new Date(); }
-    var day = d.getDate() - 1;
-    var month = d.getMonth() + 1;
-    var dayStr = day < 10 ? "0" + day.toString() : day.toString();
-    var monthStr = month < 10 ? "0" + month.toString() : month.toString();
-    return "" + d.getFullYear() + monthStr + dayStr;
-}
-function convertFirebaseObject(obj, key) {
-    return Object.assign({ key: key }, obj);
-}
-//# sourceMappingURL=common.js.map
-
-/***/ }),
-
-/***/ 439:
+/***/ 615:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1050,16 +1495,144 @@ var Student = (function () {
 
 /***/ }),
 
-/***/ 605:
+/***/ 83:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoadingPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(28);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var LoadingPage = (function () {
+    function LoadingPage(loadingCtrl) {
+        this.loadingCtrl = loadingCtrl;
+    }
+    LoadingPage.prototype.show = function (msg) {
+        if (msg === void 0) { msg = 'Please wait...'; }
+        this.loading = this.loadingCtrl.create({
+            spinner: "crescent",
+            content: msg
+        });
+        this.loading.present();
+    };
+    LoadingPage.prototype.hide = function () {
+        if (this.loading) {
+            this.loading.dismiss();
+        }
+    };
+    return LoadingPage;
+}());
+LoadingPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+        selector: 'page-loading',template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\loading\loading.html"*/'<div class="container" [ngClass]="{\'busy\': isBusy}">\n  <div class="backdrop"></div>\n  <ion-spinner></ion-spinner>\n</div>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\loading\loading.html"*/,
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */]])
+], LoadingPage);
+
+//# sourceMappingURL=loading.js.map
+
+/***/ }),
+
+/***/ 897:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ZTToast; });
+var ZTToast = (function () {
+    function ZTToast() {
+        this.defaultDuration = 2000;
+        if (!ZTToast._sharedInstance) {
+            ZTToast._sharedInstance = this;
+        }
+        return ZTToast._sharedInstance;
+    }
+    ZTToast.prototype.warning = function (msg, duration) {
+        if (duration === void 0) { duration = this.defaultDuration; }
+        var options = {
+            style: {
+                main: {
+                    background: "#F89406",
+                    color: "white"
+                }
+            },
+            settings: {
+                duration: duration
+            }
+        };
+        iqwerty.toast.Toast(msg, options);
+    };
+    ZTToast.prototype.error = function (msg, duration) {
+        if (duration === void 0) { duration = this.defaultDuration; }
+        var options = {
+            style: {
+                main: {
+                    background: "#BD362F",
+                    color: "white"
+                }
+            },
+            settings: {
+                duration: duration
+            }
+        };
+        iqwerty.toast.Toast(msg, options);
+    };
+    ZTToast.prototype.info = function (msg, duration) {
+        if (duration === void 0) { duration = this.defaultDuration; }
+        var options = {
+            style: {
+                main: {
+                    background: "#333",
+                    color: "white"
+                }
+            },
+            settings: {
+                duration: duration
+            }
+        };
+        iqwerty.toast.Toast(msg, options);
+    };
+    ZTToast.prototype.success = function (msg, duration) {
+        if (duration === void 0) { duration = this.defaultDuration; }
+        var options = {
+            style: {
+                main: {
+                    background: "#51A351",
+                    color: "white"
+                }
+            },
+            settings: {
+                duration: duration
+            }
+        };
+        iqwerty.toast.Toast(msg, options);
+    };
+    return ZTToast;
+}());
+
+//# sourceMappingURL=zttoast.js.map
+
+/***/ }),
+
+/***/ 898:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(357);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(360);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_login_login__ = __webpack_require__(355);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(416);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(419);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_login_login__ = __webpack_require__(414);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1094,54 +1667,7 @@ MyApp = __decorate([
 
 //# sourceMappingURL=app.component.js.map
 
-/***/ }),
-
-/***/ 93:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoadingPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(25);
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var LoadingPage = (function () {
-    function LoadingPage(loadingCtrl) {
-        this.loadingCtrl = loadingCtrl;
-    }
-    LoadingPage.prototype.show = function () {
-        this.loading = this.loadingCtrl.create({
-            spinner: "crescent",
-            content: "Please wait..."
-        });
-        this.loading.present();
-    };
-    LoadingPage.prototype.hide = function () {
-        if (this.loading) {
-            this.loading.dismiss();
-        }
-    };
-    return LoadingPage;
-}());
-LoadingPage = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-loading',template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\loading\loading.html"*/'<div class="container" [ngClass]="{\'busy\': isBusy}">\n  <div class="backdrop"></div>\n  <ion-spinner></ion-spinner>\n</div>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\loading\loading.html"*/,
-    }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* LoadingController */]])
-], LoadingPage);
-
-//# sourceMappingURL=loading.js.map
-
 /***/ })
 
-},[361]);
+},[420]);
 //# sourceMappingURL=main.js.map

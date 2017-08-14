@@ -11,10 +11,10 @@ export class LoadingPage {
   constructor(public loadingCtrl: LoadingController) {
   }
 
-  show() {
+  show(msg: string = 'Please wait...') {
     this.loading = this.loadingCtrl.create({
       spinner: "crescent",
-      content: "Please wait..."
+      content: msg
     });
     this.loading.present();
   }

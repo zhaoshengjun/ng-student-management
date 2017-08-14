@@ -1,30 +1,34 @@
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Sign In</ion-title>
-  </ion-navbar>
+	<ion-navbar>
+		<ion-title>Sign In</ion-title>
+	</ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <div>
-    <h1>This is a signature form</h1>
-    <span>
-      {{student |json}}
-    </span>
-  </div>
-
-  <button ion-button (click)="onSubmit()">
-    Submit
-  </button>
-  <button ion-button (click)="onCancel()">
-      Cancel
-    </button>
-
-  <div *ngIf="error">
-    <h2>{{errorMessage}}</h2>
-  </div>
-
-
+	<ion-list>
+		<ion-row>
+			<h2> {{ student?.name}}</h2>
+		</ion-row>
+		<ion-row>
+			<p> Room No.: {{student?.roomNo}} </p>
+		</ion-row>
+		<ion-row class='canvas-container'>
+			<canvas id="canvas"></canvas>
+		</ion-row>
+	</ion-list>
+	<ion-row>
+		<ion-col width-50>
+			<button ion-button (click)="onSubmit()" block large>
+        Submit
+      </button>
+		</ion-col>
+		<ion-col>
+			<button ion-button (click)="onCancel()" block large>
+          Cancel
+        </button>
+		</ion-col>
+	</ion-row>
 </ion-content>

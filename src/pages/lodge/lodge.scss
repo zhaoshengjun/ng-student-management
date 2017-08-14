@@ -1,8 +1,15 @@
-page-home {
+page-lodge {
   .hide {
     display: none;
   }
   ion-item-options .button {
     text-transform: none !important;
+  }
+  .box {
+    border-left: 6px solid red;
+    margin-bottom: 5px;
+  }
+  .lodged {
+    border-left-color: #8bc34a;
   }
 }

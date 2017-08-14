@@ -22,7 +22,7 @@
     <ion-checkbox color="dark" [(ngModel)]="activeOnly" (ionChange)="updateFilter()"></ion-checkbox>
   </ion-item>
   <ion-list>
-    <ion-item *ngFor="let item of students | async" (click)="onEdit(item)" [class.archived]="item.status === 'archived'">
+    <ion-item *ngFor="let item of students | async;let i = index" (click)="onEdit(item, i)" [class.archived]="item.status === 'archived'">
       <ion-avatar item-start>
         <img src="/assets/images/unknown.png">
       </ion-avatar>

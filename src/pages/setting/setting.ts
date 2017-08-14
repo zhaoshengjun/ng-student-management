@@ -1,5 +1,5 @@
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFireDatabase } from "angularfire2/database";
 import { StudentModalPage } from "./../student-modal/student-modal";
 import { Component } from "@angular/core";
 import { NavController, ModalController } from "ionic-angular";
@@ -12,10 +12,9 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 export class SettingPage {
   userId: string;
   students;
-  activeOnly: boolean = false
+  activeOnly: boolean = false;
   querySubject: BehaviorSubject<any>;
   queryOpts = {};
-
 
   constructor(
     public navCtrl: NavController,
@@ -27,10 +26,10 @@ export class SettingPage {
     this.userId = this.afAuth.auth.currentUser.uid;
     const studentsRefString = `/${this.userId}/students`;
     this.querySubject.subscribe(opts => {
-      console.log('options:', opts);
+      console.log("options:", opts);
       this.queryOpts = opts;
       this.students = this.afDB.list(studentsRefString, this.queryOpts);
-    })
+    });
   }
 
   ionViewDidLoad() {
@@ -38,22 +37,26 @@ export class SettingPage {
   }
 
   updateFilter() {
-    console.log('activeOnly: ', this.activeOnly);
+    console.log("activeOnly: ", this.activeOnly);
     if (this.activeOnly) {
       this.querySubject.next({
         query: {
           orderByChild: "status",
           equalTo: "active"
         }
-      })
+      });
     } else {
       this.querySubject.next({});
     }
   }
 
-  onEdit(student) {
-    console.log('Edit student info: ', student);
-    let modal = this.modalCtrl.create(StudentModalPage, { confirmTitle: "Update", student });
+  onEdit(student, index) {
+    console.log("Edit student info: ", student, index);
+    let modal = this.modalCtrl.create(StudentModalPage, {
+      confirmTitle: "Update",
+      student,
+      index
+    });
     modal.present();
   }
 

@@ -1,0 +1,23 @@
+page-lodge-detail {
+  .title {
+    font-size: larger;
+    text-align: center;
+  }
+  .pic-box {
+    padding-left: 16px;
+  }
+  .signature {
+    width: 80%;
+    height: 80%;
+    border: 4px solid black;
+    margin-top: 6px;
+  }
+  .box {
+    display: flex;
+    justify-content: space-around;
+  }
+  .text {
+    font-family: large;
+    margin-top: 4px;
+  }
+}

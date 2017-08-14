@@ -1,3 +1,4 @@
+import { LodgeDetailPage } from "./../pages/lodge-detail/lodge-detail";
 import { StudentModalPage } from "./../pages/student-modal/student-modal";
 import { SettingPage } from "./../pages/setting/setting";
 import { ReportPage } from "./../pages/report/report";
@@ -10,7 +11,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from "ionic-angular";
 import { MyApp } from "./app.component";
 import { TabsPage } from "../pages/tabs/tabs";
 import { LoadingPage } from "./../pages/loading/loading";
-import { HttpModule } from '@angular/http';
+import { HttpModule } from "@angular/http";
 
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
@@ -20,7 +21,6 @@ import { AngularFireDatabaseModule } from "angularfire2/database";
 import { AngularFireAuthModule } from "angularfire2/auth";
 import { DataService } from "../share/data-service";
 import { LodgeFormPage } from "../pages/lodge-form/lodge-form";
-
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCETsqdUtSsWkz4oCP8_EsM3mbeDlfscKQ",
@@ -42,6 +42,7 @@ export const firebaseConfig = {
     StudentModalPage,
     LoadingPage,
     LodgeFormPage,
+    LodgeDetailPage,
     TabsPage
   ],
   imports: [
@@ -66,6 +67,7 @@ export const firebaseConfig = {
     StudentModalPage,
     LoadingPage,
     LodgeFormPage,
+    LodgeDetailPage,
     TabsPage
   ],
   providers: [
@@ -75,4 +77,4 @@ export const firebaseConfig = {
     DataService
   ]
 })
-export class AppModule { }
+export class AppModule {}

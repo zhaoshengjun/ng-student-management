@@ -55,13 +55,13 @@
     <ion-label>
       Start Date
     </ion-label>
-    <ion-input type="date" [(ngModel)]="student.startDate" placeholder=""></ion-input>
+    <ion-input type="date" [(ngModel)]="startDate" placeholder=""></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>
       End Date
     </ion-label>
-    <ion-input type="date" [(ngModel)]="student.endDate" placeholder=""></ion-input>
+    <ion-input type="date" [(ngModel)]="endDate" placeholder=""></ion-input>
   </ion-item>
   <ion-item>
     <ion-label>
@@ -94,14 +94,51 @@
     <ion-textarea [(ngModel)]="student.comments" placeholder="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet quos vero sequi consequatur voluptate id, impedit sed quis doloribus. Dolore."></ion-textarea>
   </ion-item>
   <ion-item>
-    <button ion-button color="positive" icon-left (click)="onAddHoliday()">
-        <ion-icon name="plane"></ion-icon>
-        Add Holiday Period
-      </button>
+
+  </ion-item>
+
+  <ion-item>
+
+    <ion-grid>
+      <ion-row class="title">
+        <ion-col>
+          <h2>Holidays</h2>
+        </ion-col>
+        <ion-col>
+          <button ion-button color="positive" icon-left (click)="onAddHoliday()" float-right>
+                <ion-icon name="plane"></ion-icon>
+                Add
+              </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div class="holiday-table">
+      <ion-grid>
+        <ion-row>
+          <ion-col>Start Date</ion-col>
+          <ion-col>End Date</ion-col>
+          <ion-col>Actions</ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>2018/07/01</ion-col>
+          <ion-col>2018/08/01</ion-col>
+          <ion-col class="equal-box">
+            <button class="equal-item" (click)="onEditHoliday()">
+              <ion-icon name='create' class="icon-btn"></ion-icon>
+            </button>
+            <button class="equal-item" (click)="onDeleteHoliday()">
+                <ion-icon name='trash' class="icon-btn"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
   </ion-item>
 
   <div class="equal-box">
-    <button ion-button color="positive" icon-left class="equal-item" (click)="onSave()">
+    <button ion-button color="positive" icon-left class="equal-item" (click)="onConfirm()">
       <ion-icon name="checkmark-circle"></ion-icon>
       {{ confirmTitle }}
     </button>

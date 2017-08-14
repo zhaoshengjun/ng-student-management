@@ -2,4 +2,11 @@ page-setting {
   .archived {
     background-color: lightgray !important;
   }
+
+  ion-fab[bottom] {
+    bottom: 100px;
+  }
+  ion-fab {
+    position: fixed;
+  }
 }

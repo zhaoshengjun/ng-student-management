@@ -1,26 +1,25 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Lodge</ion-title>
-    <ion-buttons end>
-      <button ion-button (click)="onLogout()">
-        Logout
-        <ion-icon name="log-out"></ion-icon>
+	<ion-navbar>
+		<ion-title>Lodge</ion-title>
+		<ion-buttons end>
+			<button (click)="onLogout()">
+        <ion-icon name="log-out" class="big_icon"></ion-icon>
       </button>
-    </ion-buttons>
-  </ion-navbar>
+		</ion-buttons>
+	</ion-navbar>
 
-  <h1 center>{{today}}</h1>
-  <ion-toolbar>
-    <ion-segment [(ngModel)]="selectedSegment">
-      <ion-segment-button value="unlodged">
-        Sign In
-      </ion-segment-button>
-      <ion-segment-button value="lodged">
-        Already Signed In
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-  <!-- <div>
+	<h1 center>{{todayStr}}</h1>
+	<ion-toolbar>
+		<ion-segment [(ngModel)]="selectedSegment">
+			<ion-segment-button value="unlodged">
+				Sign In
+			</ion-segment-button>
+			<ion-segment-button value="lodged">
+				Already Signed In
+			</ion-segment-button>
+		</ion-segment>
+	</ion-toolbar>
+	<!-- <div>
     <span>
         wholeList: {{wholeList | async |json}}
       </span>
@@ -29,40 +28,42 @@
 
 <ion-content padding>
 
-  <ion-list *ngIf="wholeList">
-    <ion-item-sliding *ngFor="let item of wholeList | async; let i = index " [class.hide]="item.lodgeStatus !== selectedSegment ">
-      <ion-item>
-        <ion-avatar item-start>
-          <img src="/assets/images/unknown.png">
-        </ion-avatar>
-        <h2>{{item.name}}</h2>
-        <p> {{item.roomNo}} </p>
-        <p> {{item.email}} </p>
-        <p> {{item.lodgeStatus}} </p>
-        <p> {{item.id}} </p>
-        <p> {{item.email}} </p>
-      </ion-item>
-      <ion-item-options side="left">
-        <button ion-button color="primary" (click)="onText(item)">
-                <ion-icon name="text"></ion-icon>
-                Text
-              </button>
-        <button ion-button color="secondary" (click)="onCall(item)">
-                <ion-icon name="call"></ion-icon>
-                Call
-              </button>
-        <button ion-button color="primary" (click)="onEmail(item)">
-                  <ion-icon name="mail"></ion-icon>
-                  Email 
-                </button>
-      </ion-item-options>
-      <ion-item-options side="right">
-        <button ion-button color="primary" (click)="onSignIn(item, i)">
-                <ion-icon name="mail"></ion-icon>
-                SignIn
-              </button>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
+	<ion-list *ngIf="wholeList">
+		<ion-item-sliding *ngFor="let item of wholeList | async; let i = index" [class.hide]="item.lodgeStatus !== selectedSegment "
+		  #slidingItem (click)="onShowDetail(item)">
+
+			<ion-item [class.lodged]="item.lodgeStatus === 'lodged'" class="box">
+				<ion-avatar item-start>
+					<img src="/assets/images/unknown.png">
+				</ion-avatar>
+				<h2>{{item.name}}</h2>
+				<p> {{item.roomNo}} </p>
+				<!-- <p> {{item.email}} </p>
+				<p> {{item.lodgeStatus}} </p>
+				<p> {{item.id}} </p>
+				<p> {{item.email}} </p> -->
+			</ion-item>
+			<ion-item-options side="left" [class.hide]="item.lodgeStatus === 'lodged' ">
+				<button ion-button color="primary" (click)="onText(item, slidingItem)">
+									<ion-icon name="text"></ion-icon>
+									Text
+								</button>
+				<button ion-button color="secondary" (click)="onCall(item, slidingItem)">
+									<ion-icon name="call"></ion-icon>
+									Call
+								</button>
+				<button ion-button color="primary" (click)="onEmail(item, slidingItem)">
+										<ion-icon name="mail"></ion-icon>
+										Email
+									</button>
+			</ion-item-options>
+			<ion-item-options side="right" [class.hide]="item.lodgeStatus === 'lodged' ">
+				<button ion-button color="primary" (click)="onSignIn(item, slidingItem, i)">
+									<ion-icon name="mail"></ion-icon>
+									SignIn
+								</button>
+			</ion-item-options>
+		</ion-item-sliding>
+	</ion-list>
 
 </ion-content>

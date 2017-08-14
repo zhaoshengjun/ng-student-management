@@ -1,3 +1,13 @@
 page-lodge-form {
-
+  .canvas-container {
+    background-color: white;
+    width: 90%;
+    height: 30rem;
+    margin: auto;
+    border: 5px solid #222;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
 }

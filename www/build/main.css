@@ -25203,6 +25203,10 @@ ion-navbar.toolbar {
   text-align: center;
 }
 
+.big_icon {
+  font-size: 2em;
+}
+
 loading-modal .container {
   z-index: -1;
   -webkit-transition: z-index 0.2s step-end;
@@ -25245,16 +25249,105 @@ loading-modal .container ion-spinner {
   height: 60px;
 }
 
-page-home .hide {
+page-lodge .hide {
   display: none;
 }
 
-page-home ion-item-options .button {
+page-lodge ion-item-options .button {
   text-transform: none !important;
+}
+
+page-lodge .box {
+  border-left: 6px solid red;
+  margin-bottom: 5px;
+}
+
+page-lodge .lodged {
+  border-left-color: #8bc34a;
+}
+
+page-lodge-detail .title {
+  font-size: larger;
+  text-align: center;
+}
+
+page-lodge-detail .pic-box {
+  padding-left: 16px;
+}
+
+page-lodge-detail .signature {
+  width: 80%;
+  height: 80%;
+  border: 4px solid black;
+  margin-top: 6px;
+}
+
+page-lodge-detail .box {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+
+page-lodge-detail .text {
+  font-family: large;
+  margin-top: 4px;
+}
+
+page-lodge-form .canvas-container {
+  background-color: white;
+  width: 90%;
+  height: 30rem;
+  margin: auto;
+  border: 5px solid #222;
+}
+
+page-lodge-form canvas {
+  width: 100%;
+  height: 100%;
+}
+
+page-report .highlight {
+  border-left: 6px solid red;
+  margin-top: 6px;
+}
+
+page-report .search_text {
+  margin-left: 6px;
+}
+
+page-report .left {
+  width: 40%;
+  font-weight: bold;
+  color: #999;
+  text-align: left;
+  font-size: 1.7rem;
+}
+
+page-report .right {
+  width: 60%;
+  text-align: right;
+  font-size: 1.7rem;
+}
+
+page-report ion-row {
+  margin-bottom: 3px;
+  border-bottom: 1px dashed #dcdada;
 }
 
 page-setting .archived {
   background-color: lightgray !important;
+}
+
+page-setting ion-fab[bottom] {
+  bottom: 100px;
+}
+
+page-setting ion-fab {
+  position: fixed;
 }
 
 page-student-modal .dark {
@@ -25300,4 +25393,21 @@ page-student-modal .equal-item {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+}
+
+page-student-modal .holiday-table {
+  background-color: #e0e0e0;
+}
+
+page-student-modal .header {
+  font-weight: bold;
+  text-align: center;
+}
+
+page-student-modal .title {
+  border: 1px solid #e0e0e0;
+}
+
+page-student-modal .icon-btn {
+  font-size: 1.5em;
 }

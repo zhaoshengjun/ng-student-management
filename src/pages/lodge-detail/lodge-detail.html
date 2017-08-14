@@ -1,0 +1,55 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-title>
+			Lodge Detail
+		</ion-title>
+		<ion-buttons end>
+			<button ion-button (click)="dismiss()">
+						<ion-icon name="md-close"></ion-icon>
+					</button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+	<ion-list>
+		<ion-item>
+			<h2 class="title">{{student.name}}</h2>
+		</ion-item>
+		<ion-item>
+			Room No.:
+			<ion-note item-end>
+				{{student.roomNo}}
+			</ion-note>
+		</ion-item>
+		<ion-item *ngIf="!hasSignature">
+			Status:
+			<ion-note item-end>
+				In Holiday
+			</ion-note>
+		</ion-item>
+		<ion-item *ngIf="!hasSignature">
+			Holiday Period:
+			<ion-note item-end>
+				{{student.timestamp}}
+			</ion-note>
+		</ion-item>
+
+		<ion-item *ngIf="hasSignature">
+			Time:
+			<ion-note item-end>
+				{{student.timestampStr}}
+			</ion-note>
+		</ion-item>
+		<div *ngIf="hasSignature" class="pic-box">
+			<ion-label>Signature:</ion-label>
+			<div class="box">
+				<img [src]="student.signature" alt="" class="signature">
+			</div>
+		</div>
+		<div class="box">
+			<button ion-button (click)="dismiss()">Cancel</button>
+		</div>
+	</ion-list>
+</ion-content>

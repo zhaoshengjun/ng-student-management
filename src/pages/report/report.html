@@ -1,11 +1,181 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Report
-    </ion-title>
-  </ion-navbar>
+	<ion-navbar>
+		<ion-title>
+			Report
+		</ion-title>
+		<ion-buttons end>
+			<button (click)="onExport()">
+				<ion-icon name="md-print" class="big_icon"></ion-icon>
+			</button>
+		</ion-buttons>
+	</ion-navbar>
+
+	<ion-toolbar>
+		<ion-segment [(ngModel)]="searchTerm" (ionChange)="onChange($event)">
+			<ion-segment-button value="byDate">
+				By Date
+			</ion-segment-button>
+			<ion-segment-button value="byPerson">
+				By Person
+			</ion-segment-button>
+			<ion-segment-button value="byUniversity">
+				By University
+			</ion-segment-button>
+		</ion-segment>
+	</ion-toolbar>
 </ion-header>
 
 <ion-content padding>
+	<div [ngSwitch]="searchTerm">
+		<div *ngSwitchCase="'byDate'">
+			<ion-list>
+				<ion-item>
+					<ion-label>Date</ion-label>
+					<ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>
+				</ion-item>
+			</ion-list>
+		</div>
 
+		<div *ngSwitchCase="'byPerson'">
+			<ion-list>
+				<ion-item>
+					<ion-label>Student</ion-label>
+					<ion-input [(ngModel)]="searchPerson"></ion-input>
+				</ion-item>
+			</ion-list>
+		</div>
+
+		<div *ngSwitchCase="'byUniversity'">
+			<ion-list>
+				<ion-item>
+					<ion-label>
+						University
+					</ion-label>
+					<ion-select [(ngModel)]="searchUniversity">
+						<ion-option>
+							QUT
+						</ion-option>
+						<ion-option>
+							UQ
+						</ion-option>
+					</ion-select>
+				</ion-item>
+				<ion-item>
+					<ion-label>Date</ion-label>
+					<ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>
+				</ion-item>
+			</ion-list>
+		</div>
+	</div>
+	<button ion-button block medium (click)="onSearch($event)" item-end>
+						<ion-icon name="search"></ion-icon>
+						<span class="search_text">Search</span>
+					</button>
+	<ion-list *ngIf="resultData">
+		<!-- <ion-row>
+			<ion-col></ion-col>
+			<ion-col>University</ion-col>
+			<ion-col>Student ID</ion-col>
+			<ion-col>Name</ion-col>
+			<ion-col>DOB</ion-col>
+			<ion-col>Room Number</ion-col>
+			<ion-col>Time Signed In</ion-col>
+			<ion-col>Singnature</ion-col>
+			<ion-col>Lease Start</ion-col>
+			<ion-col>Lease End</ion-col>
+		</ion-row> -->
+		<ion-item *ngFor="let item of resultData" [class.highlight]="item.lodgeStatus === 'unlodged'">
+			<ion-row>
+				<span class="left">Date:</span>
+				<span class="right">{{item.date}}</span>
+			</ion-row>
+			<ion-row>
+				<span class="left">University:</span>
+				<span class="right">{{item.university}}</span>
+			</ion-row>
+			<ion-row>
+				<span class="left">Student ID:</span>
+				<span class="right">{{item.id}}</span>
+			</ion-row>
+			<ion-row>
+				<span class="left">Name:</span>
+				<span class="right">{{item.name}}</span>
+			</ion-row>
+			<ion-row>
+				<span class="left">DOB:</span>
+				<span class="right">{{item.dateOfBirth}}</span>
+			</ion-row>
+			<ion-row>
+				<span class="left">Room Number:</span>
+				<span class="right">{{item.roomNo}}</span>
+			</ion-row>
+			<ion-row>
+				<span class="left">Time Signed In:</span>
+				<span class="right">{{item.timestamp}}</span>
+			</ion-row>
+			<ion-row>
+				<span class="left">Singnature:</span>
+				<span class="right"><a [href]="item.signature" *ngIf="item.signature">link</a></span>
+			</ion-row>
+			<ion-row>
+				<span class="left">Lease Start:</span>
+				<span class="right">{{item.startDate}}</span>
+			</ion-row>
+			<ion-row>
+				<span class="left">Lease End:</span>
+				<span class="right">{{item.endDate}}</span>
+			</ion-row>
+		</ion-item>
+
+	</ion-list>
+
+	<!-- <div class="search">
+		<ion-list radio-group [(ngModel)]="searchTerm">
+			<ion-item>
+				<ion-label>By Date</ion-label>
+				<ion-radio (ionSelect)="onSelectChange()" value="bydate"></ion-radio>
+			</ion-item>
+			<ion-item>
+				<ion-label>Date</ion-label>
+				<ion-datetime [disabled]="this.searchTerm != 'bydate'" displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>
+			</ion-item>
+			<ion-item>
+				<ion-label>By Person</ion-label>
+				<ion-radio (ionSelect)="onSelectChange()" value="byperson"></ion-radio>
+			</ion-item>
+			<ion-item>
+				<ion-label>Name</ion-label>
+				<ion-input [disabled]="this.searchTerm != 'byperson'" [(ngModel)]="searchPerson"></ion-input>
+			</ion-item>
+			<ion-item>
+				<ion-label>By University</ion-label>
+				<ion-radio (ionSelect)="onSelectChange()" value="byuniversity"></ion-radio>
+			</ion-item>
+			<ion-item>
+				<ion-label>University</ion-label>
+				<ion-input [disabled]="this.searchTerm != 'byuniversity'" [(ngModel)]="searchUniversity"></ion-input>
+			</ion-item>
+
+		</ion-list>
+		<button ion-button block medium (click)="onSearch($event)" item-end>
+						<ion-icon name="search"></ion-icon>
+						Search
+					</button>
+	</div>
+
+	<div class="content">
+		<ion-card *ngFor="let record of records">
+			<ion-card-content>
+				<ion-row>
+					<ion-col width-40>
+						<p class="left">Student name:</p>
+					</ion-col>
+					<ion-col widht-60>
+						<p class="right"> {{record.name}} </p>
+					</ion-col>
+				</ion-row>
+
+			</ion-card-content>
+		</ion-card>
+	</div> -->
 </ion-content>

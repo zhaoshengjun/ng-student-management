@@ -1,7 +1,7 @@
+import { LodgeDetailPage } from "./../lodge-detail/lodge-detail";
+import { SignupPage } from "./../signup/signup";
 import { Student } from "./../../share/data/model";
 import { AngularFireAuth } from "angularfire2/auth";
-// import { Student } from "./../../share";
-// import { LoginPage } from "./../login/login";
 import { Component } from "@angular/core";
 import {
   NavController,
@@ -9,7 +9,8 @@ import {
   LoadingController,
   ModalController,
   AlertController,
-  Events
+  Events,
+  ItemSliding
 } from "ionic-angular";
 import { LoadingPage } from "../loading/loading";
 import {
@@ -24,8 +25,11 @@ import * as firebase from "firebase";
 // import { Observable } from "rxjs/Observable";
 import * as Rx from "rxjs";
 import { DataService } from "../../share/data-service";
-import { getDateString, convertFirebaseObject } from "../../share/common";
-import { isWithinRange, format } from "date-fns";
+import {
+  getDateString,
+  convertFirebaseObjectToArray
+} from "../../share/common";
+import { isWithinRange, format, isBefore } from "date-fns";
 import { LodgeFormPage } from "../lodge-form/lodge-form";
 
 @Component({
@@ -84,7 +88,9 @@ export class LodgePage {
             let stud = data.val();
             let student = Object.assign(stud, {
               lodgeStatus: stu.lodgeStatus,
-              reason: stu.reason
+              reason: stu.reason,
+              signature: stu.signature,
+              timestamp: stu.timestamp
             });
             // console.log('generate info: ', student);
             list.push(student);
@@ -96,9 +102,11 @@ export class LodgePage {
     this.site = this.afDB.object(`/${this.userId}/site`);
     this.wholeList.subscribe(d => {
       console.log("whole list", d);
-      if (d.length > 0) {
-        let unlodgeList = d.filter(a => a.lodgeStatus === 'unlodged');
-        this.events.publish("unlodge:count", unlodgeList.length);
+      if (d) {
+        if (d.length > 0) {
+          let unlodgeList = d.filter(a => a.lodgeStatus === "unlodged");
+          this.events.publish("unlodge:count", unlodgeList.length);
+        }
       }
     });
   }
@@ -116,27 +124,71 @@ export class LodgePage {
     let listRef = this.afDB.database.ref(lodgeListRefString);
     studentRef.once("value", snap => {
       console.log(snap.val());
-      let students = snap.val();
+      let stuSnap = snap.val();
+      let students = convertFirebaseObjectToArray(stuSnap);
+      console.log("students:", students);
       let lodgeList = [];
-      students.filter(s => s.status === "active").forEach(s => {
-        console.log("student:", s, "key:", s.id);
-        let { reason, status } = this.checkIfNeedToLodge(s);
-        let lodgeInfo = {
-          studentId: s.id,
-          lodgeStatus: status,
-          reason: reason
-        };
-        console.log("lodgeInfo:", lodgeInfo);
-        lodgeList.push(lodgeInfo);
-      });
-      listRef.update(lodgeList);
+      if (students) {
+        if (students.length > 0) {
+          students.filter(s => s.status === "active").forEach(s => {
+            console.log("student:", s, "key:", s.id);
+            let {
+              needLodge,
+              reason,
+              status,
+              signature,
+              timestamp
+            } = this.checkIfNeedToLodge(s);
+            if (needLodge) {
+              let lodgeInfo = {
+                studentId: s.id,
+                lodgeStatus: status,
+                reason,
+                signature,
+                timestamp
+              };
+              console.log("lodgeInfo:", lodgeInfo);
+              lodgeList.push(lodgeInfo);
+            }
+          });
+          listRef.update(lodgeList);
+        }
+      }
     });
   }
 
   checkIfNeedToLodge(student) {
+    let needLodge = true;
     let reason = "";
     let status = "unlodged";
+    let signature = "";
+    let timestamp = "";
 
+    if (isWithinRange(this.selectedDate, student.startDate, student.endDate)) {
+      let { reason, status, signature } = this.checkHolidays(student);
+    } else if (isBefore(student.endDate, this.selectedDate)) {
+      // update student's status to archived.
+      needLodge = false;
+      status = "";
+      let studentKey = student.id;
+      let studentRef = this.db.ref(`/${this.userId}/students/${studentKey}`);
+      studentRef.update({
+        status: "archived"
+      });
+    } else if (isBefore(this.selectedDate, student.startDate)) {
+      needLodge = false;
+      status = "";
+    }
+    return { needLodge, reason, status, signature, timestamp };
+  }
+
+  checkHolidays(student) {
+    let val = {
+      reason: "",
+      status: "unlodged",
+      signature: "",
+      timestamp: ""
+    };
     let holidays = student.holidayPeriods;
     if (holidays && holidays.length > 0) {
       for (let i = 0; i < holidays.length; i++) {
@@ -144,14 +196,18 @@ export class LodgePage {
         if (
           isWithinRange(this.selectedDate, holiday.startDate, holiday.endDate)
         ) {
-          reason = "InHoliday";
-          status = "lodged";
+          val.reason = "InHoliday";
+          val.status = "lodged";
+          val.signature = `${format(
+            holiday.startDate,
+            "YYYY-MM-DD"
+          )} ~ ${format(holiday.endDate, "YYYY-MM-DD")}`;
+          val.timestamp = new Date().toISOString();
           break;
         }
       }
     }
-
-    return { reason, status };
+    return val;
   }
 
   onLogout() {
@@ -164,7 +220,8 @@ export class LodgePage {
     console.log(this.selectedSegment);
   }
 
-  onSignIn(student, index) {
+  onSignIn(student, slidingItem: ItemSliding, index) {
+    slidingItem.close();
     console.log("Sign in with :", student);
     // should show sign in form to collect signature
     //  and save it to the database
@@ -176,7 +233,8 @@ export class LodgePage {
     });
     signInForm.present();
   }
-  onText(student) {
+  onText(student, slidingItem: ItemSliding) {
+    slidingItem.close();
     console.log("Text with :", student);
     //  Text student
     if (student.phone && student.guardianPhone) {
@@ -211,14 +269,24 @@ export class LodgePage {
       // make a call
     }
   }
-  onCall(student) {
+  onCall(student, slidingItem: ItemSliding) {
+    slidingItem.close();
     console.log("Call with :", student);
     //  Call student
     // if have more than 1 phone numbers in student record,
     //  show a popup window to choose.
   }
-  onEmail(student) {
+  onEmail(student, slidingItem) {
+    slidingItem.close();
     console.log("Email with :", student);
     //  Email student
+  }
+
+  onShowDetail(student) {
+    if (student.lodgeStatus == "lodged") {
+      // show lodged detail information
+      let lodgeDetail = this.modalCtrl.create(LodgeDetailPage, { student });
+      lodgeDetail.present();
+    }
   }
 }
