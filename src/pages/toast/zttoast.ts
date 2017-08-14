@@ -1,6 +1,6 @@
 declare let iqwerty: any;
 export class ZTToast {
-  defaultDuration = 2000;
+  defaultDuration = 500;
 
   private static _sharedInstance: ZTToast;
 

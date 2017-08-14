@@ -1,3 +1,4 @@
+import { ZTToast } from './../toast/zttoast';
 import { LodgeDetailPage } from "./../lodge-detail/lodge-detail";
 import { SignupPage } from "./../signup/signup";
 import { Student } from "./../../share/data/model";
@@ -32,6 +33,10 @@ import {
 import { isWithinRange, format, isBefore } from "date-fns";
 import { LodgeFormPage } from "../lodge-form/lodge-form";
 
+import { EmailComposer } from '@ionic-native/email-composer';
+import { SMS } from "@ionic-native/sms";
+import { CallNumber } from "@ionic-native/call-number";
+
 @Component({
   selector: "page-lodge",
   templateUrl: "lodge.html"
@@ -45,6 +50,7 @@ export class LodgePage {
   site: FirebaseObjectObservable<any>;
   db: firebase.database.Database;
   private loader: LoadingPage;
+  private toast: ZTToast;
 
   constructor(
     public navCtrl: NavController,
@@ -55,9 +61,13 @@ export class LodgePage {
     private afAuth: AngularFireAuth,
     private dbService: DataService,
     private events: Events,
+    private email: EmailComposer,
+    private sms: SMS,
+    private call: CallNumber,
     private _app: App
   ) {
     this.db = this.afDB.database;
+    this.toast = new ZTToast();
   }
 
   ionViewDidLoad() {
@@ -220,8 +230,7 @@ export class LodgePage {
     console.log(this.selectedSegment);
   }
 
-  onSignIn(student, slidingItem: ItemSliding, index) {
-    slidingItem.close();
+  onSignIn(student, index) {
     console.log("Sign in with :", student);
     // should show sign in form to collect signature
     //  and save it to the database
@@ -233,10 +242,22 @@ export class LodgePage {
     });
     signInForm.present();
   }
-  onText(student, slidingItem: ItemSliding) {
-    slidingItem.close();
+  onText(student, index) {
     console.log("Text with :", student);
     //  Text student
+    let textStudent = (phoneNumber) => {
+      this.sms.send(phoneNumber, "This is a reminder from UniLodge.")
+        .then(_ => {
+          this.updateReminderInfo(index, "text");
+        }).catch(err => {
+          this.toast.error("Error when sending text. Please check your security settings.")
+        });
+    }
+
+    this.choosePhoneNumber(student, textStudent);
+  }
+
+  choosePhoneNumber(student, cb) {
     if (student.phone && student.guardianPhone) {
       // if have more than 1 phone numbers in student record,
       //  show a popup window to choose.
@@ -257,29 +278,52 @@ export class LodgePage {
       alert.addButton("Cancel");
       alert.addButton({
         text: "Ok",
-        handler: (data: any) => {
-          console.log("Radio data:", data);
-          // data is the selected phone no.
-          // make a call
+        handler: (phoneNumber: any) => {
+          console.log("Radio data:", phoneNumber);
+          cb(phoneNumber);
         }
       });
       alert.present();
     } else {
-      let phone = student.phone || student.guardianPhone;
-      // make a call
+      let phoneNumber = student.phone || student.guardianPhone;
+      cb(phoneNumber);
     }
   }
-  onCall(student, slidingItem: ItemSliding) {
-    slidingItem.close();
+
+  onCall(student, index) {
     console.log("Call with :", student);
     //  Call student
     // if have more than 1 phone numbers in student record,
     //  show a popup window to choose.
+    let callStudent = (phoneNumber) => {
+      this.call.callNumber(phoneNumber, true)
+        .then(() => {
+          this.updateReminderInfo(index, 'call');
+        }).catch(err => {
+          this.toast.error("Error when making a call. Please check your security settings.");
+        })
+    }
+
+    this.choosePhoneNumber(student, callStudent);
+
   }
-  onEmail(student, slidingItem) {
-    slidingItem.close();
-    console.log("Email with :", student);
+  onEmail(student, index) {
     //  Email student
+    this.email.isAvailable().then(available => {
+      if (available) {
+        this.email.open({
+          app: "mailto",
+          to: student.email,
+          subject: "Reminder",
+          body: "This is a reminder from UniLodge."
+        }).then(() => {
+          this.toast.success("Email sent successfully!", 500)
+          this.updateReminderInfo(index, 'email');
+        }).catch(err => {
+          this.toast.error("Error when sending email. Please check your security settings.");
+        })
+      }
+    });
   }
 
   onShowDetail(student) {
@@ -288,5 +332,15 @@ export class LodgePage {
       let lodgeDetail = this.modalCtrl.create(LodgeDetailPage, { student });
       lodgeDetail.present();
     }
+  }
+
+  updateReminderInfo(index, remindMethod = "text", reminderTime = new Date()) {
+    let studentRefString = `/${this.userId}/lodgelists/${this.dateString}`;
+    let studentRef = this.db.ref(studentRefString);
+    studentRef.child(index)
+      .update({
+        remindMethod,
+        reminderTime
+      })
   }
 }

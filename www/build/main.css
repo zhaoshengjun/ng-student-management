@@ -25266,6 +25266,23 @@ page-lodge .lodged {
   border-left-color: #8bc34a;
 }
 
+page-lodge .button_text {
+  margin-left: 6px;
+}
+
+page-lodge .card_title {
+  font-size: 2rem;
+  padding-bottom: 4px;
+}
+
+page-lodge .color_button {
+  color: #303F9F;
+}
+
+page-lodge .right_button {
+  padding-right: 10px;
+}
+
 page-lodge-detail .title {
   font-size: larger;
   text-align: center;
@@ -25280,6 +25297,7 @@ page-lodge-detail .signature {
   height: 80%;
   border: 4px solid black;
   margin-top: 6px;
+  min-height: 20px;
 }
 
 page-lodge-detail .box {

@@ -72,18 +72,6 @@
 						<span class="search_text">Search</span>
 					</button>
 	<ion-list *ngIf="resultData">
-		<!-- <ion-row>
-			<ion-col></ion-col>
-			<ion-col>University</ion-col>
-			<ion-col>Student ID</ion-col>
-			<ion-col>Name</ion-col>
-			<ion-col>DOB</ion-col>
-			<ion-col>Room Number</ion-col>
-			<ion-col>Time Signed In</ion-col>
-			<ion-col>Singnature</ion-col>
-			<ion-col>Lease Start</ion-col>
-			<ion-col>Lease End</ion-col>
-		</ion-row> -->
 		<ion-item *ngFor="let item of resultData" [class.highlight]="item.lodgeStatus === 'unlodged'">
 			<ion-row>
 				<span class="left">Date:</span>
@@ -126,56 +114,6 @@
 				<span class="right">{{item.endDate}}</span>
 			</ion-row>
 		</ion-item>
-
 	</ion-list>
 
-	<!-- <div class="search">
-		<ion-list radio-group [(ngModel)]="searchTerm">
-			<ion-item>
-				<ion-label>By Date</ion-label>
-				<ion-radio (ionSelect)="onSelectChange()" value="bydate"></ion-radio>
-			</ion-item>
-			<ion-item>
-				<ion-label>Date</ion-label>
-				<ion-datetime [disabled]="this.searchTerm != 'bydate'" displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>
-			</ion-item>
-			<ion-item>
-				<ion-label>By Person</ion-label>
-				<ion-radio (ionSelect)="onSelectChange()" value="byperson"></ion-radio>
-			</ion-item>
-			<ion-item>
-				<ion-label>Name</ion-label>
-				<ion-input [disabled]="this.searchTerm != 'byperson'" [(ngModel)]="searchPerson"></ion-input>
-			</ion-item>
-			<ion-item>
-				<ion-label>By University</ion-label>
-				<ion-radio (ionSelect)="onSelectChange()" value="byuniversity"></ion-radio>
-			</ion-item>
-			<ion-item>
-				<ion-label>University</ion-label>
-				<ion-input [disabled]="this.searchTerm != 'byuniversity'" [(ngModel)]="searchUniversity"></ion-input>
-			</ion-item>
-
-		</ion-list>
-		<button ion-button block medium (click)="onSearch($event)" item-end>
-						<ion-icon name="search"></ion-icon>
-						Search
-					</button>
-	</div>
-
-	<div class="content">
-		<ion-card *ngFor="let record of records">
-			<ion-card-content>
-				<ion-row>
-					<ion-col width-40>
-						<p class="left">Student name:</p>
-					</ion-col>
-					<ion-col widht-60>
-						<p class="right"> {{record.name}} </p>
-					</ion-col>
-				</ion-row>
-
-			</ion-card-content>
-		</ion-card>
-	</div> -->
 </ion-content>

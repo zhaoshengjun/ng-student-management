@@ -1,0 +1,26 @@
+{
+    "cordova-plugin-email-composer": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-email-composer"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-sms": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-sms"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "mx.ferreyra.callnumber": {
+        "source": {
+            "type": "registry",
+            "id": "call-number"
+        },
+        "is_top_level": true,
+        "variables": {}
+    }
+}

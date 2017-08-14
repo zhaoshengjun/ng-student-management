@@ -19,16 +19,57 @@
 			</ion-segment-button>
 		</ion-segment>
 	</ion-toolbar>
-	<!-- <div>
-    <span>
-        wholeList: {{wholeList | async |json}}
-      </span>
-  </div> -->
 </ion-header>
 
 <ion-content padding>
+	<div *ngIf="wholeList">
+		<ion-card *ngFor="let item of wholeList | async; let i = index" [class.hide]="item.lodgeStatus !== selectedSegment">
+			<ion-row>
+				<ion-col col-8 padding>
+					<h2 class="card_title">
+						{{item.name}}
+					</h2>
+					<p>Room Number: {{item.roomNo}}</p>
+				</ion-col>
+				<ion-col col-4 *ngIf="item.lodgeStatus =='unlodged'">
+					<button ion-button outline (click)="onSignIn(item, i)" color="secondary" class="right_button">
+							<ion-icon name="md-checkbox-outline"></ion-icon>
+					<span class="button_text"> Sign In</span>
+				</button>
+				</ion-col>
+				<ion-col col-4 *ngIf="item.lodgeStatus =='lodged'">
+					<button ion-button outline (click)="onShowDetail(item)" class="right_button">
+							<ion-icon name="md-clipboard"></ion-icon>
+							<span class="button_text">Detail</span>
+				</button>
+				</ion-col>
+			</ion-row>
 
-	<ion-list *ngIf="wholeList">
+			<ion-row *ngIf="item.lodgeStatus =='unlodged'">
+				<ion-col>
+					<button ion-button small clear class="color_button" (click)="onCall(item)">
+							<ion-icon name="call"></ion-icon>
+							<span class="button_text">Call</span>
+				</button>
+				</ion-col>
+				<ion-col>
+					<button ion-button small clear class="color_button" (click)="onText(item)">
+							<ion-icon name="text"></ion-icon>	
+							<span class="button_text">Text</span>
+						</button>
+				</ion-col>
+				<ion-col>
+					<button ion-button small clear class="color_button" (click)="onEmail(item)">
+							<ion-icon name="mail"></ion-icon>
+							<span class="button_text">Email</span>
+						</button>
+				</ion-col>
+			</ion-row>
+		</ion-card>
+
+	</div>
+
+	<!-- <ion-list *ngIf="wholeList">
 		<ion-item-sliding *ngFor="let item of wholeList | async; let i = index" [class.hide]="item.lodgeStatus !== selectedSegment "
 		  #slidingItem (click)="onShowDetail(item)">
 
@@ -38,10 +79,6 @@
 				</ion-avatar>
 				<h2>{{item.name}}</h2>
 				<p> {{item.roomNo}} </p>
-				<!-- <p> {{item.email}} </p>
-				<p> {{item.lodgeStatus}} </p>
-				<p> {{item.id}} </p>
-				<p> {{item.email}} </p> -->
 			</ion-item>
 			<ion-item-options side="left" [class.hide]="item.lodgeStatus === 'lodged' ">
 				<button ion-button color="primary" (click)="onText(item, slidingItem)">
@@ -64,6 +101,6 @@
 								</button>
 			</ion-item-options>
 		</ion-item-sliding>
-	</ion-list>
+	</ion-list> -->
 
 </ion-content>

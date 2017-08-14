@@ -21,6 +21,9 @@ import { AngularFireDatabaseModule } from "angularfire2/database";
 import { AngularFireAuthModule } from "angularfire2/auth";
 import { DataService } from "../share/data-service";
 import { LodgeFormPage } from "../pages/lodge-form/lodge-form";
+import { EmailComposer } from "@ionic-native/email-composer";
+import { CallNumber } from '@ionic-native/call-number';
+import { SMS } from '@ionic-native/sms';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCETsqdUtSsWkz4oCP8_EsM3mbeDlfscKQ",
@@ -74,7 +77,10 @@ export const firebaseConfig = {
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
+    EmailComposer,
+    CallNumber,
+    SMS,
     DataService
   ]
 })
-export class AppModule {}
+export class AppModule { }
