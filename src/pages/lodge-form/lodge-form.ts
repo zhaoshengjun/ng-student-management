@@ -65,30 +65,9 @@ export class LodgeFormPage {
   }
 
   onSubmit() {
-    // submit the record
-    // this.loader.show();
     console.log("submit signin information");
-
     console.log("index", this.index);
-
     this.savePic();
-    // should show progress bar
-    // also show error/success message to let user know.
-    // let listRef = this.db.ref(this.studentRef);
-    // listRef
-    //   .child(this.index.toString())
-    //   .update({ lodgeStatus: "lodged", reason: "signature" })
-    //   .then(
-    //   _ => {
-    //     this.loader.hide();
-    //     this.viewCtrl.dismiss();
-    //   },
-    //   err => {
-    //     this.loader.hide();
-    //     this.error = true;
-    //     this.errorMessage = err.message;
-    //   }
-    //   );
   }
 
   onCancel() {
@@ -101,7 +80,7 @@ export class LodgeFormPage {
     let [contentType, b64Data] = pic.split(",");
     let picData = b64ToBlob(b64Data, contentType);
     if (this.uid) {
-      this._toast.info("Start uploading signature");
+      this._toast.info("Start save record information...");
       let ref = firebase.storage().ref("/" + this.uid);
       let generatedPicName = this.generatePictureName();
       let meta = {
@@ -110,26 +89,16 @@ export class LodgeFormPage {
           activity: "lodge"
         }
       };
-      // const showUploadPaused = () => {
-      //   this._toast.warning("Upload is paused");
-      // };
 
       const showUploadError = err => {
         this._toast.error(err.message);
-      };
-
-      const showUploadSuccess = () => {
-        this._toast.success("Upload is done!");
-        // this.saveRecord
       };
 
       ref.child(generatedPicName).put(picData, meta).then(
         snapshot => {
           console.log("snapshot:", snapshot);
           this.url = snapshot.downloadURL;
-          showUploadSuccess();
           this.updateLodgeStatus();
-          // use url to update lodge information.
         },
         err => {
           showUploadError(err);
@@ -139,7 +108,6 @@ export class LodgeFormPage {
   }
 
   updateLodgeStatus() {
-    this._toast.info("Updating sign in record");
     let listRef = this.db.ref(this.studentRef);
     listRef
       .child(this.index.toString())
@@ -150,13 +118,13 @@ export class LodgeFormPage {
         signature: this.url
       })
       .then(
-        _ => {
-          this._toast.success("Saved successfully!");
-          this.viewCtrl.dismiss();
-        },
-        err => {
-          this._toast.error(err.message);
-        }
+      _ => {
+        this._toast.success("Saved successfully!");
+        this.viewCtrl.dismiss();
+      },
+      err => {
+        this._toast.error(err.message);
+      }
       );
   }
 

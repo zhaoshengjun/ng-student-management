@@ -1123,28 +1123,9 @@ var LodgeFormPage = (function () {
         this.resizeCanvas();
     };
     LodgeFormPage.prototype.onSubmit = function () {
-        // submit the record
-        // this.loader.show();
         console.log("submit signin information");
         console.log("index", this.index);
         this.savePic();
-        // should show progress bar
-        // also show error/success message to let user know.
-        // let listRef = this.db.ref(this.studentRef);
-        // listRef
-        //   .child(this.index.toString())
-        //   .update({ lodgeStatus: "lodged", reason: "signature" })
-        //   .then(
-        //   _ => {
-        //     this.loader.hide();
-        //     this.viewCtrl.dismiss();
-        //   },
-        //   err => {
-        //     this.loader.hide();
-        //     this.error = true;
-        //     this.errorMessage = err.message;
-        //   }
-        //   );
     };
     LodgeFormPage.prototype.onCancel = function () {
         console.log("Cancel signin");
@@ -1156,7 +1137,7 @@ var LodgeFormPage = (function () {
         var _a = pic.split(","), contentType = _a[0], b64Data = _a[1];
         var picData = Object(__WEBPACK_IMPORTED_MODULE_5__share_common__["a" /* b64ToBlob */])(b64Data, contentType);
         if (this.uid) {
-            this._toast.info("Start uploading signature");
+            this._toast.info("Start save record information...");
             var ref = __WEBPACK_IMPORTED_MODULE_3_firebase___default.a.storage().ref("/" + this.uid);
             var generatedPicName = this.generatePictureName();
             var meta = {
@@ -1165,22 +1146,13 @@ var LodgeFormPage = (function () {
                     activity: "lodge"
                 }
             };
-            // const showUploadPaused = () => {
-            //   this._toast.warning("Upload is paused");
-            // };
             var showUploadError_1 = function (err) {
                 _this._toast.error(err.message);
-            };
-            var showUploadSuccess_1 = function () {
-                _this._toast.success("Upload is done!");
-                // this.saveRecord
             };
             ref.child(generatedPicName).put(picData, meta).then(function (snapshot) {
                 console.log("snapshot:", snapshot);
                 _this.url = snapshot.downloadURL;
-                showUploadSuccess_1();
                 _this.updateLodgeStatus();
-                // use url to update lodge information.
             }, function (err) {
                 showUploadError_1(err);
             });
@@ -1188,7 +1160,6 @@ var LodgeFormPage = (function () {
     };
     LodgeFormPage.prototype.updateLodgeStatus = function () {
         var _this = this;
-        this._toast.info("Updating sign in record");
         var listRef = this.db.ref(this.studentRef);
         listRef
             .child(this.index.toString())
@@ -1215,12 +1186,10 @@ LodgeFormPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
         selector: "page-lodge-form",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/'<ion-header>\n\n	<ion-navbar>\n		<ion-title>Sign In</ion-title>\n	</ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n	<ion-list>\n		<ion-row>\n			<h2> {{ student?.name}}</h2>\n		</ion-row>\n		<ion-row>\n			<p> Room No.: {{student?.roomNo}} </p>\n		</ion-row>\n		<ion-row class=\'canvas-container\'>\n			<canvas id="canvas"></canvas>\n		</ion-row>\n	</ion-list>\n	<ion-row>\n		<ion-col width-50>\n			<button ion-button (click)="onSubmit()" block large>\n        Submit\n      </button>\n		</ion-col>\n		<ion-col>\n			<button ion-button (click)="onCancel()" block large>\n          Cancel\n        </button>\n		</ion-col>\n	</ion-row>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */],
-        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */]) === "function" && _d || Object])
 ], LodgeFormPage);
 
+var _a, _b, _c, _d;
 //# sourceMappingURL=lodge-form.js.map
 
 /***/ }),
