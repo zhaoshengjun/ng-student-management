@@ -1,10 +1,14 @@
-import { SignupPage } from "./../signup/signup";
+import { EmailComposer } from '@ionic-native/email-composer';
+import { File } from '@ionic-native/file';
 import { Component } from "@angular/core";
 import { NavController, AlertController } from "ionic-angular";
 import * as firebase from "firebase";
 import Rx from "rxjs/Rx";
 import { convertFirebaseObjectToArray } from "../../share/common";
 import { format, isBefore } from "date-fns";
+import { ExcelService } from "../../share/excel-service";
+
+declare var cordova;
 
 @Component({
   selector: "page-report",
@@ -24,8 +28,12 @@ export class ReportPage {
   resultData: Array<any>;
   loaded: boolean = false;
   noData: boolean;
+  fs: string = cordova.file.documentsDirectory;  // iOS specific
 
   constructor(public navCtrl: NavController,
+    private excel: ExcelService,
+    private email: EmailComposer,
+    private file: File,
     private alertCtrl: AlertController) { }
 
   ionViewDidLoad() {
@@ -187,9 +195,6 @@ export class ReportPage {
   }
 
   getData() {
-    let lodgeLists = [];
-    let students = [];
-
     let lodgeListsRef = firebase.database().ref(this.lodgeListsRefString);
     let studentsRef = firebase.database().ref(this.studentsRefString);
 
@@ -202,5 +207,38 @@ export class ReportPage {
 
   onExport() {
     console.log("export report");
+    this.excel.createXSLX([['Head1', 'Head2', 'Head3'], ['val1', 'val2', 'val3']])
+      .then(data => {
+        console.log("excel data:", data);
+        let time = new Date().getTime();
+        let fileName: string = "UniLodge-" + time + ".xlsx";
+        this.file.writeFile(this.fs, fileName, data, { replace: true })
+          .then(f => {
+            console.log("Returned from writing file: ", f);
+
+            let fp = this.fs + fileName;
+            // let emailAddress = firebase.auth().currentUser.email;
+            let emailAddress = "zhao.shengjun@gmail.com"
+            let emailOptions = {
+              to: emailAddress,
+              attachments: [fp],
+              subject: "UniLodge Report",
+              body: "Here's the report you wanted."
+            };
+            this.email.open(emailOptions)
+              .then(() => {
+                console.log('done!')
+              })
+              .catch((err) => {
+                console.log('error: ', err.message);
+              });
+          })
+          .catch(err => {
+            console.log("Error when writing file: ", err);
+          });
+      })
+      .catch(err => {
+        console.log("error:", err.message);
+      });
   }
 }

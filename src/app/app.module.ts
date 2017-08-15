@@ -25,6 +25,7 @@ import { LodgeFormPage } from "../pages/lodge-form/lodge-form";
 import { EmailComposer } from "@ionic-native/email-composer";
 import { CallNumber } from "@ionic-native/call-number";
 import { SMS } from "@ionic-native/sms";
+import { ExcelService } from "../share/excel-service";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCETsqdUtSsWkz4oCP8_EsM3mbeDlfscKQ",
@@ -84,6 +85,7 @@ export const firebaseConfig = {
     EmailComposer,
     CallNumber,
     SMS,
+    ExcelService,
     DataService
   ]
 })

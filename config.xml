@@ -86,4 +86,5 @@
     <plugin name="cordova-plugin-email-composer" spec="~0.8.7" />
     <plugin name="cordova-plugin-sms" spec="~1.0.5" />
     <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
+    <plugin name="cordova-plugin-file" spec="~4.3.3" />
 </widget>
