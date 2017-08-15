@@ -175,8 +175,6 @@ var LodgeDetailPage = (function () {
         this.viewCtrl = viewCtrl;
         this.hasSignature = true;
         this.student = navParams.get("student");
-    }
-    LodgeDetailPage.prototype.ionViewDidLoad = function () {
         if (this.student.reason == "InHoliday") {
             this.hasSignature = false;
         }
@@ -184,6 +182,8 @@ var LodgeDetailPage = (function () {
             this.hasSignature = true;
             this.student.timestampStr = Object(__WEBPACK_IMPORTED_MODULE_0_date_fns__["format"])(this.student.timestamp, "YYYY/MM/DD HH:mm:ss");
         }
+    }
+    LodgeDetailPage.prototype.ionViewDidLoad = function () {
     };
     LodgeDetailPage.prototype.dismiss = function () {
         this.viewCtrl.dismiss();
@@ -192,11 +192,12 @@ var LodgeDetailPage = (function () {
 }());
 LodgeDetailPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
-        selector: "page-lodge-detail",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-detail\lodge-detail.html"*/'<ion-header>\n	<ion-toolbar>\n		<ion-title>\n			Lodge Detail\n		</ion-title>\n		<ion-buttons end>\n			<button ion-button (click)="dismiss()">\n						<ion-icon name="md-close"></ion-icon>\n					</button>\n		</ion-buttons>\n	</ion-toolbar>\n</ion-header>\n\n\n<ion-content padding>\n	<ion-list>\n		<ion-item>\n			<h2 class="title">{{student.name}}</h2>\n		</ion-item>\n		<ion-item>\n			Room No.:\n			<ion-note item-end>\n				{{student.roomNo}}\n			</ion-note>\n		</ion-item>\n		<ion-item *ngIf="!hasSignature">\n			Status:\n			<ion-note item-end>\n				In Holiday\n			</ion-note>\n		</ion-item>\n		<ion-item *ngIf="!hasSignature">\n			Holiday Period:\n			<ion-note item-end>\n				{{student.timestamp}}\n			</ion-note>\n		</ion-item>\n\n		<ion-item *ngIf="hasSignature">\n			Time:\n			<ion-note item-end>\n				{{student.timestampStr}}\n			</ion-note>\n		</ion-item>\n		<div *ngIf="hasSignature" class="pic-box">\n			<ion-label>Signature:</ion-label>\n			<div class="box">\n				<img [src]="student.signature" alt="" class="signature">\n			</div>\n		</div>\n		<div class="box">\n			<button ion-button (click)="dismiss()">Cancel</button>\n		</div>\n	</ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-detail\lodge-detail.html"*/
+        selector: "page-lodge-detail",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-detail\lodge-detail.html"*/'<ion-header>\n	<ion-toolbar>\n		<ion-title>\n			Lodge Detail\n		</ion-title>\n		<ion-buttons end>\n			<button ion-button (click)="dismiss()">\n						<ion-icon name="md-close"></ion-icon>\n					</button>\n		</ion-buttons>\n	</ion-toolbar>\n</ion-header>\n\n\n<ion-content padding>\n	<ion-list>\n		<ion-item>\n			<h2 class="title">{{student.name}}</h2>\n		</ion-item>\n		<ion-item>\n			Room No.:\n			<ion-note item-end>\n				{{student.roomNo}}\n			</ion-note>\n		</ion-item>\n		<ion-item *ngIf="!hasSignature">\n			Status:\n			<ion-note item-end>\n				In Holiday\n			</ion-note>\n		</ion-item>\n		<ion-item *ngIf="!hasSignature">\n			Holiday Period:\n			<span item-end class="text_label">\n				{{student.signature}}\n			</span>\n		</ion-item>\n\n		<ion-item *ngIf="hasSignature">\n			Time:\n			<ion-note item-end>\n				{{student.timestampStr}}\n			</ion-note>\n		</ion-item>\n		<div *ngIf="hasSignature" class="pic-box">\n			<ion-label>Signature:</ion-label>\n			<div class="box">\n				<img [src]="student.signature" alt="" class="signature">\n			</div>\n		</div>\n		<div class="box">\n			<button ion-button (click)="dismiss()">Cancel</button>\n		</div>\n	</ion-list>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-detail\lodge-detail.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */], __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */]) === "function" && _b || Object])
 ], LodgeDetailPage);
 
+var _a, _b;
 //# sourceMappingURL=lodge-detail.js.map
 
 /***/ }),

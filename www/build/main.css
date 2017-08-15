@@ -25324,6 +25324,10 @@ page-lodge-detail .text {
   margin-top: 4px;
 }
 
+page-lodge-detail .text_label {
+  color: #c5c5c5;
+}
+
 page-lodge-form .canvas-container {
   background-color: white;
   width: 90%;

@@ -31,9 +31,9 @@
 		</ion-item>
 		<ion-item *ngIf="!hasSignature">
 			Holiday Period:
-			<ion-note item-end>
-				{{student.timestamp}}
-			</ion-note>
+			<span item-end class="text_label">
+				{{student.signature}}
+			</span>
 		</ion-item>
 
 		<ion-item *ngIf="hasSignature">

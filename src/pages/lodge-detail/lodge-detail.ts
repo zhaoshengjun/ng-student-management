@@ -11,9 +11,6 @@ export class LodgeDetailPage {
   hasSignature: boolean = true;
   constructor(public navParams: NavParams, public viewCtrl: ViewController) {
     this.student = navParams.get("student");
-  }
-
-  ionViewDidLoad() {
     if (this.student.reason == "InHoliday") {
       this.hasSignature = false;
     } else if (this.student.reason == "signature") {
@@ -23,6 +20,10 @@ export class LodgeDetailPage {
         "YYYY/MM/DD HH:mm:ss"
       );
     }
+  }
+
+  ionViewDidLoad() {
+
   }
 
   dismiss() {
