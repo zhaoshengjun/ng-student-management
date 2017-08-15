@@ -25207,6 +25207,10 @@ ion-navbar.toolbar {
   font-size: 2em;
 }
 
+.alert-sub-title {
+  white-space: pre-line !important;
+}
+
 loading-modal .container {
   z-index: -1;
   -webkit-transition: z-index 0.2s step-end;

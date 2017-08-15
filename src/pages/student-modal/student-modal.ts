@@ -37,7 +37,7 @@ export class StudentModalPage {
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private navParams: NavParams
-  ) {}
+  ) { }
 
   ionViewDidLoad() {
     let title = this.navParams.get("confirmTitle");
@@ -67,53 +67,101 @@ export class StudentModalPage {
     // this can be saved to the database.
   }
 
+  validateDates() {
+    // 1. start date >= today
+    // 2. end date >= start date
+    // 3. holiday start date >= today
+    // 4. holiday end date >= holiday start date
+    let hasError = false;
+    let errors = [];
+    let today = new Date();
+    this.student.startDate = new Date(this.startDate);
+    this.student.endDate = new Date(this.endDate);
+    this.student.dateOfBirth = new Date(this.dateOfBirth);
+
+    if (isBefore(this.student.startDate, today)) {
+      hasError = true;
+      errors.push({
+        type: "warning",
+        message: "Start date is before today, but we cannot change historical sign in records"
+      });
+    }
+
+    if (isBefore(this.student.endDate, this.student.startDate)) {
+      hasError = true;
+      errors.push({
+        type: "error",
+        message: "End date should no later than start date"
+      });
+    }
+    return { hasError, errors }
+  }
+
   onConfirm() {
     // should update/add the student data
     // delete/archive will be performed in the list view instead of this detail view
     // for unarchived student, there's archive option
     // for archived student, there's unarchive option
-    this.loader.show();
 
-    this.student.startDate = new Date(this.startDate);
-    this.student.endDate = new Date(this.endDate);
-    this.student.dateOfBirth = new Date(this.dateOfBirth);
-    this.updateStudentStatus();
+    let { hasError, errors } = this.validateDates()
+    if (!hasError) {
+      this.loader.show();
+      this.updateStudentStatus();
 
-    let listRef = this.db.ref(this.studentRef);
-    if (this.mode == "add") {
-      let newKey = listRef.push().key;
-      this.student.id = newKey;
-      let updateData = {};
-      updateData[newKey] = this.student;
-      // also need to check if needs to be inserted into today's lodge list.
+      let listRef = this.db.ref(this.studentRef);
+      if (this.mode == "add") {
+        let newKey = listRef.push().key;
+        this.student.id = newKey;
+        let updateData = {};
+        updateData[newKey] = this.student;
+        // also need to check if needs to be inserted into today's lodge list.
 
-      listRef.update(updateData).then(
-        _ => {
-          this.addIntoLodgeList(this.student);
-          this.loader.hide();
-          this.viewCtrl.dismiss();
-        },
-        err => {
-          this.loader.hide();
-          this.error = true;
-          this.errorMessage = err.message;
-          console.log("error when saving student data", err);
-        }
-      );
+        listRef.update(updateData).then(
+          _ => {
+            this.addIntoLodgeList(this.student);
+            this.loader.hide();
+            this.viewCtrl.dismiss();
+          },
+          err => {
+            this.loader.hide();
+            this.error = true;
+            this.errorMessage = err.message;
+            console.log("error when saving student data", err);
+          }
+        );
+      } else {
+        listRef.child(this.student.id).update(this.student).then(
+          _ => {
+            this.loader.hide();
+            this.viewCtrl.dismiss();
+          },
+          err => {
+            this.loader.hide();
+            this.error = true;
+            this.errorMessage = err.message;
+            console.log("error when saving student data", err);
+          }
+        );
+      }
     } else {
-      listRef.child(this.student.id).update(this.student).then(
-        _ => {
-          this.loader.hide();
-          this.viewCtrl.dismiss();
-        },
-        err => {
-          this.loader.hide();
-          this.error = true;
-          this.errorMessage = err.message;
-          console.log("error when saving student data", err);
-        }
-      );
+      let msg = this.buildErrorMessages(errors);
+      let confirm = this.alertCtrl.create({
+        title: 'Errors',
+        subTitle: msg,
+        buttons: ['OK']
+      });
+      confirm.present();
     }
+
+  }
+
+  buildErrorMessages(errors) {
+    let msg = "There are following errors: \n"
+    for (let err of errors) {
+      msg = msg + " - " + err.message + '\n';
+    }
+
+    return msg;
   }
 
   updateStudentStatus() {

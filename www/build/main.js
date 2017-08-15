@@ -273,46 +273,90 @@ var StudentModalPage = (function () {
         // access the photo lib to change the avatar.
         // this can be saved to the database.
     };
+    StudentModalPage.prototype.validateDates = function () {
+        // 1. start date >= today
+        // 2. end date >= start date
+        // 3. holiday start date >= today
+        // 4. holiday end date >= holiday start date
+        var hasError = false;
+        var errors = [];
+        var today = new Date();
+        this.student.startDate = new Date(this.startDate);
+        this.student.endDate = new Date(this.endDate);
+        this.student.dateOfBirth = new Date(this.dateOfBirth);
+        if (Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["isBefore"])(this.student.startDate, today)) {
+            hasError = true;
+            errors.push({
+                type: "warning",
+                message: "Start date is before today, but we cannot change historical sign in records"
+            });
+        }
+        if (Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["isBefore"])(this.student.endDate, this.student.startDate)) {
+            hasError = true;
+            errors.push({
+                type: "error",
+                message: "End date should no later than start date"
+            });
+        }
+        return { hasError: hasError, errors: errors };
+    };
     StudentModalPage.prototype.onConfirm = function () {
-        var _this = this;
         // should update/add the student data
         // delete/archive will be performed in the list view instead of this detail view
         // for unarchived student, there's archive option
         // for archived student, there's unarchive option
-        this.loader.show();
-        this.student.startDate = new Date(this.startDate);
-        this.student.endDate = new Date(this.endDate);
-        this.student.dateOfBirth = new Date(this.dateOfBirth);
-        this.updateStudentStatus();
-        var listRef = this.db.ref(this.studentRef);
-        if (this.mode == "add") {
-            var newKey = listRef.push().key;
-            this.student.id = newKey;
-            var updateData = {};
-            updateData[newKey] = this.student;
-            // also need to check if needs to be inserted into today's lodge list.
-            listRef.update(updateData).then(function (_) {
-                _this.addIntoLodgeList(_this.student);
-                _this.loader.hide();
-                _this.viewCtrl.dismiss();
-            }, function (err) {
-                _this.loader.hide();
-                _this.error = true;
-                _this.errorMessage = err.message;
-                console.log("error when saving student data", err);
-            });
+        var _this = this;
+        var _a = this.validateDates(), hasError = _a.hasError, errors = _a.errors;
+        if (!hasError) {
+            this.loader.show();
+            this.updateStudentStatus();
+            var listRef = this.db.ref(this.studentRef);
+            if (this.mode == "add") {
+                var newKey = listRef.push().key;
+                this.student.id = newKey;
+                var updateData = {};
+                updateData[newKey] = this.student;
+                // also need to check if needs to be inserted into today's lodge list.
+                listRef.update(updateData).then(function (_) {
+                    _this.addIntoLodgeList(_this.student);
+                    _this.loader.hide();
+                    _this.viewCtrl.dismiss();
+                }, function (err) {
+                    _this.loader.hide();
+                    _this.error = true;
+                    _this.errorMessage = err.message;
+                    console.log("error when saving student data", err);
+                });
+            }
+            else {
+                listRef.child(this.student.id).update(this.student).then(function (_) {
+                    _this.loader.hide();
+                    _this.viewCtrl.dismiss();
+                }, function (err) {
+                    _this.loader.hide();
+                    _this.error = true;
+                    _this.errorMessage = err.message;
+                    console.log("error when saving student data", err);
+                });
+            }
         }
         else {
-            listRef.child(this.student.id).update(this.student).then(function (_) {
-                _this.loader.hide();
-                _this.viewCtrl.dismiss();
-            }, function (err) {
-                _this.loader.hide();
-                _this.error = true;
-                _this.errorMessage = err.message;
-                console.log("error when saving student data", err);
+            var msg = this.buildErrorMessages(errors);
+            var confirm = this.alertCtrl.create({
+                title: 'Errors',
+                subTitle: msg,
+                buttons: ['OK']
             });
+            confirm.present();
         }
+    };
+    StudentModalPage.prototype.buildErrorMessages = function (errors) {
+        var msg = "There are following errors: \n";
+        for (var _i = 0, errors_1 = errors; _i < errors_1.length; _i++) {
+            var err = errors_1[_i];
+            msg = msg + " - " + err.message + '\n';
+        }
+        return msg;
     };
     StudentModalPage.prototype.updateStudentStatus = function () {
         var keyDate = new Date();
@@ -456,13 +500,10 @@ StudentModalPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["n" /* Component */])({
         selector: "page-student-modal",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/'<ion-header>\n	<ion-toolbar>\n		<ion-title>\n			Student Info\n		</ion-title>\n\n		<ion-buttons start>\n			<button ion-button (click)="onCancel()">\n        <ion-icon name="md-close"></ion-icon>\n      </button>\n		</ion-buttons>\n	</ion-toolbar>\n</ion-header>\n\n<ion-content padding [class.dark]="isArchived">\n	<ion-list>\n		<ion-item>\n			<ion-avatar (click)="clickedAvatar()" item-start>\n				<img src="/assets/images/unknown.png">\n				<button ion-button class="inside-middle">Change</button>\n			</ion-avatar>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Full Name\n			</ion-label>\n			<ion-input type="text" [(ngModel)]="student.name" placeholder="Full Name"></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Id\n			</ion-label>\n			<ion-input type="text" [(ngModel)]="student.studentId" placeholder="Student Id"></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				University\n			</ion-label>\n			<ion-select [(ngModel)]="student.university">\n				<ion-option>\n					QUT\n				</ion-option>\n				<ion-option>\n					UQ\n				</ion-option>\n			</ion-select>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Email\n			</ion-label>\n			<ion-input type="email" [(ngModel)]="student.email" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Phone\n			</ion-label>\n			<ion-input type="tel" [(ngModel)]="student.phone" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Start Date\n			</ion-label>\n			<ion-input type="date" [(ngModel)]="startDate" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				End Date\n			</ion-label>\n			<ion-input type="date" [(ngModel)]="endDate" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Room No.\n			</ion-label>\n			<ion-input type="number" [(ngModel)]="student.roomNo" placeholder=""></ion-input>\n		</ion-item>\n\n		<ion-list-header><span class="list_header">Guardian Info</span></ion-list-header>\n		<ion-item>\n			<ion-label>\n				Guardian Name\n			</ion-label>\n			<ion-input type="text" [(ngModel)]="student.guardianName" placeholder="Full Name"></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Guardian Email\n			</ion-label>\n			<ion-input type="email" [(ngModel)]="student.guardianEmail" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Guardian Phone\n			</ion-label>\n			<ion-input type="tel" [(ngModel)]="student.guardianPhone" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Comments\n			</ion-label>\n			<ion-textarea rows="4" [(ngModel)]="student.comments" placeholder="Any comments?"></ion-textarea>\n		</ion-item>\n\n		<ion-list-header> <span class="list_header"> Holiday Info</span></ion-list-header>\n		<ion-item>\n			<ion-row>\n				<ion-col col-3 push-8>\n					<button ion-button icon-left (click)="onAddHoliday()" pull-right>\n							<ion-icon name="plane"></ion-icon>\n							Add\n						</button>\n				</ion-col>\n			</ion-row>\n			<ion-row>\n				<ion-col class="table header">Start Date</ion-col>\n				<ion-col class="table header">End Date</ion-col>\n				<ion-col class="table header">Actions</ion-col>\n			</ion-row>\n\n			<div *ngIf="student.holidayPeriods">\n				<ion-row *ngFor="let holiday of student.holidayPeriods, let i = index">\n					<ion-col class="table">{{holiday.startDate}}</ion-col>\n					<ion-col class="table">{{holiday.endDate}}</ion-col>\n					<ion-col class="equal-box table">\n						<button class="equal-item" (click)="onEditHoliday(i)" ion-button small>\n              <ion-icon name=\'create\' class="icon-btn"></ion-icon>\n            </button>\n						<button class="equal-item" (click)="onDeleteHoliday(i)" ion-button small>\n                <ion-icon name=\'trash\' class="icon-btn"></ion-icon>\n            </button>\n					</ion-col>\n				</ion-row>\n			</div>\n		</ion-item>\n\n	</ion-list>\n	<hr>\n	<div class="equal-box">\n		<button ion-button color="positive" icon-left class="equal-item" (click)="onConfirm()">\n		<ion-icon name="checkmark-circle"></ion-icon>\n		{{ confirmTitle }}\n	</button>\n		<button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">\n		<ion-icon name="close"></ion-icon>\n		Cancel\n	</button>\n	</div>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_5_ionic_angular__["l" /* ViewController */],
-        __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["g" /* LoadingController */],
-        __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["h" /* ModalController */],
-        __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["a" /* AlertController */],
-        __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["j" /* NavParams */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["l" /* ViewController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["l" /* ViewController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["g" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["g" /* LoadingController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["h" /* ModalController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["h" /* ModalController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["a" /* AlertController */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["j" /* NavParams */]) === "function" && _e || Object])
 ], StudentModalPage);
 
+var _a, _b, _c, _d, _e;
 //# sourceMappingURL=student-modal.js.map
 
 /***/ }),
