@@ -54,6 +54,7 @@ export const firebaseConfig = {
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp, {
+      mode: "md",
       iconMode: "md",
       pageTransition: "md-transition"
     }),
@@ -86,4 +87,4 @@ export const firebaseConfig = {
     DataService
   ]
 })
-export class AppModule {}
+export class AppModule { }
