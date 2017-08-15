@@ -25400,6 +25400,10 @@ page-report .right {
   font-size: 1.7rem;
 }
 
+page-report .center {
+  text-align: center;
+}
+
 page-report ion-row {
   margin-bottom: 3px;
   border-bottom: 1px dashed #dcdada;

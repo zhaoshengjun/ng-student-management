@@ -1,10 +1,10 @@
 import { SignupPage } from "./../signup/signup";
 import { Component } from "@angular/core";
-import { NavController } from "ionic-angular";
+import { NavController, AlertController } from "ionic-angular";
 import * as firebase from "firebase";
 import Rx from "rxjs/Rx";
 import { convertFirebaseObjectToArray } from "../../share/common";
-import { format } from "date-fns";
+import { format, isBefore } from "date-fns";
 
 @Component({
   selector: "page-report",
@@ -23,8 +23,10 @@ export class ReportPage {
   lodgeLists: Array<any>;
   resultData: Array<any>;
   loaded: boolean = false;
+  noData: boolean;
 
-  constructor(public navCtrl: NavController) { }
+  constructor(public navCtrl: NavController,
+    private alertCtrl: AlertController) { }
 
   ionViewDidLoad() {
     this.uid = firebase.auth().currentUser.uid;
@@ -49,19 +51,30 @@ export class ReportPage {
   }
 
   onSearch() {
-    console.log("Search");
     this.resultData = [];
 
-    if (!this.loaded) {
-      this.getData().then(snap => {
-        this.convertFirebaseData(snap);
-        this.doSearch();
+    // check if the date is after today.
+
+    if (this.searchTerm !== "byPerson" && isBefore(new Date(), this.searchDate)) {
+      let confirm = this.alertCtrl.create({
+        title: 'Error',
+        subTitle: "Cannot search data later than today.",
+        buttons: ['OK']
       });
+      confirm.present();
     } else {
-      this.doSearch();
-      this.formatResultData();
-      console.log("resultData:", this.resultData);
+      if (!this.loaded) {
+        this.getData().then(snap => {
+          this.convertFirebaseData(snap);
+          this.doSearch();
+        });
+      } else {
+        this.doSearch();
+        this.formatResultData();
+        console.log("resultData:", this.resultData);
+      }
     }
+
   }
 
   formatResultData() {
@@ -101,12 +114,17 @@ export class ReportPage {
 
     let keyDate = format(new Date(this.searchDate), "YYYYMMDD");
     let lodgelist = this.lodgeLists[keyDate];
-    this.resultData = lodgelist
-      .map(l => {
-        let studentInfo = findStudentInfo(l.studentId);
-        return this.mergeInfo(studentInfo, l, this.searchDate);
-      })
-      .filter(e => e);
+    if (lodgelist) {
+      this.noData = false;
+      this.resultData = lodgelist
+        .map(l => {
+          let studentInfo = findStudentInfo(l.studentId);
+          return this.mergeInfo(studentInfo, l, this.searchDate);
+        })
+        .filter(e => e);
+    } else {
+      this.noData = true;
+    }
   }
 
   mergeInfo(student, lodgeInfo, date) {

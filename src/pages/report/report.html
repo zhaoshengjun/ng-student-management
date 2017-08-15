@@ -71,6 +71,10 @@
 						<ion-icon name="search"></ion-icon>
 						<span class="search_text">Search</span>
 					</button>
+
+	<div *ngIf="noData">
+		<p class="center">No data matches the selected criterias.</p>
+	</div>
 	<ion-list *ngIf="resultData">
 		<ion-item *ngFor="let item of resultData" [class.highlight]="item.lodgeStatus === 'unlodged'">
 			<ion-row>

@@ -630,8 +630,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var ReportPage = (function () {
-    function ReportPage(navCtrl) {
+    function ReportPage(navCtrl, alertCtrl) {
         this.navCtrl = navCtrl;
+        this.alertCtrl = alertCtrl;
         this.searchTerm = "byDate";
         this.loaded = false;
     }
@@ -656,18 +657,28 @@ var ReportPage = (function () {
     };
     ReportPage.prototype.onSearch = function () {
         var _this = this;
-        console.log("Search");
         this.resultData = [];
-        if (!this.loaded) {
-            this.getData().then(function (snap) {
-                _this.convertFirebaseData(snap);
-                _this.doSearch();
+        // check if the date is after today.
+        if (this.searchTerm !== "byPerson" && Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["isBefore"])(new Date(), this.searchDate)) {
+            var confirm = this.alertCtrl.create({
+                title: 'Error',
+                subTitle: "Cannot search data later than today.",
+                buttons: ['OK']
             });
+            confirm.present();
         }
         else {
-            this.doSearch();
-            this.formatResultData();
-            console.log("resultData:", this.resultData);
+            if (!this.loaded) {
+                this.getData().then(function (snap) {
+                    _this.convertFirebaseData(snap);
+                    _this.doSearch();
+                });
+            }
+            else {
+                this.doSearch();
+                this.formatResultData();
+                console.log("resultData:", this.resultData);
+            }
         }
     };
     ReportPage.prototype.formatResultData = function () {
@@ -704,12 +715,18 @@ var ReportPage = (function () {
         };
         var keyDate = Object(__WEBPACK_IMPORTED_MODULE_5_date_fns__["format"])(new Date(this.searchDate), "YYYYMMDD");
         var lodgelist = this.lodgeLists[keyDate];
-        this.resultData = lodgelist
-            .map(function (l) {
-            var studentInfo = findStudentInfo(l.studentId);
-            return _this.mergeInfo(studentInfo, l, _this.searchDate);
-        })
-            .filter(function (e) { return e; });
+        if (lodgelist) {
+            this.noData = false;
+            this.resultData = lodgelist
+                .map(function (l) {
+                var studentInfo = findStudentInfo(l.studentId);
+                return _this.mergeInfo(studentInfo, l, _this.searchDate);
+            })
+                .filter(function (e) { return e; });
+        }
+        else {
+            this.noData = true;
+        }
     };
     ReportPage.prototype.mergeInfo = function (student, lodgeInfo, date) {
         var lodgeStatus = lodgeInfo.lodgeStatus, reason = lodgeInfo.reason, signature = lodgeInfo.signature, timestamp = lodgeInfo.timestamp, reminderTime = lodgeInfo.reminderTime;
@@ -786,11 +803,12 @@ var ReportPage = (function () {
 }());
 ReportPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: "page-report",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/'<ion-header>\n	<ion-navbar>\n		<ion-title>\n			Report\n		</ion-title>\n		<ion-buttons end>\n			<button (click)="onExport()">\n				<ion-icon name="md-print" class="big_icon"></ion-icon>\n			</button>\n		</ion-buttons>\n	</ion-navbar>\n\n	<ion-toolbar>\n		<ion-segment [(ngModel)]="searchTerm" (ionChange)="onChange($event)">\n			<ion-segment-button value="byDate">\n				By Date\n			</ion-segment-button>\n			<ion-segment-button value="byPerson">\n				By Person\n			</ion-segment-button>\n			<ion-segment-button value="byUniversity">\n				By University\n			</ion-segment-button>\n		</ion-segment>\n	</ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n	<div [ngSwitch]="searchTerm">\n		<div *ngSwitchCase="\'byDate\'">\n			<ion-list>\n				<ion-item>\n					<ion-label>Date</ion-label>\n					<ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>\n				</ion-item>\n			</ion-list>\n		</div>\n\n		<div *ngSwitchCase="\'byPerson\'">\n			<ion-list>\n				<ion-item>\n					<ion-label>Student</ion-label>\n					<ion-input [(ngModel)]="searchPerson"></ion-input>\n				</ion-item>\n			</ion-list>\n		</div>\n\n		<div *ngSwitchCase="\'byUniversity\'">\n			<ion-list>\n				<ion-item>\n					<ion-label>\n						University\n					</ion-label>\n					<ion-select [(ngModel)]="searchUniversity">\n						<ion-option>\n							QUT\n						</ion-option>\n						<ion-option>\n							UQ\n						</ion-option>\n					</ion-select>\n				</ion-item>\n				<ion-item>\n					<ion-label>Date</ion-label>\n					<ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>\n				</ion-item>\n			</ion-list>\n		</div>\n	</div>\n	<button ion-button block medium (click)="onSearch($event)" item-end>\n						<ion-icon name="search"></ion-icon>\n						<span class="search_text">Search</span>\n					</button>\n	<ion-list *ngIf="resultData">\n		<ion-item *ngFor="let item of resultData" [class.highlight]="item.lodgeStatus === \'unlodged\'">\n			<ion-row>\n				<span class="left">Date:</span>\n				<span class="right">{{item.date}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">University:</span>\n				<span class="right">{{item.university}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Student ID:</span>\n				<span class="right">{{item.id}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Name:</span>\n				<span class="right">{{item.name}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">DOB:</span>\n				<span class="right">{{item.dateOfBirth}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Room Number:</span>\n				<span class="right">{{item.roomNo}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Time Signed In:</span>\n				<span class="right">{{item.timestamp}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Singnature:</span>\n				<span class="right"><a [href]="item.signature" *ngIf="item.signature">link</a></span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Lease Start:</span>\n				<span class="right">{{item.startDate}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Lease End:</span>\n				<span class="right">{{item.endDate}}</span>\n			</ion-row>\n		</ion-item>\n	</ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/
+        selector: "page-report",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/'<ion-header>\n	<ion-navbar>\n		<ion-title>\n			Report\n		</ion-title>\n		<ion-buttons end>\n			<button (click)="onExport()">\n				<ion-icon name="md-print" class="big_icon"></ion-icon>\n			</button>\n		</ion-buttons>\n	</ion-navbar>\n\n	<ion-toolbar>\n		<ion-segment [(ngModel)]="searchTerm" (ionChange)="onChange($event)">\n			<ion-segment-button value="byDate">\n				By Date\n			</ion-segment-button>\n			<ion-segment-button value="byPerson">\n				By Person\n			</ion-segment-button>\n			<ion-segment-button value="byUniversity">\n				By University\n			</ion-segment-button>\n		</ion-segment>\n	</ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n	<div [ngSwitch]="searchTerm">\n		<div *ngSwitchCase="\'byDate\'">\n			<ion-list>\n				<ion-item>\n					<ion-label>Date</ion-label>\n					<ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>\n				</ion-item>\n			</ion-list>\n		</div>\n\n		<div *ngSwitchCase="\'byPerson\'">\n			<ion-list>\n				<ion-item>\n					<ion-label>Student</ion-label>\n					<ion-input [(ngModel)]="searchPerson"></ion-input>\n				</ion-item>\n			</ion-list>\n		</div>\n\n		<div *ngSwitchCase="\'byUniversity\'">\n			<ion-list>\n				<ion-item>\n					<ion-label>\n						University\n					</ion-label>\n					<ion-select [(ngModel)]="searchUniversity">\n						<ion-option>\n							QUT\n						</ion-option>\n						<ion-option>\n							UQ\n						</ion-option>\n					</ion-select>\n				</ion-item>\n				<ion-item>\n					<ion-label>Date</ion-label>\n					<ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="searchDate"></ion-datetime>\n				</ion-item>\n			</ion-list>\n		</div>\n	</div>\n	<button ion-button block medium (click)="onSearch($event)" item-end>\n						<ion-icon name="search"></ion-icon>\n						<span class="search_text">Search</span>\n					</button>\n\n	<div *ngIf="noData">\n		<p class="center">No data matches the selected criterias.</p>\n	</div>\n	<ion-list *ngIf="resultData">\n		<ion-item *ngFor="let item of resultData" [class.highlight]="item.lodgeStatus === \'unlodged\'">\n			<ion-row>\n				<span class="left">Date:</span>\n				<span class="right">{{item.date}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">University:</span>\n				<span class="right">{{item.university}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Student ID:</span>\n				<span class="right">{{item.id}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Name:</span>\n				<span class="right">{{item.name}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">DOB:</span>\n				<span class="right">{{item.dateOfBirth}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Room Number:</span>\n				<span class="right">{{item.roomNo}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Time Signed In:</span>\n				<span class="right">{{item.timestamp}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Singnature:</span>\n				<span class="right"><a [href]="item.signature" *ngIf="item.signature">link</a></span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Lease Start:</span>\n				<span class="right">{{item.startDate}}</span>\n			</ion-row>\n			<ion-row>\n				<span class="left">Lease End:</span>\n				<span class="right">{{item.endDate}}</span>\n			</ion-row>\n		</ion-item>\n	</ion-list>\n\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\report\report.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]) === "function" && _b || Object])
 ], ReportPage);
 
+var _a, _b;
 //# sourceMappingURL=report.js.map
 
 /***/ }),
