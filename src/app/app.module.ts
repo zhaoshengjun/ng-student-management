@@ -1,3 +1,4 @@
+import { PeriodModalPage } from "./../pages/period-modal/period-modal";
 import { LodgeDetailPage } from "./../pages/lodge-detail/lodge-detail";
 import { StudentModalPage } from "./../pages/student-modal/student-modal";
 import { SettingPage } from "./../pages/setting/setting";
@@ -22,8 +23,8 @@ import { AngularFireAuthModule } from "angularfire2/auth";
 import { DataService } from "../share/data-service";
 import { LodgeFormPage } from "../pages/lodge-form/lodge-form";
 import { EmailComposer } from "@ionic-native/email-composer";
-import { CallNumber } from '@ionic-native/call-number';
-import { SMS } from '@ionic-native/sms';
+import { CallNumber } from "@ionic-native/call-number";
+import { SMS } from "@ionic-native/sms";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyCETsqdUtSsWkz4oCP8_EsM3mbeDlfscKQ",
@@ -46,6 +47,7 @@ export const firebaseConfig = {
     LoadingPage,
     LodgeFormPage,
     LodgeDetailPage,
+    PeriodModalPage,
     TabsPage
   ],
   imports: [
@@ -71,6 +73,7 @@ export const firebaseConfig = {
     LoadingPage,
     LodgeFormPage,
     LodgeDetailPage,
+    PeriodModalPage,
     TabsPage
   ],
   providers: [
@@ -83,4 +86,4 @@ export const firebaseConfig = {
     DataService
   ]
 })
-export class AppModule { }
+export class AppModule {}

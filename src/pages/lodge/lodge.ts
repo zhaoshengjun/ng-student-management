@@ -1,4 +1,4 @@
-import { ZTToast } from './../toast/zttoast';
+import { ZTToast } from "./../toast/zttoast";
 import { LodgeDetailPage } from "./../lodge-detail/lodge-detail";
 import { SignupPage } from "./../signup/signup";
 import { Student } from "./../../share/data/model";
@@ -33,7 +33,7 @@ import {
 import { isWithinRange, format, isBefore } from "date-fns";
 import { LodgeFormPage } from "../lodge-form/lodge-form";
 
-import { EmailComposer } from '@ionic-native/email-composer';
+import { EmailComposer } from "@ionic-native/email-composer";
 import { SMS } from "@ionic-native/sms";
 import { CallNumber } from "@ionic-native/call-number";
 
@@ -145,14 +145,14 @@ export class LodgePage {
             let {
               needLodge,
               reason,
-              status,
+              lodgeStatus,
               signature,
               timestamp
             } = this.checkIfNeedToLodge(s);
             if (needLodge) {
               let lodgeInfo = {
                 studentId: s.id,
-                lodgeStatus: status,
+                lodgeStatus,
                 reason,
                 signature,
                 timestamp
@@ -170,16 +170,20 @@ export class LodgePage {
   checkIfNeedToLodge(student) {
     let needLodge = true;
     let reason = "";
-    let status = "unlodged";
+    let lodgeStatus = "unlodged";
     let signature = "";
     let timestamp = "";
 
     if (isWithinRange(this.selectedDate, student.startDate, student.endDate)) {
-      let { reason, status, signature } = this.checkHolidays(student);
+      let lodgeInfo = this.checkHolidays(student);
+      reason = lodgeInfo.reason;
+      lodgeStatus = lodgeInfo.lodgeStatus;
+      signature = lodgeInfo.signature;
+      timestamp = lodgeInfo.timestamp;
     } else if (isBefore(student.endDate, this.selectedDate)) {
       // update student's status to archived.
       needLodge = false;
-      status = "";
+      lodgeStatus = "";
       let studentKey = student.id;
       let studentRef = this.db.ref(`/${this.userId}/students/${studentKey}`);
       studentRef.update({
@@ -187,15 +191,15 @@ export class LodgePage {
       });
     } else if (isBefore(this.selectedDate, student.startDate)) {
       needLodge = false;
-      status = "";
+      lodgeStatus = "";
     }
-    return { needLodge, reason, status, signature, timestamp };
+    return { needLodge, reason, lodgeStatus, signature, timestamp };
   }
 
   checkHolidays(student) {
     let val = {
       reason: "",
-      status: "unlodged",
+      lodgeStatus: "unlodged",
       signature: "",
       timestamp: ""
     };
@@ -207,7 +211,7 @@ export class LodgePage {
           isWithinRange(this.selectedDate, holiday.startDate, holiday.endDate)
         ) {
           val.reason = "InHoliday";
-          val.status = "lodged";
+          val.lodgeStatus = "lodged";
           val.signature = `${format(
             holiday.startDate,
             "YYYY-MM-DD"
@@ -245,14 +249,18 @@ export class LodgePage {
   onText(student, index) {
     console.log("Text with :", student);
     //  Text student
-    let textStudent = (phoneNumber) => {
-      this.sms.send(phoneNumber, "This is a reminder from UniLodge.")
+    let textStudent = phoneNumber => {
+      this.sms
+        .send(phoneNumber, "This is a reminder from UniLodge.")
         .then(_ => {
           this.updateReminderInfo(index, "text");
-        }).catch(err => {
-          this.toast.error("Error when sending text. Please check your security settings.")
+        })
+        .catch(err => {
+          this.toast.error(
+            "Error when sending text. Please check your security settings."
+          );
         });
-    }
+    };
 
     this.choosePhoneNumber(student, textStudent);
   }
@@ -295,33 +303,41 @@ export class LodgePage {
     //  Call student
     // if have more than 1 phone numbers in student record,
     //  show a popup window to choose.
-    let callStudent = (phoneNumber) => {
-      this.call.callNumber(phoneNumber, true)
+    let callStudent = phoneNumber => {
+      this.call
+        .callNumber(phoneNumber, true)
         .then(() => {
-          this.updateReminderInfo(index, 'call');
-        }).catch(err => {
-          this.toast.error("Error when making a call. Please check your security settings.");
+          this.updateReminderInfo(index, "call");
         })
-    }
+        .catch(err => {
+          this.toast.error(
+            "Error when making a call. Please check your security settings."
+          );
+        });
+    };
 
     this.choosePhoneNumber(student, callStudent);
-
   }
   onEmail(student, index) {
     //  Email student
     this.email.isAvailable().then(available => {
       if (available) {
-        this.email.open({
-          app: "mailto",
-          to: student.email,
-          subject: "Reminder",
-          body: "This is a reminder from UniLodge."
-        }).then(() => {
-          this.toast.success("Email sent successfully!", 500)
-          this.updateReminderInfo(index, 'email');
-        }).catch(err => {
-          this.toast.error("Error when sending email. Please check your security settings.");
-        })
+        this.email
+          .open({
+            app: "mailto",
+            to: student.email,
+            subject: "Reminder",
+            body: "This is a reminder from UniLodge."
+          })
+          .then(() => {
+            this.toast.success("Email sent successfully!", 500);
+            this.updateReminderInfo(index, "email");
+          })
+          .catch(err => {
+            this.toast.error(
+              "Error when sending email. Please check your security settings."
+            );
+          });
       }
     });
   }
@@ -337,10 +353,9 @@ export class LodgePage {
   updateReminderInfo(index, remindMethod = "text", reminderTime = new Date()) {
     let studentRefString = `/${this.userId}/lodgelists/${this.dateString}`;
     let studentRef = this.db.ref(studentRefString);
-    studentRef.child(index)
-      .update({
-        remindMethod,
-        reminderTime
-      })
+    studentRef.child(index).update({
+      remindMethod,
+      reminderTime
+    });
   }
 }

@@ -1,150 +1,149 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Student Info
-    </ion-title>
+	<ion-toolbar>
+		<ion-title>
+			Student Info
+		</ion-title>
 
-    <ion-buttons start>
-      <button ion-button (click)="onCancel()">
+		<ion-buttons start>
+			<button ion-button (click)="onCancel()">
         <ion-icon name="md-close"></ion-icon>
       </button>
-    </ion-buttons>
-  </ion-toolbar>
+		</ion-buttons>
+	</ion-toolbar>
 </ion-header>
 
 <ion-content padding [class.dark]="isArchived">
-  <ion-item>
-    <ion-avatar (click)="clickedAvatar()">
-      <img src="/assets/images/unknown.png">
-      <button ion-button class="inside-middle">Change</button>
-    </ion-avatar>
+	<ion-list>
+		<ion-item>
+			<ion-avatar (click)="clickedAvatar()" item-start>
+				<img src="/assets/images/unknown.png">
+				<button ion-button class="inside-middle">Change</button>
+			</ion-avatar>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				Full Name
+			</ion-label>
+			<ion-input type="text" [(ngModel)]="student.name" placeholder="Full Name"></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				Id
+			</ion-label>
+			<ion-input type="text" [(ngModel)]="student.studentId" placeholder="Student Id"></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				University
+			</ion-label>
+			<ion-select [(ngModel)]="student.university">
+				<ion-option>
+					QUT
+				</ion-option>
+				<ion-option>
+					UQ
+				</ion-option>
+			</ion-select>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				Email
+			</ion-label>
+			<ion-input type="email" [(ngModel)]="student.email" placeholder=""></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				Phone
+			</ion-label>
+			<ion-input type="tel" [(ngModel)]="student.phone" placeholder=""></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				Start Date
+			</ion-label>
+			<ion-input type="date" [(ngModel)]="startDate" placeholder=""></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				End Date
+			</ion-label>
+			<ion-input type="date" [(ngModel)]="endDate" placeholder=""></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				Room No.
+			</ion-label>
+			<ion-input type="number" [(ngModel)]="student.roomNo" placeholder=""></ion-input>
+		</ion-item>
 
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Full Name
-    </ion-label>
-    <ion-input type="text" [(ngModel)]="student.name" placeholder="Full Name"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      University
-    </ion-label>
-    <ion-select name="">
-      <ion-option>
-        QUT
-      </ion-option>
-      <ion-option>
-        UQ
-      </ion-option>
-    </ion-select>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Email
-    </ion-label>
-    <ion-input type="email" [(ngModel)]="student.email" placeholder=""></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Phone
-    </ion-label>
-    <ion-input type="tel" [(ngModel)]="student.phone" placeholder=""></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Start Date
-    </ion-label>
-    <ion-input type="date" [(ngModel)]="startDate" placeholder=""></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      End Date
-    </ion-label>
-    <ion-input type="date" [(ngModel)]="endDate" placeholder=""></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Room No.
-    </ion-label>
-    <ion-input type="number" [(ngModel)]="student.roomNo" placeholder=""></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Guardian Name
-    </ion-label>
-    <ion-input type="text" [(ngModel)]="student.guardianName" placeholder="Full Name"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Guardian Email
-    </ion-label>
-    <ion-input type="email" [(ngModel)]="student.guardianEmail" placeholder=""></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Guardian Phone
-    </ion-label>
-    <ion-input type="tel" [(ngModel)]="student.guardianPhone" placeholder=""></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      Comments
-    </ion-label>
-    <ion-textarea [(ngModel)]="student.comments" placeholder="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet quos vero sequi consequatur voluptate id, impedit sed quis doloribus. Dolore."></ion-textarea>
-  </ion-item>
-  <ion-item>
+		<ion-list-header><span class="list_header">Guardian Info</span></ion-list-header>
+		<ion-item>
+			<ion-label>
+				Guardian Name
+			</ion-label>
+			<ion-input type="text" [(ngModel)]="student.guardianName" placeholder="Full Name"></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				Guardian Email
+			</ion-label>
+			<ion-input type="email" [(ngModel)]="student.guardianEmail" placeholder=""></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				Guardian Phone
+			</ion-label>
+			<ion-input type="tel" [(ngModel)]="student.guardianPhone" placeholder=""></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label>
+				Comments
+			</ion-label>
+			<ion-textarea rows="4" [(ngModel)]="student.comments" placeholder="Any comments?"></ion-textarea>
+		</ion-item>
 
-  </ion-item>
+		<ion-list-header> <span class="list_header"> Holiday Info</span></ion-list-header>
+		<ion-item>
+			<ion-row>
+				<ion-col col-3 push-8>
+					<button ion-button icon-left (click)="onAddHoliday()" pull-right>
+							<ion-icon name="plane"></ion-icon>
+							Add
+						</button>
+				</ion-col>
+			</ion-row>
+			<ion-row>
+				<ion-col class="table header">Start Date</ion-col>
+				<ion-col class="table header">End Date</ion-col>
+				<ion-col class="table header">Actions</ion-col>
+			</ion-row>
 
-  <ion-item>
-
-    <ion-grid>
-      <ion-row class="title">
-        <ion-col>
-          <h2>Holidays</h2>
-        </ion-col>
-        <ion-col>
-          <button ion-button color="positive" icon-left (click)="onAddHoliday()" float-right>
-                <ion-icon name="plane"></ion-icon>
-                Add
-              </button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <div class="holiday-table">
-      <ion-grid>
-        <ion-row>
-          <ion-col>Start Date</ion-col>
-          <ion-col>End Date</ion-col>
-          <ion-col>Actions</ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>2018/07/01</ion-col>
-          <ion-col>2018/08/01</ion-col>
-          <ion-col class="equal-box">
-            <button class="equal-item" (click)="onEditHoliday()">
+			<div *ngIf="student.holidayPeriods">
+				<ion-row *ngFor="let holiday of student.holidayPeriods, let i = index">
+					<ion-col class="table">{{holiday.startDate}}</ion-col>
+					<ion-col class="table">{{holiday.endDate}}</ion-col>
+					<ion-col class="equal-box table">
+						<button class="equal-item" (click)="onEditHoliday(i)" ion-button small>
               <ion-icon name='create' class="icon-btn"></ion-icon>
             </button>
-            <button class="equal-item" (click)="onDeleteHoliday()">
+						<button class="equal-item" (click)="onDeleteHoliday(i)" ion-button small>
                 <ion-icon name='trash' class="icon-btn"></ion-icon>
             </button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
-  </ion-item>
+					</ion-col>
+				</ion-row>
+			</div>
+		</ion-item>
 
-  <div class="equal-box">
-    <button ion-button color="positive" icon-left class="equal-item" (click)="onConfirm()">
-      <ion-icon name="checkmark-circle"></ion-icon>
-      {{ confirmTitle }}
-    </button>
-    <button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">
-      <ion-icon name="close"></ion-icon>
-      Cancel
-    </button>
-  </div>
+	</ion-list>
+	<hr>
+	<div class="equal-box">
+		<button ion-button color="positive" icon-left class="equal-item" (click)="onConfirm()">
+		<ion-icon name="checkmark-circle"></ion-icon>
+		{{ confirmTitle }}
+	</button>
+		<button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">
+		<ion-icon name="close"></ion-icon>
+		Cancel
+	</button>
+	</div>
 </ion-content>

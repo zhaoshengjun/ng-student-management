@@ -1,9 +1,15 @@
+import { PeriodModalPage } from "./../period-modal/period-modal";
 import { LoadingPage } from "./../loading/loading";
-import { format } from "date-fns";
-import { DataService } from "./../../share/data-service";
+import { format, isWithinRange, isBefore } from "date-fns";
 import { Student } from "./../../share/data/model";
 import { Component } from "@angular/core";
-import { NavParams, ViewController, LoadingController } from "ionic-angular";
+import {
+  NavParams,
+  ViewController,
+  LoadingController,
+  ModalController,
+  AlertController
+} from "ionic-angular";
 import * as firebase from "firebase";
 
 @Component({
@@ -27,8 +33,9 @@ export class StudentModalPage {
 
   constructor(
     private viewCtrl: ViewController,
-    private dbService: DataService,
     private loadCtrl: LoadingController,
+    private modalCtrl: ModalController,
+    private alertCtrl: AlertController,
     private navParams: NavParams
   ) {}
 
@@ -70,6 +77,8 @@ export class StudentModalPage {
     this.student.startDate = new Date(this.startDate);
     this.student.endDate = new Date(this.endDate);
     this.student.dateOfBirth = new Date(this.dateOfBirth);
+    this.updateStudentStatus();
+
     let listRef = this.db.ref(this.studentRef);
     if (this.mode == "add") {
       let newKey = listRef.push().key;
@@ -77,8 +86,10 @@ export class StudentModalPage {
       let updateData = {};
       updateData[newKey] = this.student;
       // also need to check if needs to be inserted into today's lodge list.
+
       listRef.update(updateData).then(
         _ => {
+          this.addIntoLodgeList(this.student);
           this.loader.hide();
           this.viewCtrl.dismiss();
         },
@@ -90,7 +101,6 @@ export class StudentModalPage {
         }
       );
     } else {
-      // this.dbService.updateStudentInfo(this.student.$key, newVal)
       listRef.child(this.student.id).update(this.student).then(
         _ => {
           this.loader.hide();
@@ -106,19 +116,154 @@ export class StudentModalPage {
     }
   }
 
+  updateStudentStatus() {
+    let keyDate = new Date();
+    if (isBefore(this.student.endDate, keyDate)) {
+      this.student.status = "archived";
+    } else {
+      this.student.status = "active";
+    }
+  }
+
+  addIntoLodgeList(student) {
+    // check if current date is between start date and end date.
+    let lodgeList = [];
+    let {
+      needLodge,
+      reason,
+      lodgeStatus,
+      signature,
+      timestamp
+    } = this.checkIfNeedToLodge(student);
+    if (needLodge) {
+      let lodgeInfo = {
+        studentId: student.id,
+        lodgeStatus,
+        reason,
+        signature,
+        timestamp
+      };
+      console.log("lodgeInfo:", lodgeInfo);
+      lodgeList.push(lodgeInfo);
+    }
+    // push to firebase
+    let uid = firebase.auth().currentUser.uid;
+    let dateString = format(new Date(), "YYYYMMDD");
+    let lodgeListRefString = `/${uid}/lodgelists/${dateString}`;
+    let listRef = firebase.database().ref(lodgeListRefString);
+    listRef.push(lodgeList);
+  }
+
+  checkIfNeedToLodge(student) {
+    let needLodge = true;
+    let reason = "";
+    let lodgeStatus = "unlodged";
+    let signature = "";
+    let timestamp = "";
+    let uid = firebase.auth().currentUser.uid;
+
+    let keyDate = new Date();
+
+    if (isWithinRange(keyDate, student.startDate, student.endDate)) {
+      let lodgeInfo = this.checkHolidays(student);
+      reason = lodgeInfo.reason;
+      lodgeStatus = lodgeInfo.lodgeStatus;
+      signature = lodgeInfo.signature;
+      timestamp = lodgeInfo.timestamp;
+    } else if (isBefore(student.endDate, keyDate)) {
+      // update student's status to archived.
+      needLodge = false;
+      lodgeStatus = "";
+      let studentKey = student.id;
+      let studentRef = this.db.ref(`/${uid}/students/${studentKey}`);
+      studentRef.update({
+        status: "archived"
+      });
+    } else if (isBefore(keyDate, student.startDate)) {
+      needLodge = false;
+      lodgeStatus = "";
+    }
+    return { needLodge, reason, lodgeStatus, signature, timestamp };
+  }
+
+  checkHolidays(student) {
+    let val = {
+      reason: "",
+      lodgeStatus: "unlodged",
+      signature: "",
+      timestamp: ""
+    };
+    let keyDate = new Date();
+    let holidays = student.holidayPeriods;
+    if (holidays && holidays.length > 0) {
+      for (let i = 0; i < holidays.length; i++) {
+        let holiday = holidays[i];
+        if (isWithinRange(keyDate, holiday.startDate, holiday.endDate)) {
+          val.reason = "InHoliday";
+          val.lodgeStatus = "lodged";
+          val.signature = `${format(
+            holiday.startDate,
+            "YYYY-MM-DD"
+          )} ~ ${format(holiday.endDate, "YYYY-MM-DD")}`;
+          val.timestamp = new Date().toISOString();
+          break;
+        }
+      }
+    }
+    return val;
+  }
+
   onCancel() {
     this.viewCtrl.dismiss();
   }
 
   onAddHoliday() {
     console.log("Add holiday");
+
+    let modal = this.modalCtrl.create(PeriodModalPage, {
+      student: this.student
+    });
+    modal.onDidDismiss(data => {
+      if (data) {
+        let { startDate, endDate } = data;
+        if (!this.student.holidayPeriods) {
+          this.student.holidayPeriods = [];
+        }
+        this.student.holidayPeriods.push({ startDate, endDate });
+      }
+    });
+    modal.present();
   }
 
-  onEditHoliday() {
+  onEditHoliday(index) {
     console.log("Edit holiday");
+    let modal = this.modalCtrl.create(PeriodModalPage, {
+      student: this.student,
+      index
+    });
+    modal.present();
   }
 
-  onDeleteHoliday() {
+  onDeleteHoliday(index) {
     console.log("Delete holiday");
+    let confirm = this.alertCtrl.create({
+      title: "Confirm",
+      message: "Are you sure to delete this holiday period?",
+      buttons: [
+        {
+          text: "Cancel",
+          handler: () => {
+            console.log("Cancel clicked");
+          }
+        },
+        {
+          text: "Confirm",
+          handler: () => {
+            this.student.holidayPeriods.splice(index, 1);
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 }

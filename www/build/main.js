@@ -1,14 +1,80 @@
 webpackJsonp([0],{
 
-/***/ 163:
+/***/ 106:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataService; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_database__ = __webpack_require__(95);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_auth__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common__ = __webpack_require__(98);
+/* harmony export (immutable) */ __webpack_exports__["c"] = getDateString;
+/* harmony export (immutable) */ __webpack_exports__["b"] = convertFirebaseObjectToArray;
+/* unused harmony export convertFirebaseObject */
+/* harmony export (immutable) */ __webpack_exports__["a"] = b64ToBlob;
+function getDateString(d) {
+    if (d === void 0) { d = new Date(); }
+    var day = d.getDate() - 1;
+    var month = d.getMonth() + 1;
+    var dayStr = day < 10 ? "0" + day.toString() : day.toString();
+    var monthStr = month < 10 ? "0" + month.toString() : month.toString();
+    return "" + d.getFullYear() + monthStr + dayStr;
+}
+function convertFirebaseObjectToArray(obj) {
+    var arr = [];
+    for (var k in obj) {
+        if (obj.hasOwnProperty(k)) {
+            arr.push(convertFirebaseObject(obj[k], k));
+        }
+    }
+    return arr;
+}
+function convertFirebaseObject(obj, key) {
+    return Object.assign({ key: key }, obj);
+}
+function b64ToBlob(b64data, contentType, sliceSize) {
+    if (contentType === void 0) { contentType = ""; }
+    if (sliceSize === void 0) { sliceSize = 512; }
+    var byteCharacters = atob(b64data);
+    var byteArrays = [];
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+    var blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+}
+//# sourceMappingURL=common.js.map
+
+/***/ }),
+
+/***/ 188:
+/***/ (function(module, exports) {
+
+function webpackEmptyAsyncContext(req) {
+	// Here Promise.resolve().then() is used instead of new Promise() to prevent
+	// uncatched exception popping up in devtools
+	return Promise.resolve().then(function() {
+		throw new Error("Cannot find module '" + req + "'.");
+	});
+}
+webpackEmptyAsyncContext.keys = function() { return []; };
+webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
+module.exports = webpackEmptyAsyncContext;
+webpackEmptyAsyncContext.id = 188;
+
+/***/ }),
+
+/***/ 189:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PeriodModalPage; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_date_fns__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_date_fns__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -22,123 +88,50 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var DataService = (function () {
-    function DataService(afAuth, afDB) {
-        var _this = this;
-        this.afAuth = afAuth;
-        this.afDB = afDB;
-        afAuth.authState.subscribe(function (user) {
-            _this.uid = user.uid;
-        });
+var PeriodModalPage = (function () {
+    function PeriodModalPage(navCtrl, viewCtrl, navParams) {
+        this.navCtrl = navCtrl;
+        this.viewCtrl = viewCtrl;
+        this.navParams = navParams;
+        this.mode = "add";
+        this.student = navParams.get("student");
+        this.holiday = {
+            startDate: Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["format"])(new Date(), "YYYY-MM-DD"),
+            endDate: Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["format"])(new Date(), "YYYY-MM-DD")
+        };
+        var idx = navParams.get("index");
+        if (!isNaN(idx)) {
+            // means this is an edit operation
+            this.mode = "edit";
+            var _a = this.student.holidayPeriods[idx], startDate = _a.startDate, endDate = _a.endDate;
+            this.holiday = { startDate: startDate, endDate: endDate };
+        }
     }
-    DataService.prototype.convertFirebaseObject = function (obj, key) {
-        return Object.assign({ key: key }, obj);
+    PeriodModalPage.prototype.ionViewDidLoad = function () {
+        console.log("ionViewDidLoad PeriodModalPage");
     };
-    // students api
-    DataService.prototype.checkLoginStatus = function () {
-        if (!this.uid) {
-            var user = this.afAuth.auth.currentUser;
-            if (user) {
-                this.uid = user.uid;
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            return true;
-        }
+    PeriodModalPage.prototype.onConfirm = function () {
+        this.viewCtrl.dismiss(this.holiday);
     };
-    DataService.prototype.retriveData = function () {
-        var _this = this;
-        if (this.checkLoginStatus()) {
-            var today = Object(__WEBPACK_IMPORTED_MODULE_3__common__["c" /* getDateString */])();
-            this.afDB
-                .list("/" + this.uid + "/students", { preserveSnapshot: true })
-                .subscribe(function (snapshot) {
-                console.log("Getting students snapshot:", snapshot);
-                var stuTemp = [];
-                snapshot.forEach(function (s) {
-                    stuTemp.push(_this.convertFirebaseObject(s.val(), s.key));
-                });
-                _this.students = stuTemp;
-            });
-            this.afDB
-                .list("/" + this.uid + "/lodgelists/" + today, { preserveSnapshot: true })
-                .subscribe(function (snapshot) {
-                console.log("Getting lodgelists", snapshot);
-                _this.lodgelist = snapshot;
-            });
-        }
+    PeriodModalPage.prototype.onCancel = function () {
+        this.viewCtrl.dismiss();
     };
-    DataService.prototype.getStudents = function () {
-        var _this = this;
-        if (!this.students) {
-            this.retriveData();
-        }
-        return new Promise(function (res, rej) {
-            if (_this.students) {
-                res(_this.students);
-            }
-            else {
-                rej("No data found");
-            }
-        });
-    };
-    DataService.prototype.getStudentById = function (id) {
-        return this.students[0];
-        // return this.students.filter( s => s.$key === id);
-    };
-    DataService.prototype.updateStudentInfo = function (studentId, newVal) {
-        // 1. update based on new value;
-        // 2. if holiday period has been updated, needs to check the lodge list as well
-        // return this.students
-        // .update(studentId, newVal)
-    };
-    DataService.prototype.addStudent = function (student) {
-        // 1. add to students
-        // 2. check if he/she needs to be lodged on today's list.
-        // return this.students.push(student);
-    };
-    DataService.prototype.archiveStudent = function (studentId) {
-        // return this.students.update(studentId, {
-        //   archived: true,
-        //   archivedDate: new Date()
-        // })
-    };
-    // lodge list api
-    DataService.prototype.getList = function (ref) {
-        // if (this.uid) {
-        //   if (!this.lodgelist) {
-        //     // user has signed in and there's no lodgelist
-        //     //  we build a new one
-        //     this.buildLodgeList();
-        //   }
-        // }
-        if (this.checkLoginStatus()) {
-            return this.afDB.list(ref, {
-                preserveSnapshot: true
-            });
-        }
-        else {
-            return null;
-        }
-    };
-    DataService.prototype.buildLodgeList = function () { };
-    return DataService;
+    return PeriodModalPage;
 }());
-DataService = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_angularfire2_auth__["a" /* AngularFireAuth */],
-        __WEBPACK_IMPORTED_MODULE_0_angularfire2_database__["a" /* AngularFireDatabase */]])
-], DataService);
+PeriodModalPage = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
+        selector: "page-period-modal",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\period-modal\period-modal.html"*/'<ion-header>\n	<ion-toolbar>\n		<ion-title>\n			Holiday\n		</ion-title>\n\n		<ion-buttons start>\n			<button ion-button (click)="onCancel()">\n					<ion-icon name="md-close"></ion-icon>\n				</button>\n		</ion-buttons>\n	</ion-toolbar>\n</ion-header>\n\n\n<ion-content padding>\n\n	<ion-list>\n		<ion-item>\n			<h2 class="title"> {{ student.name}}</h2>\n		</ion-item>\n\n		<ion-item>\n			<ion-label>Start Date</ion-label>\n			<ion-datetime displayFormat="MMM DD YYYY" max="2030-12-31" [(ngModel)]="holiday.startDate"></ion-datetime>\n		</ion-item>\n		<ion-item>\n			<ion-label>End Date</ion-label>\n			<ion-datetime displayFormat="MMM DD YYYY" max="2030-12-31" [(ngModel)]="holiday.endDate"></ion-datetime>\n		</ion-item>\n	</ion-list>\n\n	<div class="equal-box">\n		<button ion-button icon-left class="equal-item" (click)="onConfirm()">\n      <ion-icon name="checkmark-circle"></ion-icon>\n      Save\n    </button>\n		<button ion-button color="secondary" icon-left class="equal-item" (click)="onCancel()">\n      <ion-icon name="close"></ion-icon>\n      Cancel\n    </button>\n	</div>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\period-modal\period-modal.html"*/
+    }),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0_ionic_angular__["i" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_0_ionic_angular__["l" /* ViewController */],
+        __WEBPACK_IMPORTED_MODULE_0_ionic_angular__["j" /* NavParams */]])
+], PeriodModalPage);
 
-//# sourceMappingURL=data-service.js.map
+//# sourceMappingURL=period-modal.js.map
 
 /***/ }),
 
-/***/ 189:
+/***/ 232:
 /***/ (function(module, exports) {
 
 function webpackEmptyAsyncContext(req) {
@@ -151,19 +144,19 @@ function webpackEmptyAsyncContext(req) {
 webpackEmptyAsyncContext.keys = function() { return []; };
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
 module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 189;
+webpackEmptyAsyncContext.id = 232;
 
 /***/ }),
 
-/***/ 190:
+/***/ 307:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LodgeDetailPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_date_fns__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_date_fns__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_date_fns__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(20);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -208,36 +201,19 @@ LodgeDetailPage = __decorate([
 
 /***/ }),
 
-/***/ 268:
-/***/ (function(module, exports) {
-
-function webpackEmptyAsyncContext(req) {
-	// Here Promise.resolve().then() is used instead of new Promise() to prevent
-	// uncatched exception popping up in devtools
-	return Promise.resolve().then(function() {
-		throw new Error("Cannot find module '" + req + "'.");
-	});
-}
-webpackEmptyAsyncContext.keys = function() { return []; };
-webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-module.exports = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 268;
-
-/***/ }),
-
 /***/ 308:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return StudentModalPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__loading_loading__ = __webpack_require__(69);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_date_fns__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_date_fns__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__share_data_service__ = __webpack_require__(163);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__share_data_model__ = __webpack_require__(520);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__period_modal_period_modal__ = __webpack_require__(189);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__loading_loading__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_date_fns__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_date_fns__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__share_data_model__ = __webpack_require__(511);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_ionic_angular__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_firebase__ = __webpack_require__(169);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_firebase__ = __webpack_require__(163);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_firebase__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -256,10 +232,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var StudentModalPage = (function () {
-    function StudentModalPage(viewCtrl, dbService, loadCtrl, navParams) {
+    function StudentModalPage(viewCtrl, loadCtrl, modalCtrl, alertCtrl, navParams) {
         this.viewCtrl = viewCtrl;
-        this.dbService = dbService;
         this.loadCtrl = loadCtrl;
+        this.modalCtrl = modalCtrl;
+        this.alertCtrl = alertCtrl;
         this.navParams = navParams;
         this.confirmTitle = "Save";
         this.isArchived = false;
@@ -281,14 +258,14 @@ var StudentModalPage = (function () {
         if (student) {
             this.mode = "edit";
             this.student = student;
-            this.startDate = Object(__WEBPACK_IMPORTED_MODULE_1_date_fns__["format"])(this.student.startDate, "YYYY-MM-DD");
-            this.endDate = Object(__WEBPACK_IMPORTED_MODULE_1_date_fns__["format"])(this.student.endDate, "YYYY-MM-DD");
+            this.startDate = Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["format"])(this.student.startDate, "YYYY-MM-DD");
+            this.endDate = Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["format"])(this.student.endDate, "YYYY-MM-DD");
             console.log("startDate:", this.startDate);
             console.log("endDate:", this.endDate);
             this.index = this.navParams.get("index");
         }
         this.isArchived = this.student.status == "achived";
-        this.loader = new __WEBPACK_IMPORTED_MODULE_0__loading_loading__["a" /* LoadingPage */](this.loadCtrl);
+        this.loader = new __WEBPACK_IMPORTED_MODULE_1__loading_loading__["a" /* LoadingPage */](this.loadCtrl);
     };
     StudentModalPage.prototype.clickedAvatar = function () {
         console.log("needs to change avatar");
@@ -305,6 +282,7 @@ var StudentModalPage = (function () {
         this.student.startDate = new Date(this.startDate);
         this.student.endDate = new Date(this.endDate);
         this.student.dateOfBirth = new Date(this.dateOfBirth);
+        this.updateStudentStatus();
         var listRef = this.db.ref(this.studentRef);
         if (this.mode == "add") {
             var newKey = listRef.push().key;
@@ -313,6 +291,7 @@ var StudentModalPage = (function () {
             updateData[newKey] = this.student;
             // also need to check if needs to be inserted into today's lodge list.
             listRef.update(updateData).then(function (_) {
+                _this.addIntoLodgeList(_this.student);
                 _this.loader.hide();
                 _this.viewCtrl.dismiss();
             }, function (err) {
@@ -323,7 +302,6 @@ var StudentModalPage = (function () {
             });
         }
         else {
-            // this.dbService.updateStudentInfo(this.student.$key, newVal)
             listRef.child(this.student.id).update(this.student).then(function (_) {
                 _this.loader.hide();
                 _this.viewCtrl.dismiss();
@@ -335,27 +313,152 @@ var StudentModalPage = (function () {
             });
         }
     };
+    StudentModalPage.prototype.updateStudentStatus = function () {
+        var keyDate = new Date();
+        if (Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["isBefore"])(this.student.endDate, keyDate)) {
+            this.student.status = "archived";
+        }
+        else {
+            this.student.status = "active";
+        }
+    };
+    StudentModalPage.prototype.addIntoLodgeList = function (student) {
+        // check if current date is between start date and end date.
+        var lodgeList = [];
+        var _a = this.checkIfNeedToLodge(student), needLodge = _a.needLodge, reason = _a.reason, lodgeStatus = _a.lodgeStatus, signature = _a.signature, timestamp = _a.timestamp;
+        if (needLodge) {
+            var lodgeInfo = {
+                studentId: student.id,
+                lodgeStatus: lodgeStatus,
+                reason: reason,
+                signature: signature,
+                timestamp: timestamp
+            };
+            console.log("lodgeInfo:", lodgeInfo);
+            lodgeList.push(lodgeInfo);
+        }
+        // push to firebase
+        var uid = __WEBPACK_IMPORTED_MODULE_6_firebase__["auth"]().currentUser.uid;
+        var dateString = Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["format"])(new Date(), "YYYYMMDD");
+        var lodgeListRefString = "/" + uid + "/lodgelists/" + dateString;
+        var listRef = __WEBPACK_IMPORTED_MODULE_6_firebase__["database"]().ref(lodgeListRefString);
+        listRef.push(lodgeList);
+    };
+    StudentModalPage.prototype.checkIfNeedToLodge = function (student) {
+        var needLodge = true;
+        var reason = "";
+        var lodgeStatus = "unlodged";
+        var signature = "";
+        var timestamp = "";
+        var uid = __WEBPACK_IMPORTED_MODULE_6_firebase__["auth"]().currentUser.uid;
+        var keyDate = new Date();
+        if (Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["isWithinRange"])(keyDate, student.startDate, student.endDate)) {
+            var lodgeInfo = this.checkHolidays(student);
+            reason = lodgeInfo.reason;
+            lodgeStatus = lodgeInfo.lodgeStatus;
+            signature = lodgeInfo.signature;
+            timestamp = lodgeInfo.timestamp;
+        }
+        else if (Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["isBefore"])(student.endDate, keyDate)) {
+            // update student's status to archived.
+            needLodge = false;
+            lodgeStatus = "";
+            var studentKey = student.id;
+            var studentRef = this.db.ref("/" + uid + "/students/" + studentKey);
+            studentRef.update({
+                status: "archived"
+            });
+        }
+        else if (Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["isBefore"])(keyDate, student.startDate)) {
+            needLodge = false;
+            lodgeStatus = "";
+        }
+        return { needLodge: needLodge, reason: reason, lodgeStatus: lodgeStatus, signature: signature, timestamp: timestamp };
+    };
+    StudentModalPage.prototype.checkHolidays = function (student) {
+        var val = {
+            reason: "",
+            lodgeStatus: "unlodged",
+            signature: "",
+            timestamp: ""
+        };
+        var keyDate = new Date();
+        var holidays = student.holidayPeriods;
+        if (holidays && holidays.length > 0) {
+            for (var i = 0; i < holidays.length; i++) {
+                var holiday = holidays[i];
+                if (Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["isWithinRange"])(keyDate, holiday.startDate, holiday.endDate)) {
+                    val.reason = "InHoliday";
+                    val.lodgeStatus = "lodged";
+                    val.signature = Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["format"])(holiday.startDate, "YYYY-MM-DD") + " ~ " + Object(__WEBPACK_IMPORTED_MODULE_2_date_fns__["format"])(holiday.endDate, "YYYY-MM-DD");
+                    val.timestamp = new Date().toISOString();
+                    break;
+                }
+            }
+        }
+        return val;
+    };
     StudentModalPage.prototype.onCancel = function () {
         this.viewCtrl.dismiss();
     };
     StudentModalPage.prototype.onAddHoliday = function () {
+        var _this = this;
         console.log("Add holiday");
+        var modal = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_0__period_modal_period_modal__["a" /* PeriodModalPage */], {
+            student: this.student
+        });
+        modal.onDidDismiss(function (data) {
+            if (data) {
+                var startDate = data.startDate, endDate = data.endDate;
+                if (!_this.student.holidayPeriods) {
+                    _this.student.holidayPeriods = [];
+                }
+                _this.student.holidayPeriods.push({ startDate: startDate, endDate: endDate });
+            }
+        });
+        modal.present();
     };
-    StudentModalPage.prototype.onEditHoliday = function () {
+    StudentModalPage.prototype.onEditHoliday = function (index) {
         console.log("Edit holiday");
+        var modal = this.modalCtrl.create(__WEBPACK_IMPORTED_MODULE_0__period_modal_period_modal__["a" /* PeriodModalPage */], {
+            student: this.student,
+            index: index
+        });
+        modal.present();
     };
-    StudentModalPage.prototype.onDeleteHoliday = function () {
+    StudentModalPage.prototype.onDeleteHoliday = function (index) {
+        var _this = this;
         console.log("Delete holiday");
+        var confirm = this.alertCtrl.create({
+            title: "Confirm",
+            message: "Are you sure to delete this holiday period?",
+            buttons: [
+                {
+                    text: "Cancel",
+                    handler: function () {
+                        console.log("Cancel clicked");
+                    }
+                },
+                {
+                    text: "Confirm",
+                    handler: function () {
+                        _this.student.holidayPeriods.splice(index, 1);
+                    }
+                }
+            ]
+        });
+        confirm.present();
     };
     return StudentModalPage;
 }());
 StudentModalPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_4__angular_core__["n" /* Component */])({
-        selector: "page-student-modal",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/'<ion-header>\n  <ion-toolbar>\n    <ion-title>\n      Student Info\n    </ion-title>\n\n    <ion-buttons start>\n      <button ion-button (click)="onCancel()">\n        <ion-icon name="md-close"></ion-icon>\n      </button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content padding [class.dark]="isArchived">\n  <ion-item>\n    <ion-avatar (click)="clickedAvatar()">\n      <img src="/assets/images/unknown.png">\n      <button ion-button class="inside-middle">Change</button>\n    </ion-avatar>\n\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Full Name\n    </ion-label>\n    <ion-input type="text" [(ngModel)]="student.name" placeholder="Full Name"></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      University\n    </ion-label>\n    <ion-select name="">\n      <ion-option>\n        QUT\n      </ion-option>\n      <ion-option>\n        UQ\n      </ion-option>\n    </ion-select>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Email\n    </ion-label>\n    <ion-input type="email" [(ngModel)]="student.email" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Phone\n    </ion-label>\n    <ion-input type="tel" [(ngModel)]="student.phone" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Start Date\n    </ion-label>\n    <ion-input type="date" [(ngModel)]="startDate" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      End Date\n    </ion-label>\n    <ion-input type="date" [(ngModel)]="endDate" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Room No.\n    </ion-label>\n    <ion-input type="number" [(ngModel)]="student.roomNo" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Name\n    </ion-label>\n    <ion-input type="text" [(ngModel)]="student.guardianName" placeholder="Full Name"></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Email\n    </ion-label>\n    <ion-input type="email" [(ngModel)]="student.guardianEmail" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Guardian Phone\n    </ion-label>\n    <ion-input type="tel" [(ngModel)]="student.guardianPhone" placeholder=""></ion-input>\n  </ion-item>\n  <ion-item>\n    <ion-label>\n      Comments\n    </ion-label>\n    <ion-textarea [(ngModel)]="student.comments" placeholder="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet quos vero sequi consequatur voluptate id, impedit sed quis doloribus. Dolore."></ion-textarea>\n  </ion-item>\n  <ion-item>\n\n  </ion-item>\n\n  <ion-item>\n\n    <ion-grid>\n      <ion-row class="title">\n        <ion-col>\n          <h2>Holidays</h2>\n        </ion-col>\n        <ion-col>\n          <button ion-button color="positive" icon-left (click)="onAddHoliday()" float-right>\n                <ion-icon name="plane"></ion-icon>\n                Add\n              </button>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n\n    <div class="holiday-table">\n      <ion-grid>\n        <ion-row>\n          <ion-col>Start Date</ion-col>\n          <ion-col>End Date</ion-col>\n          <ion-col>Actions</ion-col>\n        </ion-row>\n\n        <ion-row>\n          <ion-col>2018/07/01</ion-col>\n          <ion-col>2018/08/01</ion-col>\n          <ion-col class="equal-box">\n            <button class="equal-item" (click)="onEditHoliday()">\n              <ion-icon name=\'create\' class="icon-btn"></ion-icon>\n            </button>\n            <button class="equal-item" (click)="onDeleteHoliday()">\n                <ion-icon name=\'trash\' class="icon-btn"></ion-icon>\n            </button>\n          </ion-col>\n        </ion-row>\n      </ion-grid>\n    </div>\n  </ion-item>\n\n  <div class="equal-box">\n    <button ion-button color="positive" icon-left class="equal-item" (click)="onConfirm()">\n      <ion-icon name="checkmark-circle"></ion-icon>\n      {{ confirmTitle }}\n    </button>\n    <button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">\n      <ion-icon name="close"></ion-icon>\n      Cancel\n    </button>\n  </div>\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/
+        selector: "page-student-modal",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/'<ion-header>\n	<ion-toolbar>\n		<ion-title>\n			Student Info\n		</ion-title>\n\n		<ion-buttons start>\n			<button ion-button (click)="onCancel()">\n        <ion-icon name="md-close"></ion-icon>\n      </button>\n		</ion-buttons>\n	</ion-toolbar>\n</ion-header>\n\n<ion-content padding [class.dark]="isArchived">\n	<ion-list>\n		<ion-item>\n			<ion-avatar (click)="clickedAvatar()" item-start>\n				<img src="/assets/images/unknown.png">\n				<button ion-button class="inside-middle">Change</button>\n			</ion-avatar>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Full Name\n			</ion-label>\n			<ion-input type="text" [(ngModel)]="student.name" placeholder="Full Name"></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Id\n			</ion-label>\n			<ion-input type="text" [(ngModel)]="student.studentId" placeholder="Student Id"></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				University\n			</ion-label>\n			<ion-select [(ngModel)]="student.university">\n				<ion-option>\n					QUT\n				</ion-option>\n				<ion-option>\n					UQ\n				</ion-option>\n			</ion-select>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Email\n			</ion-label>\n			<ion-input type="email" [(ngModel)]="student.email" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Phone\n			</ion-label>\n			<ion-input type="tel" [(ngModel)]="student.phone" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Start Date\n			</ion-label>\n			<ion-input type="date" [(ngModel)]="startDate" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				End Date\n			</ion-label>\n			<ion-input type="date" [(ngModel)]="endDate" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Room No.\n			</ion-label>\n			<ion-input type="number" [(ngModel)]="student.roomNo" placeholder=""></ion-input>\n		</ion-item>\n\n		<ion-list-header><span class="list_header">Guardian Info</span></ion-list-header>\n		<ion-item>\n			<ion-label>\n				Guardian Name\n			</ion-label>\n			<ion-input type="text" [(ngModel)]="student.guardianName" placeholder="Full Name"></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Guardian Email\n			</ion-label>\n			<ion-input type="email" [(ngModel)]="student.guardianEmail" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Guardian Phone\n			</ion-label>\n			<ion-input type="tel" [(ngModel)]="student.guardianPhone" placeholder=""></ion-input>\n		</ion-item>\n		<ion-item>\n			<ion-label>\n				Comments\n			</ion-label>\n			<ion-textarea rows="4" [(ngModel)]="student.comments" placeholder="Any comments?"></ion-textarea>\n		</ion-item>\n\n		<ion-list-header> <span class="list_header"> Holiday Info</span></ion-list-header>\n		<ion-item>\n			<ion-row>\n				<ion-col col-3 push-8>\n					<button ion-button icon-left (click)="onAddHoliday()" pull-right>\n							<ion-icon name="plane"></ion-icon>\n							Add\n						</button>\n				</ion-col>\n			</ion-row>\n			<ion-row>\n				<ion-col class="table header">Start Date</ion-col>\n				<ion-col class="table header">End Date</ion-col>\n				<ion-col class="table header">Actions</ion-col>\n			</ion-row>\n\n			<div *ngIf="student.holidayPeriods">\n				<ion-row *ngFor="let holiday of student.holidayPeriods, let i = index">\n					<ion-col class="table">{{holiday.startDate}}</ion-col>\n					<ion-col class="table">{{holiday.endDate}}</ion-col>\n					<ion-col class="equal-box table">\n						<button class="equal-item" (click)="onEditHoliday(i)" ion-button small>\n              <ion-icon name=\'create\' class="icon-btn"></ion-icon>\n            </button>\n						<button class="equal-item" (click)="onDeleteHoliday(i)" ion-button small>\n                <ion-icon name=\'trash\' class="icon-btn"></ion-icon>\n            </button>\n					</ion-col>\n				</ion-row>\n			</div>\n		</ion-item>\n\n	</ion-list>\n	<hr>\n	<div class="equal-box">\n		<button ion-button color="positive" icon-left class="equal-item" (click)="onConfirm()">\n		<ion-icon name="checkmark-circle"></ion-icon>\n		{{ confirmTitle }}\n	</button>\n		<button ion-button color="assertive" icon-left class="equal-item" (click)="onCancel()">\n		<ion-icon name="close"></ion-icon>\n		Cancel\n	</button>\n	</div>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\student-modal\student-modal.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_5_ionic_angular__["l" /* ViewController */],
-        __WEBPACK_IMPORTED_MODULE_2__share_data_service__["a" /* DataService */],
         __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["g" /* LoadingController */],
+        __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["h" /* ModalController */],
+        __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["a" /* AlertController */],
         __WEBPACK_IMPORTED_MODULE_5_ionic_angular__["j" /* NavParams */]])
 ], StudentModalPage);
 
@@ -363,17 +466,17 @@ StudentModalPage = __decorate([
 
 /***/ }),
 
-/***/ 330:
+/***/ 320:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_auth__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__student_modal_student_modal__ = __webpack_require__(308);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(175);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(174);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -443,7 +546,7 @@ var SettingPage = (function () {
 }());
 SettingPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["n" /* Component */])({
-        selector: "page-setting",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/'<ion-header>\n  <ion-navbar>\n    <ion-title>\n      Setting\n    </ion-title>\n  </ion-navbar>\n</ion-header>\n\n<ion-content>\n  <div>\n    <ion-fab right bottom>\n      <button ion-fab (click)="onAdd()">\n        <ion-icon name="add"></ion-icon>\n      </button>\n    </ion-fab>\n    <!-- <span>\n      {{ students | async | json}}\n    </span> -->\n  </div>\n  <ion-item>\n    <ion-label>Active students only</ion-label>\n    <ion-checkbox color="dark" [(ngModel)]="activeOnly" (ionChange)="updateFilter()"></ion-checkbox>\n  </ion-item>\n  <ion-list>\n    <ion-item *ngFor="let item of students | async;let i = index" (click)="onEdit(item, i)" [class.archived]="item.status === \'archived\'">\n      <ion-avatar item-start>\n        <img src="/assets/images/unknown.png">\n      </ion-avatar>\n      <h2>{{item.name}}</h2>\n      <p> {{item.roomNo}} </p>\n      <p> {{item.email}} </p>\n      <p> {{item.lodgeStatus}} </p>\n      <p> {{item.id}} </p>\n      <p> {{item.email}} </p>\n    </ion-item>\n  </ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/
+        selector: "page-setting",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/'<ion-header>\n	<ion-navbar>\n		<ion-title>\n			Setting\n		</ion-title>\n	</ion-navbar>\n</ion-header>\n\n<ion-content>\n	<div>\n		<ion-fab right bottom>\n			<button ion-fab (click)="onAdd()">\n        <ion-icon name="add"></ion-icon>\n      </button>\n		</ion-fab>\n	</div>\n	<ion-item>\n		<ion-label>Active students only</ion-label>\n		<ion-checkbox color="dark" [(ngModel)]="activeOnly" (ionChange)="updateFilter()"></ion-checkbox>\n	</ion-item>\n	<ion-list>\n		<ion-item *ngFor="let item of students | async;let i = index" (click)="onEdit(item, i)" [class.archived]="item.status === \'archived\'">\n			<ion-avatar item-start>\n				<ion-img src="/assets/images/unknown.png"></ion-img>\n			</ion-avatar>\n			<h2>{{item.name}}</h2>\n			<p>Room Number: {{item.roomNo}} </p>\n		</ion-item>\n	</ion-list>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\setting\setting.html"*/
     }),
     __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */],
         __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */],
@@ -461,13 +564,13 @@ SettingPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReportPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_firebase__ = __webpack_require__(169);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_firebase__ = __webpack_require__(163);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_firebase__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__ = __webpack_require__(543);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__ = __webpack_require__(544);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Rx__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__share_common__ = __webpack_require__(98);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_date_fns__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__share_common__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_date_fns__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_date_fns__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -656,22 +759,22 @@ ReportPage = __decorate([
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LodgePage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__toast_zttoast__ = __webpack_require__(356);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lodge_detail_lodge_detail__ = __webpack_require__(190);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lodge_detail_lodge_detail__ = __webpack_require__(307);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__loading_loading__ = __webpack_require__(69);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angularfire2_database__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__loading_loading__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angularfire2_database__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map__ = __webpack_require__(344);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__share_data_service__ = __webpack_require__(163);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__share_common__ = __webpack_require__(98);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_date_fns__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__share_data_service__ = __webpack_require__(357);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__share_common__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_date_fns__ = __webpack_require__(65);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_date_fns___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_date_fns__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__lodge_form_lodge_form__ = __webpack_require__(357);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__ionic_native_email_composer__ = __webpack_require__(358);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__ionic_native_sms__ = __webpack_require__(360);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_call_number__ = __webpack_require__(361);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__lodge_form_lodge_form__ = __webpack_require__(358);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__ionic_native_email_composer__ = __webpack_require__(359);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__ionic_native_sms__ = __webpack_require__(361);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_call_number__ = __webpack_require__(362);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -787,11 +890,11 @@ var LodgePage = (function () {
                 if (students.length > 0) {
                     students.filter(function (s) { return s.status === "active"; }).forEach(function (s) {
                         console.log("student:", s, "key:", s.id);
-                        var _a = _this.checkIfNeedToLodge(s), needLodge = _a.needLodge, reason = _a.reason, status = _a.status, signature = _a.signature, timestamp = _a.timestamp;
+                        var _a = _this.checkIfNeedToLodge(s), needLodge = _a.needLodge, reason = _a.reason, lodgeStatus = _a.lodgeStatus, signature = _a.signature, timestamp = _a.timestamp;
                         if (needLodge) {
                             var lodgeInfo = {
                                 studentId: s.id,
-                                lodgeStatus: status,
+                                lodgeStatus: lodgeStatus,
                                 reason: reason,
                                 signature: signature,
                                 timestamp: timestamp
@@ -808,16 +911,20 @@ var LodgePage = (function () {
     LodgePage.prototype.checkIfNeedToLodge = function (student) {
         var needLodge = true;
         var reason = "";
-        var status = "unlodged";
+        var lodgeStatus = "unlodged";
         var signature = "";
         var timestamp = "";
         if (Object(__WEBPACK_IMPORTED_MODULE_10_date_fns__["isWithinRange"])(this.selectedDate, student.startDate, student.endDate)) {
-            var _a = this.checkHolidays(student), reason_1 = _a.reason, status_1 = _a.status, signature_1 = _a.signature;
+            var lodgeInfo = this.checkHolidays(student);
+            reason = lodgeInfo.reason;
+            lodgeStatus = lodgeInfo.lodgeStatus;
+            signature = lodgeInfo.signature;
+            timestamp = lodgeInfo.timestamp;
         }
         else if (Object(__WEBPACK_IMPORTED_MODULE_10_date_fns__["isBefore"])(student.endDate, this.selectedDate)) {
             // update student's status to archived.
             needLodge = false;
-            status = "";
+            lodgeStatus = "";
             var studentKey = student.id;
             var studentRef = this.db.ref("/" + this.userId + "/students/" + studentKey);
             studentRef.update({
@@ -826,14 +933,14 @@ var LodgePage = (function () {
         }
         else if (Object(__WEBPACK_IMPORTED_MODULE_10_date_fns__["isBefore"])(this.selectedDate, student.startDate)) {
             needLodge = false;
-            status = "";
+            lodgeStatus = "";
         }
-        return { needLodge: needLodge, reason: reason, status: status, signature: signature, timestamp: timestamp };
+        return { needLodge: needLodge, reason: reason, lodgeStatus: lodgeStatus, signature: signature, timestamp: timestamp };
     };
     LodgePage.prototype.checkHolidays = function (student) {
         var val = {
             reason: "",
-            status: "unlodged",
+            lodgeStatus: "unlodged",
             signature: "",
             timestamp: ""
         };
@@ -843,7 +950,7 @@ var LodgePage = (function () {
                 var holiday = holidays[i];
                 if (Object(__WEBPACK_IMPORTED_MODULE_10_date_fns__["isWithinRange"])(this.selectedDate, holiday.startDate, holiday.endDate)) {
                     val.reason = "InHoliday";
-                    val.status = "lodged";
+                    val.lodgeStatus = "lodged";
                     val.signature = Object(__WEBPACK_IMPORTED_MODULE_10_date_fns__["format"])(holiday.startDate, "YYYY-MM-DD") + " ~ " + Object(__WEBPACK_IMPORTED_MODULE_10_date_fns__["format"])(holiday.endDate, "YYYY-MM-DD");
                     val.timestamp = new Date().toISOString();
                     break;
@@ -877,10 +984,12 @@ var LodgePage = (function () {
         console.log("Text with :", student);
         //  Text student
         var textStudent = function (phoneNumber) {
-            _this.sms.send(phoneNumber, "This is a reminder from UniLodge.")
+            _this.sms
+                .send(phoneNumber, "This is a reminder from UniLodge.")
                 .then(function (_) {
                 _this.updateReminderInfo(index, "text");
-            }).catch(function (err) {
+            })
+                .catch(function (err) {
                 _this.toast.error("Error when sending text. Please check your security settings.");
             });
         };
@@ -890,29 +999,29 @@ var LodgePage = (function () {
         if (student.phone && student.guardianPhone) {
             // if have more than 1 phone numbers in student record,
             //  show a popup window to choose.
-            var alert = this.alertCtrl.create();
-            alert.setTitle("Select phone number");
-            alert.addInput({
+            var alert_1 = this.alertCtrl.create();
+            alert_1.setTitle("Select phone number");
+            alert_1.addInput({
                 type: "radio",
                 label: student.phone,
                 value: student.phone,
                 checked: true
             });
-            alert.addInput({
+            alert_1.addInput({
                 type: "radio",
                 label: student.guardianPhone,
                 value: student.guardianPhone,
                 checked: false
             });
-            alert.addButton("Cancel");
-            alert.addButton({
+            alert_1.addButton("Cancel");
+            alert_1.addButton({
                 text: "Ok",
                 handler: function (phoneNumber) {
                     console.log("Radio data:", phoneNumber);
                     cb(phoneNumber);
                 }
             });
-            alert.present();
+            alert_1.present();
         }
         else {
             var phoneNumber = student.phone || student.guardianPhone;
@@ -926,10 +1035,12 @@ var LodgePage = (function () {
         // if have more than 1 phone numbers in student record,
         //  show a popup window to choose.
         var callStudent = function (phoneNumber) {
-            _this.call.callNumber(phoneNumber, true)
+            _this.call
+                .callNumber(phoneNumber, true)
                 .then(function () {
-                _this.updateReminderInfo(index, 'call');
-            }).catch(function (err) {
+                _this.updateReminderInfo(index, "call");
+            })
+                .catch(function (err) {
                 _this.toast.error("Error when making a call. Please check your security settings.");
             });
         };
@@ -940,15 +1051,18 @@ var LodgePage = (function () {
         //  Email student
         this.email.isAvailable().then(function (available) {
             if (available) {
-                _this.email.open({
+                _this.email
+                    .open({
                     app: "mailto",
                     to: student.email,
                     subject: "Reminder",
                     body: "This is a reminder from UniLodge."
-                }).then(function () {
+                })
+                    .then(function () {
                     _this.toast.success("Email sent successfully!", 500);
-                    _this.updateReminderInfo(index, 'email');
-                }).catch(function (err) {
+                    _this.updateReminderInfo(index, "email");
+                })
+                    .catch(function (err) {
                     _this.toast.error("Error when sending email. Please check your security settings.");
                 });
             }
@@ -966,8 +1080,7 @@ var LodgePage = (function () {
         if (reminderTime === void 0) { reminderTime = new Date(); }
         var studentRefString = "/" + this.userId + "/lodgelists/" + this.dateString;
         var studentRef = this.db.ref(studentRefString);
-        studentRef.child(index)
-            .update({
+        studentRef.child(index).update({
             remindMethod: remindMethod,
             reminderTime: reminderTime
         });
@@ -976,12 +1089,22 @@ var LodgePage = (function () {
 }());
 LodgePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["n" /* Component */])({
-        selector: "page-lodge",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/'<ion-header>\n	<ion-navbar>\n		<ion-title>Lodge</ion-title>\n		<ion-buttons end>\n			<button (click)="onLogout()">\n        <ion-icon name="log-out" class="big_icon"></ion-icon>\n      </button>\n		</ion-buttons>\n	</ion-navbar>\n\n	<h1 center>{{todayStr}}</h1>\n	<ion-toolbar>\n		<ion-segment [(ngModel)]="selectedSegment">\n			<ion-segment-button value="unlodged">\n				Sign In\n			</ion-segment-button>\n			<ion-segment-button value="lodged">\n				Already Signed In\n			</ion-segment-button>\n		</ion-segment>\n	</ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n	<div *ngIf="wholeList">\n		<ion-card *ngFor="let item of wholeList | async; let i = index" [class.hide]="item.lodgeStatus !== selectedSegment">\n			<ion-row>\n				<ion-col col-8 padding>\n					<h2 class="card_title">\n						{{item.name}}\n					</h2>\n					<p>Room Number: {{item.roomNo}}</p>\n				</ion-col>\n				<ion-col col-4 *ngIf="item.lodgeStatus ==\'unlodged\'">\n					<button ion-button outline (click)="onSignIn(item, i)" color="secondary" class="right_button">\n							<ion-icon name="md-checkbox-outline"></ion-icon>\n					<span class="button_text"> Sign In</span>\n				</button>\n				</ion-col>\n				<ion-col col-4 *ngIf="item.lodgeStatus ==\'lodged\'">\n					<button ion-button outline (click)="onShowDetail(item)" class="right_button">\n							<ion-icon name="md-clipboard"></ion-icon>\n							<span class="button_text">Detail</span>\n				</button>\n				</ion-col>\n			</ion-row>\n\n			<ion-row *ngIf="item.lodgeStatus ==\'unlodged\'">\n				<ion-col>\n					<button ion-button small clear class="color_button" (click)="onCall(item)">\n							<ion-icon name="call"></ion-icon>\n							<span class="button_text">Call</span>\n				</button>\n				</ion-col>\n				<ion-col>\n					<button ion-button small clear class="color_button" (click)="onText(item)">\n							<ion-icon name="text"></ion-icon>	\n							<span class="button_text">Text</span>\n						</button>\n				</ion-col>\n				<ion-col>\n					<button ion-button small clear class="color_button" (click)="onEmail(item)">\n							<ion-icon name="mail"></ion-icon>\n							<span class="button_text">Email</span>\n						</button>\n				</ion-col>\n			</ion-row>\n		</ion-card>\n\n	</div>\n\n	<!-- <ion-list *ngIf="wholeList">\n		<ion-item-sliding *ngFor="let item of wholeList | async; let i = index" [class.hide]="item.lodgeStatus !== selectedSegment "\n		  #slidingItem (click)="onShowDetail(item)">\n\n			<ion-item [class.lodged]="item.lodgeStatus === \'lodged\'" class="box">\n				<ion-avatar item-start>\n					<img src="/assets/images/unknown.png">\n				</ion-avatar>\n				<h2>{{item.name}}</h2>\n				<p> {{item.roomNo}} </p>\n			</ion-item>\n			<ion-item-options side="left" [class.hide]="item.lodgeStatus === \'lodged\' ">\n				<button ion-button color="primary" (click)="onText(item, slidingItem)">\n									<ion-icon name="text"></ion-icon>\n									Text\n								</button>\n				<button ion-button color="secondary" (click)="onCall(item, slidingItem)">\n									<ion-icon name="call"></ion-icon>\n									Call\n								</button>\n				<button ion-button color="primary" (click)="onEmail(item, slidingItem)">\n										<ion-icon name="mail"></ion-icon>\n										Email\n									</button>\n			</ion-item-options>\n			<ion-item-options side="right" [class.hide]="item.lodgeStatus === \'lodged\' ">\n				<button ion-button color="primary" (click)="onSignIn(item, slidingItem, i)">\n									<ion-icon name="mail"></ion-icon>\n									SignIn\n								</button>\n			</ion-item-options>\n		</ion-item-sliding>\n	</ion-list> -->\n\n</ion-content>'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/
+        selector: "page-lodge",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/'<ion-header>\n	<ion-navbar>\n		<ion-title>Lodge</ion-title>\n		<ion-buttons end>\n			<button (click)="onLogout()">\n        <ion-icon name="log-out" class="big_icon"></ion-icon>\n      </button>\n		</ion-buttons>\n	</ion-navbar>\n\n	<h1 center>{{todayStr}}</h1>\n	<ion-toolbar>\n		<ion-segment [(ngModel)]="selectedSegment">\n			<ion-segment-button value="unlodged">\n				Sign In\n			</ion-segment-button>\n			<ion-segment-button value="lodged">\n				Already Signed In\n			</ion-segment-button>\n		</ion-segment>\n	</ion-toolbar>\n</ion-header>\n\n<ion-content padding>\n	<div *ngIf="wholeList">\n		<ion-card *ngFor="let item of wholeList | async; let i = index" [class.hide]="item.lodgeStatus !== selectedSegment">\n			<ion-row>\n				<ion-col col-8 class="padding_left">\n					<h2 class="card_title">\n						{{item.name}}\n					</h2>\n					<p>Room Number: {{item.roomNo}}</p>\n				</ion-col>\n				<ion-col col-4 *ngIf="item.lodgeStatus ==\'unlodged\'" class="padding_right">\n					<button ion-button outline (click)="onSignIn(item, i)" color="secondary" class="right_button">\n							<ion-icon name="md-checkbox-outline"></ion-icon>\n					<span class="button_text"> Sign In</span>\n				</button>\n				</ion-col>\n				<ion-col col-4 *ngIf="item.lodgeStatus ==\'lodged\'">\n					<button ion-button outline (click)="onShowDetail(item)" class="right_button">\n							<ion-icon name="md-clipboard"></ion-icon>\n							<span class="button_text">Detail</span>\n				</button>\n				</ion-col>\n			</ion-row>\n\n			<ion-row *ngIf="item.lodgeStatus ==\'unlodged\'">\n				<ion-col>\n					<button ion-button small clear class="color_button" (click)="onCall(item)">\n							<ion-icon name="call"></ion-icon>\n							<span class="button_text">Call</span>\n				</button>\n				</ion-col>\n				<ion-col>\n					<button ion-button small clear class="color_button" (click)="onText(item)">\n							<ion-icon name="text"></ion-icon>\n							<span class="button_text">Text</span>\n						</button>\n				</ion-col>\n				<ion-col>\n					<button ion-button small clear class="color_button" (click)="onEmail(item)">\n							<ion-icon name="mail"></ion-icon>\n							<span class="button_text">Email</span>\n						</button>\n				</ion-col>\n			</ion-row>\n		</ion-card>\n\n	</div>\n\n	<!-- <ion-list *ngIf="wholeList">\n		<ion-item-sliding *ngFor="let item of wholeList | async; let i = index" [class.hide]="item.lodgeStatus !== selectedSegment "\n		  #slidingItem (click)="onShowDetail(item)">\n\n			<ion-item [class.lodged]="item.lodgeStatus === \'lodged\'" class="box">\n				<ion-avatar item-start>\n					<img src="/assets/images/unknown.png">\n				</ion-avatar>\n				<h2>{{item.name}}</h2>\n				<p> {{item.roomNo}} </p>\n			</ion-item>\n			<ion-item-options side="left" [class.hide]="item.lodgeStatus === \'lodged\' ">\n				<button ion-button color="primary" (click)="onText(item, slidingItem)">\n									<ion-icon name="text"></ion-icon>\n									Text\n								</button>\n				<button ion-button color="secondary" (click)="onCall(item, slidingItem)">\n									<ion-icon name="call"></ion-icon>\n									Call\n								</button>\n				<button ion-button color="primary" (click)="onEmail(item, slidingItem)">\n										<ion-icon name="mail"></ion-icon>\n										Email\n									</button>\n			</ion-item-options>\n			<ion-item-options side="right" [class.hide]="item.lodgeStatus === \'lodged\' ">\n				<button ion-button color="primary" (click)="onSignIn(item, slidingItem, i)">\n									<ion-icon name="mail"></ion-icon>\n									SignIn\n								</button>\n			</ion-item-options>\n		</ion-item-sliding>\n	</ion-list> -->\n\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge\lodge.html"*/
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["g" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["g" /* LoadingController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["a" /* AlertController */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_6_angularfire2_database__["a" /* AngularFireDatabase */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6_angularfire2_database__["a" /* AngularFireDatabase */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__["a" /* AngularFireAuth */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__["a" /* AngularFireAuth */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_8__share_data_service__["a" /* DataService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__share_data_service__["a" /* DataService */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* Events */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* Events */]) === "function" && _h || Object, typeof (_j = typeof __WEBPACK_IMPORTED_MODULE_12__ionic_native_email_composer__["a" /* EmailComposer */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_12__ionic_native_email_composer__["a" /* EmailComposer */]) === "function" && _j || Object, typeof (_k = typeof __WEBPACK_IMPORTED_MODULE_13__ionic_native_sms__["a" /* SMS */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_13__ionic_native_sms__["a" /* SMS */]) === "function" && _k || Object, typeof (_l = typeof __WEBPACK_IMPORTED_MODULE_14__ionic_native_call_number__["a" /* CallNumber */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_14__ionic_native_call_number__["a" /* CallNumber */]) === "function" && _l || Object, typeof (_m = typeof __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["b" /* App */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["b" /* App */]) === "function" && _m || Object])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_4_ionic_angular__["i" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["g" /* LoadingController */],
+        __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["h" /* ModalController */],
+        __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["a" /* AlertController */],
+        __WEBPACK_IMPORTED_MODULE_6_angularfire2_database__["a" /* AngularFireDatabase */],
+        __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__["a" /* AngularFireAuth */],
+        __WEBPACK_IMPORTED_MODULE_8__share_data_service__["a" /* DataService */],
+        __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["c" /* Events */],
+        __WEBPACK_IMPORTED_MODULE_12__ionic_native_email_composer__["a" /* EmailComposer */],
+        __WEBPACK_IMPORTED_MODULE_13__ionic_native_sms__["a" /* SMS */],
+        __WEBPACK_IMPORTED_MODULE_14__ionic_native_call_number__["a" /* CallNumber */],
+        __WEBPACK_IMPORTED_MODULE_4_ionic_angular__["b" /* App */]])
 ], LodgePage);
 
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
 //# sourceMappingURL=lodge.js.map
 
 /***/ }),
@@ -1070,14 +1193,152 @@ var ZTToast = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_angularfire2_database__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_auth__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__common__ = __webpack_require__(106);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var DataService = (function () {
+    function DataService(afAuth, afDB) {
+        var _this = this;
+        this.afAuth = afAuth;
+        this.afDB = afDB;
+        afAuth.authState.subscribe(function (user) {
+            _this.uid = user.uid;
+        });
+    }
+    DataService.prototype.convertFirebaseObject = function (obj, key) {
+        return Object.assign({ key: key }, obj);
+    };
+    // students api
+    DataService.prototype.checkLoginStatus = function () {
+        if (!this.uid) {
+            var user = this.afAuth.auth.currentUser;
+            if (user) {
+                this.uid = user.uid;
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+    };
+    DataService.prototype.retriveData = function () {
+        var _this = this;
+        if (this.checkLoginStatus()) {
+            var today = Object(__WEBPACK_IMPORTED_MODULE_3__common__["c" /* getDateString */])();
+            this.afDB
+                .list("/" + this.uid + "/students", { preserveSnapshot: true })
+                .subscribe(function (snapshot) {
+                console.log("Getting students snapshot:", snapshot);
+                var stuTemp = [];
+                snapshot.forEach(function (s) {
+                    stuTemp.push(_this.convertFirebaseObject(s.val(), s.key));
+                });
+                _this.students = stuTemp;
+            });
+            this.afDB
+                .list("/" + this.uid + "/lodgelists/" + today, { preserveSnapshot: true })
+                .subscribe(function (snapshot) {
+                console.log("Getting lodgelists", snapshot);
+                _this.lodgelist = snapshot;
+            });
+        }
+    };
+    DataService.prototype.getStudents = function () {
+        var _this = this;
+        if (!this.students) {
+            this.retriveData();
+        }
+        return new Promise(function (res, rej) {
+            if (_this.students) {
+                res(_this.students);
+            }
+            else {
+                rej("No data found");
+            }
+        });
+    };
+    DataService.prototype.getStudentById = function (id) {
+        return this.students[0];
+        // return this.students.filter( s => s.$key === id);
+    };
+    DataService.prototype.updateStudentInfo = function (studentId, newVal) {
+        // 1. update based on new value;
+        // 2. if holiday period has been updated, needs to check the lodge list as well
+        // return this.students
+        // .update(studentId, newVal)
+    };
+    DataService.prototype.addStudent = function (student) {
+        // 1. add to students
+        // 2. check if he/she needs to be lodged on today's list.
+        // return this.students.push(student);
+    };
+    DataService.prototype.archiveStudent = function (studentId) {
+        // return this.students.update(studentId, {
+        //   archived: true,
+        //   archivedDate: new Date()
+        // })
+    };
+    // lodge list api
+    DataService.prototype.getList = function (ref) {
+        // if (this.uid) {
+        //   if (!this.lodgelist) {
+        //     // user has signed in and there's no lodgelist
+        //     //  we build a new one
+        //     this.buildLodgeList();
+        //   }
+        // }
+        if (this.checkLoginStatus()) {
+            return this.afDB.list(ref, {
+                preserveSnapshot: true
+            });
+        }
+        else {
+            return null;
+        }
+    };
+    DataService.prototype.buildLodgeList = function () { };
+    return DataService;
+}());
+DataService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["B" /* Injectable */])(),
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_angularfire2_auth__["a" /* AngularFireAuth */],
+        __WEBPACK_IMPORTED_MODULE_0_angularfire2_database__["a" /* AngularFireDatabase */]])
+], DataService);
+
+//# sourceMappingURL=data-service.js.map
+
+/***/ }),
+
+/***/ 358:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LodgeFormPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__loading_loading__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__loading_loading__ = __webpack_require__(70);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase__ = __webpack_require__(169);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase__ = __webpack_require__(163);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_firebase___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_firebase__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__toast_zttoast__ = __webpack_require__(356);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__share_common__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__share_common__ = __webpack_require__(106);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1186,22 +1447,24 @@ LodgeFormPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["n" /* Component */])({
         selector: "page-lodge-form",template:/*ion-inline-start:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/'<ion-header>\n\n	<ion-navbar>\n		<ion-title>Sign In</ion-title>\n	</ion-navbar>\n\n</ion-header>\n\n\n<ion-content padding>\n	<ion-list>\n		<ion-row>\n			<h2> {{ student?.name}}</h2>\n		</ion-row>\n		<ion-row>\n			<p> Room No.: {{student?.roomNo}} </p>\n		</ion-row>\n		<ion-row class=\'canvas-container\'>\n			<canvas id="canvas"></canvas>\n		</ion-row>\n	</ion-list>\n	<ion-row>\n		<ion-col width-50>\n			<button ion-button (click)="onSubmit()" block large>\n        Submit\n      </button>\n		</ion-col>\n		<ion-col>\n			<button ion-button (click)="onCancel()" block large>\n          Cancel\n        </button>\n		</ion-col>\n	</ion-row>\n</ion-content>\n'/*ion-inline-end:"C:\Data\Projects\Ionic\UniLodge\src\pages\lodge-form\lodge-form.html"*/
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2_ionic_angular__["i" /* NavController */],
+        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["l" /* ViewController */],
+        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["g" /* LoadingController */],
+        __WEBPACK_IMPORTED_MODULE_2_ionic_angular__["j" /* NavParams */]])
 ], LodgeFormPage);
 
-var _a, _b, _c, _d;
 //# sourceMappingURL=lodge-form.js.map
 
 /***/ }),
 
-/***/ 362:
+/***/ 363:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SignupPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angularfire2_auth__ = __webpack_require__(55);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1258,17 +1521,17 @@ SignupPage = __decorate([
 
 /***/ }),
 
-/***/ 363:
+/***/ 364:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoginPage; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tabs_tabs__ = __webpack_require__(364);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__signup_signup__ = __webpack_require__(362);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__tabs_tabs__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__signup_signup__ = __webpack_require__(363);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__loading_loading__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angularfire2_auth__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__loading_loading__ = __webpack_require__(70);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1329,16 +1592,16 @@ LoginPage = __decorate([
 
 /***/ }),
 
-/***/ 364:
+/***/ 365:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TabsPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__report_report__ = __webpack_require__(331);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__setting_setting__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__setting_setting__ = __webpack_require__(320);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lodge_lodge__ = __webpack_require__(355);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_ionic_angular__ = __webpack_require__(20);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1377,13 +1640,13 @@ TabsPage = __decorate([
 
 /***/ }),
 
-/***/ 367:
+/***/ 368:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(368);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(372);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__ = __webpack_require__(369);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_module__ = __webpack_require__(373);
 
 
 Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_1__app_module__["a" /* AppModule */]);
@@ -1391,42 +1654,44 @@ Object(__WEBPACK_IMPORTED_MODULE_0__angular_platform_browser_dynamic__["a" /* pl
 
 /***/ }),
 
-/***/ 372:
+/***/ 373:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* unused harmony export firebaseConfig */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_lodge_detail_lodge_detail__ = __webpack_require__(190);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__pages_student_modal_student_modal__ = __webpack_require__(308);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__pages_setting_setting__ = __webpack_require__(330);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_report_report__ = __webpack_require__(331);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_lodge_lodge__ = __webpack_require__(355);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_signup_signup__ = __webpack_require__(362);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_login_login__ = __webpack_require__(363);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_ionic_angular__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__app_component__ = __webpack_require__(808);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__pages_tabs_tabs__ = __webpack_require__(364);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_loading_loading__ = __webpack_require__(69);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_http__ = __webpack_require__(809);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__ionic_native_status_bar__ = __webpack_require__(365);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_native_splash_screen__ = __webpack_require__(366);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_angularfire2__ = __webpack_require__(810);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_angularfire2_database__ = __webpack_require__(95);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_angularfire2_auth__ = __webpack_require__(56);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__share_data_service__ = __webpack_require__(163);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__pages_lodge_form_lodge_form__ = __webpack_require__(357);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__ionic_native_email_composer__ = __webpack_require__(358);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_call_number__ = __webpack_require__(361);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__ionic_native_sms__ = __webpack_require__(360);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pages_period_modal_period_modal__ = __webpack_require__(189);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__pages_lodge_detail_lodge_detail__ = __webpack_require__(307);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__pages_student_modal_student_modal__ = __webpack_require__(308);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pages_setting_setting__ = __webpack_require__(320);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_report_report__ = __webpack_require__(331);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__pages_lodge_lodge__ = __webpack_require__(355);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pages_signup_signup__ = __webpack_require__(363);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__pages_login_login__ = __webpack_require__(364);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_core__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__angular_platform_browser__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__app_component__ = __webpack_require__(809);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__pages_tabs_tabs__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__pages_loading_loading__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_http__ = __webpack_require__(810);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__ionic_native_status_bar__ = __webpack_require__(366);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__ionic_native_splash_screen__ = __webpack_require__(367);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_angularfire2__ = __webpack_require__(811);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18_angularfire2_database__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19_angularfire2_auth__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__share_data_service__ = __webpack_require__(357);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__pages_lodge_form_lodge_form__ = __webpack_require__(358);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__ionic_native_email_composer__ = __webpack_require__(359);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__ionic_native_call_number__ = __webpack_require__(362);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__ionic_native_sms__ = __webpack_require__(361);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -1465,53 +1730,55 @@ var AppModule = (function () {
     return AppModule;
 }());
 AppModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_7__angular_core__["L" /* NgModule */])({
+    Object(__WEBPACK_IMPORTED_MODULE_8__angular_core__["L" /* NgModule */])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_10__app_component__["a" /* MyApp */],
-            __WEBPACK_IMPORTED_MODULE_6__pages_login_login__["a" /* LoginPage */],
-            __WEBPACK_IMPORTED_MODULE_5__pages_signup_signup__["a" /* SignupPage */],
-            __WEBPACK_IMPORTED_MODULE_4__pages_lodge_lodge__["a" /* LodgePage */],
-            __WEBPACK_IMPORTED_MODULE_3__pages_report_report__["a" /* ReportPage */],
-            __WEBPACK_IMPORTED_MODULE_2__pages_setting_setting__["a" /* SettingPage */],
-            __WEBPACK_IMPORTED_MODULE_1__pages_student_modal_student_modal__["a" /* StudentModalPage */],
-            __WEBPACK_IMPORTED_MODULE_12__pages_loading_loading__["a" /* LoadingPage */],
-            __WEBPACK_IMPORTED_MODULE_20__pages_lodge_form_lodge_form__["a" /* LodgeFormPage */],
-            __WEBPACK_IMPORTED_MODULE_0__pages_lodge_detail_lodge_detail__["a" /* LodgeDetailPage */],
-            __WEBPACK_IMPORTED_MODULE_11__pages_tabs_tabs__["a" /* TabsPage */]
+            __WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* MyApp */],
+            __WEBPACK_IMPORTED_MODULE_7__pages_login_login__["a" /* LoginPage */],
+            __WEBPACK_IMPORTED_MODULE_6__pages_signup_signup__["a" /* SignupPage */],
+            __WEBPACK_IMPORTED_MODULE_5__pages_lodge_lodge__["a" /* LodgePage */],
+            __WEBPACK_IMPORTED_MODULE_4__pages_report_report__["a" /* ReportPage */],
+            __WEBPACK_IMPORTED_MODULE_3__pages_setting_setting__["a" /* SettingPage */],
+            __WEBPACK_IMPORTED_MODULE_2__pages_student_modal_student_modal__["a" /* StudentModalPage */],
+            __WEBPACK_IMPORTED_MODULE_13__pages_loading_loading__["a" /* LoadingPage */],
+            __WEBPACK_IMPORTED_MODULE_21__pages_lodge_form_lodge_form__["a" /* LodgeFormPage */],
+            __WEBPACK_IMPORTED_MODULE_1__pages_lodge_detail_lodge_detail__["a" /* LodgeDetailPage */],
+            __WEBPACK_IMPORTED_MODULE_0__pages_period_modal_period_modal__["a" /* PeriodModalPage */],
+            __WEBPACK_IMPORTED_MODULE_12__pages_tabs_tabs__["a" /* TabsPage */]
         ],
         imports: [
-            __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__["a" /* BrowserModule */],
-            __WEBPACK_IMPORTED_MODULE_13__angular_http__["a" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["f" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_10__app_component__["a" /* MyApp */], {
+            __WEBPACK_IMPORTED_MODULE_9__angular_platform_browser__["a" /* BrowserModule */],
+            __WEBPACK_IMPORTED_MODULE_14__angular_http__["a" /* HttpModule */],
+            __WEBPACK_IMPORTED_MODULE_10_ionic_angular__["f" /* IonicModule */].forRoot(__WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* MyApp */], {
                 iconMode: "md",
                 pageTransition: "md-transition"
             }),
-            __WEBPACK_IMPORTED_MODULE_16_angularfire2__["a" /* AngularFireModule */].initializeApp(firebaseConfig),
-            __WEBPACK_IMPORTED_MODULE_17_angularfire2_database__["b" /* AngularFireDatabaseModule */],
-            __WEBPACK_IMPORTED_MODULE_18_angularfire2_auth__["b" /* AngularFireAuthModule */]
+            __WEBPACK_IMPORTED_MODULE_17_angularfire2__["a" /* AngularFireModule */].initializeApp(firebaseConfig),
+            __WEBPACK_IMPORTED_MODULE_18_angularfire2_database__["b" /* AngularFireDatabaseModule */],
+            __WEBPACK_IMPORTED_MODULE_19_angularfire2_auth__["b" /* AngularFireAuthModule */]
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_9_ionic_angular__["d" /* IonicApp */]],
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_10_ionic_angular__["d" /* IonicApp */]],
         entryComponents: [
-            __WEBPACK_IMPORTED_MODULE_10__app_component__["a" /* MyApp */],
-            __WEBPACK_IMPORTED_MODULE_6__pages_login_login__["a" /* LoginPage */],
-            __WEBPACK_IMPORTED_MODULE_5__pages_signup_signup__["a" /* SignupPage */],
-            __WEBPACK_IMPORTED_MODULE_4__pages_lodge_lodge__["a" /* LodgePage */],
-            __WEBPACK_IMPORTED_MODULE_3__pages_report_report__["a" /* ReportPage */],
-            __WEBPACK_IMPORTED_MODULE_2__pages_setting_setting__["a" /* SettingPage */],
-            __WEBPACK_IMPORTED_MODULE_1__pages_student_modal_student_modal__["a" /* StudentModalPage */],
-            __WEBPACK_IMPORTED_MODULE_12__pages_loading_loading__["a" /* LoadingPage */],
-            __WEBPACK_IMPORTED_MODULE_20__pages_lodge_form_lodge_form__["a" /* LodgeFormPage */],
-            __WEBPACK_IMPORTED_MODULE_0__pages_lodge_detail_lodge_detail__["a" /* LodgeDetailPage */],
-            __WEBPACK_IMPORTED_MODULE_11__pages_tabs_tabs__["a" /* TabsPage */]
+            __WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* MyApp */],
+            __WEBPACK_IMPORTED_MODULE_7__pages_login_login__["a" /* LoginPage */],
+            __WEBPACK_IMPORTED_MODULE_6__pages_signup_signup__["a" /* SignupPage */],
+            __WEBPACK_IMPORTED_MODULE_5__pages_lodge_lodge__["a" /* LodgePage */],
+            __WEBPACK_IMPORTED_MODULE_4__pages_report_report__["a" /* ReportPage */],
+            __WEBPACK_IMPORTED_MODULE_3__pages_setting_setting__["a" /* SettingPage */],
+            __WEBPACK_IMPORTED_MODULE_2__pages_student_modal_student_modal__["a" /* StudentModalPage */],
+            __WEBPACK_IMPORTED_MODULE_13__pages_loading_loading__["a" /* LoadingPage */],
+            __WEBPACK_IMPORTED_MODULE_21__pages_lodge_form_lodge_form__["a" /* LodgeFormPage */],
+            __WEBPACK_IMPORTED_MODULE_1__pages_lodge_detail_lodge_detail__["a" /* LodgeDetailPage */],
+            __WEBPACK_IMPORTED_MODULE_0__pages_period_modal_period_modal__["a" /* PeriodModalPage */],
+            __WEBPACK_IMPORTED_MODULE_12__pages_tabs_tabs__["a" /* TabsPage */]
         ],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_14__ionic_native_status_bar__["a" /* StatusBar */],
-            __WEBPACK_IMPORTED_MODULE_15__ionic_native_splash_screen__["a" /* SplashScreen */],
-            { provide: __WEBPACK_IMPORTED_MODULE_7__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_9_ionic_angular__["e" /* IonicErrorHandler */] },
-            __WEBPACK_IMPORTED_MODULE_21__ionic_native_email_composer__["a" /* EmailComposer */],
-            __WEBPACK_IMPORTED_MODULE_22__ionic_native_call_number__["a" /* CallNumber */],
-            __WEBPACK_IMPORTED_MODULE_23__ionic_native_sms__["a" /* SMS */],
-            __WEBPACK_IMPORTED_MODULE_19__share_data_service__["a" /* DataService */]
+            __WEBPACK_IMPORTED_MODULE_15__ionic_native_status_bar__["a" /* StatusBar */],
+            __WEBPACK_IMPORTED_MODULE_16__ionic_native_splash_screen__["a" /* SplashScreen */],
+            { provide: __WEBPACK_IMPORTED_MODULE_8__angular_core__["v" /* ErrorHandler */], useClass: __WEBPACK_IMPORTED_MODULE_10_ionic_angular__["e" /* IonicErrorHandler */] },
+            __WEBPACK_IMPORTED_MODULE_22__ionic_native_email_composer__["a" /* EmailComposer */],
+            __WEBPACK_IMPORTED_MODULE_23__ionic_native_call_number__["a" /* CallNumber */],
+            __WEBPACK_IMPORTED_MODULE_24__ionic_native_sms__["a" /* SMS */],
+            __WEBPACK_IMPORTED_MODULE_20__share_data_service__["a" /* DataService */]
         ]
     })
 ], AppModule);
@@ -1520,7 +1787,7 @@ AppModule = __decorate([
 
 /***/ }),
 
-/***/ 520:
+/***/ 511:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1551,13 +1818,13 @@ var Student = (function () {
 
 /***/ }),
 
-/***/ 69:
+/***/ 70:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoadingPage; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(20);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1599,16 +1866,16 @@ LoadingPage = __decorate([
 
 /***/ }),
 
-/***/ 808:
+/***/ 809:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MyApp; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(365);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(366);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_login_login__ = __webpack_require__(363);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__ = __webpack_require__(366);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__ = __webpack_require__(367);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__pages_login_login__ = __webpack_require__(364);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1643,56 +1910,7 @@ MyApp = __decorate([
 
 //# sourceMappingURL=app.component.js.map
 
-/***/ }),
-
-/***/ 98:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["c"] = getDateString;
-/* harmony export (immutable) */ __webpack_exports__["b"] = convertFirebaseObjectToArray;
-/* unused harmony export convertFirebaseObject */
-/* harmony export (immutable) */ __webpack_exports__["a"] = b64ToBlob;
-function getDateString(d) {
-    if (d === void 0) { d = new Date(); }
-    var day = d.getDate() - 1;
-    var month = d.getMonth() + 1;
-    var dayStr = day < 10 ? "0" + day.toString() : day.toString();
-    var monthStr = month < 10 ? "0" + month.toString() : month.toString();
-    return "" + d.getFullYear() + monthStr + dayStr;
-}
-function convertFirebaseObjectToArray(obj) {
-    var arr = [];
-    for (var k in obj) {
-        if (obj.hasOwnProperty(k)) {
-            arr.push(convertFirebaseObject(obj[k], k));
-        }
-    }
-    return arr;
-}
-function convertFirebaseObject(obj, key) {
-    return Object.assign({ key: key }, obj);
-}
-function b64ToBlob(b64data, contentType, sliceSize) {
-    if (contentType === void 0) { contentType = ""; }
-    if (sliceSize === void 0) { sliceSize = 512; }
-    var byteCharacters = atob(b64data);
-    var byteArrays = [];
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        var slice = byteCharacters.slice(offset, offset + sliceSize);
-        var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-        var byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
-    }
-    var blob = new Blob(byteArrays, { type: contentType });
-    return blob;
-}
-//# sourceMappingURL=common.js.map
-
 /***/ })
 
-},[367]);
+},[368]);
 //# sourceMappingURL=main.js.map

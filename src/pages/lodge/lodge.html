@@ -25,13 +25,13 @@
 	<div *ngIf="wholeList">
 		<ion-card *ngFor="let item of wholeList | async; let i = index" [class.hide]="item.lodgeStatus !== selectedSegment">
 			<ion-row>
-				<ion-col col-8 padding>
+				<ion-col col-8 class="padding_left">
 					<h2 class="card_title">
 						{{item.name}}
 					</h2>
 					<p>Room Number: {{item.roomNo}}</p>
 				</ion-col>
-				<ion-col col-4 *ngIf="item.lodgeStatus =='unlodged'">
+				<ion-col col-4 *ngIf="item.lodgeStatus =='unlodged'" class="padding_right">
 					<button ion-button outline (click)="onSignIn(item, i)" color="secondary" class="right_button">
 							<ion-icon name="md-checkbox-outline"></ion-icon>
 					<span class="button_text"> Sign In</span>
@@ -54,7 +54,7 @@
 				</ion-col>
 				<ion-col>
 					<button ion-button small clear class="color_button" (click)="onText(item)">
-							<ion-icon name="text"></ion-icon>	
+							<ion-icon name="text"></ion-icon>
 							<span class="button_text">Text</span>
 						</button>
 				</ion-col>

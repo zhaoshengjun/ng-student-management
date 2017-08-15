@@ -25257,6 +25257,15 @@ page-lodge ion-item-options .button {
   text-transform: none !important;
 }
 
+page-lodge .padding_left {
+  padding-top: 16px;
+  padding-left: 8px;
+}
+
+page-lodge .padding_right {
+  padding-right: 8px;
+}
+
 page-lodge .box {
   border-left: 6px solid red;
   margin-bottom: 5px;
@@ -25276,11 +25285,11 @@ page-lodge .card_title {
 }
 
 page-lodge .color_button {
-  color: #303F9F;
+  color: #303f9f;
 }
 
 page-lodge .right_button {
-  padding-right: 10px;
+  padding-right: 4px;
 }
 
 page-lodge-detail .title {
@@ -25326,6 +25335,38 @@ page-lodge-form .canvas-container {
 page-lodge-form canvas {
   width: 100%;
   height: 100%;
+}
+
+page-period-modal .equal-box {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+page-period-modal .equal-item {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+page-period-modal .title {
+  font-size: 2rem;
+  text-align: center;
 }
 
 page-report .highlight {
@@ -25428,4 +25469,14 @@ page-student-modal .title {
 
 page-student-modal .icon-btn {
   font-size: 1.5em;
+}
+
+page-student-modal .list_header {
+  font-size: 2rem;
+  color: black;
+  text-decoration: underline blue;
+}
+
+page-student-modal .table {
+  border: 1px solid #c2c2c2;
 }

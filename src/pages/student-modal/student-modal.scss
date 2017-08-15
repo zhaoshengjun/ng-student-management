@@ -18,10 +18,10 @@ page-student-modal {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center
+    align-items: center;
   }
   .equal-item {
-    flex: 1
+    flex: 1;
   }
   .holiday-table {
     background-color: #e0e0e0;
@@ -35,5 +35,13 @@ page-student-modal {
   }
   .icon-btn {
     font-size: 1.5em;
+  }
+  .list_header {
+    font-size: 2rem;
+    color: black;
+    text-decoration: underline blue;
+  }
+  .table {
+    border: 1px solid #c2c2c2;
   }
 }

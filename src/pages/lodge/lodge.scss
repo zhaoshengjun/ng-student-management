@@ -5,6 +5,13 @@ page-lodge {
   ion-item-options .button {
     text-transform: none !important;
   }
+  .padding_left {
+    padding-top: 16px;
+    padding-left: 8px;
+  }
+  .padding_right {
+    padding-right: 8px;
+  }
   .box {
     border-left: 6px solid red;
     margin-bottom: 5px;
@@ -20,9 +27,9 @@ page-lodge {
     padding-bottom: 4px;
   }
   .color_button {
-    color: #303F9F;
+    color: #303f9f;
   }
   .right_button {
-    padding-right: 10px;
+    padding-right: 4px;
   }
 }
